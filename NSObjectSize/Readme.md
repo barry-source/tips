@@ -1,9 +1,9 @@
 
-# 一个NSObject对象占用多少空间：
+# 一个NSObject对象占用多少空间
 
 对于一个Object C对象，可以通过xcrun和clang命令来生成相应的底层代码，不过生成的代码不是最新的，具体的相关信息可以参考苹果官方源码。
 
-如下一个**没有**任何变量的类，可以暂时通过 xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main64.cpp（解释见附录）组合命令生成 底层cpp代码
+如下一个**没有**任何变量的类，可以暂时通过 `xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main64.cpp`（解释见附录）组合命令生成 底层cpp代码
 
 ```
 @interface OCObject : NSObject
@@ -51,7 +51,7 @@ struct OCObject_IMPL {
     Class isa;
 };
 ```
-对于上面的总结来说，由于**isa**是一个指针类型，那么`OCObject_IMPL`占用的空间是8（64bit 平台）也即是`OCObject`占用的空间是8。同样的`OCObject`占用的空间是8
+对于上面的总结来说，由于**isa**是一个指针类型，那么`OCObject_IMPL`占用的空间是8（64bit 平台）也即是`OCObject`占用的空间是8。同样的`NSObject`占用的空间是8
 
 目前有两种测量NSObject对象占用空间的方法
 - 通过runtime
@@ -77,16 +77,16 @@ Do not use sizeof(SomeClass). Use class_getInstanceSize([SomeClass class]) inste
 两种方式的结果分别是**8**和**16**
 
 
-class_getInstanceSize  在源码中的调用过程
+## class_getInstanceSize  在源码中的调用过程
 
-objc-class.mm 中 class_getInstanceSize -> alignedInstanceSize
-源码中对alignedInstanceSize的注释如下
+objc-class.mm 中 `class_getInstanceSize -> alignedInstanceSize`
+源码中对`alignedInstanceSize`的注释如下
 ```
 // Class's ivar size rounded up to a pointer-size boundary.
 类的所有成员变量空间的大小，它以指针大小为边界，向上舍入（涉及到内存对齐）
 ```
 
-alloc  在源码中的调用过程
+## alloc  在源码中的调用过程
 alloc 本质上是调用`allocWithZone`（NSObject.mm文件内）, 
 `allocWithZone`内部又调用了`_objc_rootAllocWithZone`（objc-runtime-new.mm文件内）函数，
 `_objc_rootAllocWithZone`内部调用了`_class_createInstanceFromZone`（objc-runtime-new.mm文件内）函数
@@ -109,5 +109,6 @@ size_t instanceSize(size_t extraBytes) const {
 ```
 结论：
 
-**系统分配了16个字节给NSObject对象（通过malloc_size函数获得）**
-**NSObject对象内部只使用了8个字节的空间（64bit环境下)，可以通过class_getInstanceSize函数获得**
+- **系统分配了16个字节给NSObject对象（通过malloc_size函数获得）**
+
+- **NSObject对象内部只使用了8个字节的空间（64bit环境下)，可以通过class_getInstanceSize函数获得**
