@@ -107,7 +107,7 @@ size_t instanceSize(size_t extraBytes) const {
     return size;
 }
 ```
-结论：
+# 结论：
 
 - **系统分配了16个字节给NSObject对象（通过malloc_size函数获得）**
 
