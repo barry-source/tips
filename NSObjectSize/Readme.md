@@ -34,7 +34,7 @@ struct NSObject_IMPL {
 typedef struct objc_class *Class;
 ```
 
-跳转到`struct objc_class`定义中，内部只包含了一个自身类型的变量`Class`, 其变量已被标注 **deprecated**
+跳转到`struct objc_class`定义中，内部只包含了一个自身类型的指针变量`isa`, 其变量已被标注 **deprecated**
 
 ```
 struct objc_class {
@@ -112,3 +112,48 @@ size_t instanceSize(size_t extraBytes) const {
 - **系统分配了16个字节给NSObject对象（通过malloc_size函数获得）**
 
 - **NSObject对象内部只使用了8个字节的空间（64bit环境下)，可以通过class_getInstanceSize函数获得**
+
+# 附录：
+
+
+Clang 是 c 、c++ 、object-c的编译器
+
+### Clang常用命令：
+
+查看编译源文件需要的几个不同的阶段
+- clang -ccc-print-phases main.m
+
+重新编译oc代码
+- clang -arch arm64 -rewrite-objc main.m(要重写的文件) -o output.cpp(输出文件)
+
+
+### xcrun常用命令
+- xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m  -o  output.cpp  // 输出64位真机文件
+- xcrun -sdk iphonesimulator13.5 clang -arch arm64 -rewrite-objc main.m  -o  output.cpp   // 输出64位真机文件
+- xcodebuild -showsdks // 列出所有sdk
+```python
+iOS SDKs:
+    iOS 13.5                          -sdk iphoneos13.5
+
+iOS Simulator SDKs:
+    Simulator - iOS 13.5              -sdk iphonesimulator13.5
+
+macOS SDKs:
+    DriverKit 19.0                    -sdk driverkit.macosx19.0
+macOS 10.15                       -sdk macosx10.15
+
+tvOS SDKs:
+    tvOS 13.4                         -sdk appletvos13.4
+
+tvOS Simulator SDKs:
+    Simulator - tvOS 13.4             -sdk appletvsimulator13.4
+
+watchOS SDKs:
+    watchOS 6.2                       -sdk watchos6.2
+
+watchOS Simulator SDKs:
+    Simulator - watchOS 6.2           -sdk watchsimulator6.2
+
+```
+
+[clang命令](https://www.jianshu.com/p/42cb026ce541)
