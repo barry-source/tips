@@ -5,7 +5,7 @@
 
 如下一个**没有**任何变量的类，可以暂时通过 `xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main64.cpp`（解释见附录）组合命令生成 底层cpp代码
 
-```
+```Object-C
 @interface OCObject : NSObject
 @end
 
@@ -15,14 +15,14 @@
 
 生成的源码中会出现一个`OCObject_IMPL`，这个就是 `OCObject`在底层的展现形式，可见其是一个结构体。结构体中只有一个`NSObject_IVARS`对象，其类型是`NSObject_IMPL`,它即是系统类`NSObject`的实现。
 
-```
+```Object-C
 struct OCObject_IMPL {
     struct NSObject_IMPL NSObject_IVARS;
 };
 ```
 跳转到`NSObject_IMPL`定义中，可以看到其它只有一个`isa`变量，其类型是`Class`
 
-```
+```Object-C
 struct NSObject_IMPL {
     Class isa;
 };
@@ -30,13 +30,13 @@ struct NSObject_IMPL {
 
 跳转到`Class`定义中，可以看到它是一个类型别名，真实类型为`struct objc_class`
 
-```
+```Object-C
 typedef struct objc_class *Class;
 ```
 
 跳转到`struct objc_class`定义中，内部只包含了一个自身类型的指针变量`isa`, 其变量已被标注 **deprecated**
 
-```
+```Object-C
 struct objc_class {
     Class _Nonnull isa __attribute__((deprecated));
 } __attribute__((unavailable));
@@ -46,7 +46,7 @@ struct objc_class {
 综上来说，相当于`OCObject_IMPL`直接拥有了一个`Class`类型的*isa*变量，因为结构体中的第一个变量的地址即是结构体的地址
 (类比数组，数组首元素的地址既是数组的地址，结构体某种意义上也是一种数组--除去方法，只不过类型可以不一致而已)
 
-```
+```Object-C
 struct OCObject_IMPL {
     Class isa;
 };
@@ -55,7 +55,7 @@ struct OCObject_IMPL {
 
 目前有两种测量NSObject对象占用空间的方法
 - 通过runtime
-```
+```Object-C
 #import <objc/runtime.h>
 
 class_getInstanceSize([obj class])
@@ -63,7 +63,7 @@ class_getInstanceSize([obj class])
 ```
 
 - 通过malloc
-```
+```Object-C
 #import <malloc/malloc.h>
 
 malloc_size((__bridge const void *)(obj))
@@ -71,7 +71,7 @@ malloc_size((__bridge const void *)(obj))
 ```
 - 注意
 苹果源码文档中已明确提出,不能用**sizeof**运算符，查看对象占用的大小
-```
+```Object-C
 Do not use sizeof(SomeClass). Use class_getInstanceSize([SomeClass class]) instead.
 ```
 两种方式的结果分别是**8**和**16**
@@ -81,7 +81,7 @@ Do not use sizeof(SomeClass). Use class_getInstanceSize([SomeClass class]) inste
 
 objc-class.mm 中 `class_getInstanceSize -> alignedInstanceSize`
 源码中对`alignedInstanceSize`的注释如下
-```
+```Object-C
 // Class's ivar size rounded up to a pointer-size boundary.
 类的所有成员变量空间的大小，它以指针大小为边界，向上舍入（涉及到内存对齐）
 ```
@@ -94,7 +94,7 @@ alloc 本质上是调用`allocWithZone`（NSObject.mm文件内）,
 `_class_createInstanceFromZone`函数内部有部分处理size的代码`size = cls->instanceSize(extraBytes);`（objc-runtime-new.mm文件内）
 
 `instanceSize`的源码如下：
-```
+```Object-C
 size_t instanceSize(size_t extraBytes) const {
     if (fastpath(cache.hasFastInstanceSize(extraBytes))) {
         return cache.fastInstanceSize(extraBytes);
