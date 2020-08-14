@@ -130,7 +130,7 @@ Clang 是 c 、c++ 、object-c的编译器
 
 ### xcrun常用命令
 - xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m  -o  output.cpp  // 输出64位真机文件
-- xcrun -sdk iphonesimulator13.5 clang -arch arm64 -rewrite-objc main.m  -o  output.cpp   // 输出64位真机文件
+- xcrun -sdk iphonesimulator13.5 clang -arch arm64 -rewrite-objc main.m  -o  output.cpp   // 输出64位模拟器文件
 - xcodebuild -showsdks // 列出所有sdk
 ```python
 iOS SDKs:
@@ -156,5 +156,15 @@ watchOS Simulator SDKs:
     Simulator - watchOS 6.2           -sdk watchsimulator6.2
 
 ```
+
+### 其它常用命令
+
+-  查看配置文件（描述文件）信息，防止安装之后在/Library/MobileDevice/Provisioning Profiles路径中找不到安装的描述文件
+```security cms -D -i tianxiao_adhoc.mobileprovision
+```
+- 查询静态库支持的格式
+```lipo -info 文件名.a
+```
+
 
 [clang命令](https://www.jianshu.com/p/42cb026ce541)
