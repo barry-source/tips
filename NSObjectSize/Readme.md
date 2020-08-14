@@ -160,10 +160,12 @@ watchOS Simulator SDKs:
 ### 其它常用命令
 
 -  查看配置文件（描述文件）信息，防止安装之后在/Library/MobileDevice/Provisioning Profiles路径中找不到安装的描述文件
-```security cms -D -i tianxiao_adhoc.mobileprovision
+```
+security cms -D -i tianxiao_adhoc.mobileprovision
 ```
 - 查询静态库支持的格式
-```lipo -info 文件名.a
+```
+lipo -info 文件名.a
 ```
 
 
