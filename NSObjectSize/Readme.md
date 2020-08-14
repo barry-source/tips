@@ -161,7 +161,7 @@ watchOS Simulator SDKs:
 
 -  查看配置文件（描述文件）信息，防止安装之后在/Library/MobileDevice/Provisioning Profiles路径中找不到安装的描述文件
 ```
-security cms -D -i tianxiao_adhoc.mobileprovision
+security cms -D -i name.mobileprovision
 ```
 - 查询静态库支持的格式
 ```
