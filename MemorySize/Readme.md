@@ -133,9 +133,6 @@ struct CustomType {
 
 ![结构体嵌套.jpg](https://upload-images.jianshu.io/upload_images/1846524-cd49f8e573058583.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-
--  **X**为补齐部分
-
 ## 案例6：#pragma pack(4) 综合展示
 ```Objective-C
 struct CustomType {
