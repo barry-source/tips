@@ -28,5 +28,5 @@ struct CustomType {
 
 ### 对齐示意图：
 
-![pack(1).jpg](https://upload-images.jianshu.io/upload_images/1846524-98586fbbf290d7a6.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![pack1.jpg](https://upload-images.jianshu.io/upload_images/1846524-98586fbbf290d7a6.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
