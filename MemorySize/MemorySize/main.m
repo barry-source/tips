@@ -180,13 +180,12 @@ int main(int argc, const char * argv[]) {
 //        pack4StructTest();
 //        pack4llAllTest();
 //        packAttribute();
-        testXcodePack();
-//        struct TestObject_IMPL s;
-//        NSLog(@"%zd", sizeof(s));
-//        TestObject *obj = [[TestObject alloc] init];
-//
-//        NSLog(@"%zd", malloc_size((__bridge const void *)(obj)));
-//        NSLog(@"%zd", class_getInstanceSize([obj class]));
+//        testXcodePack();
+        
+        TestObject *obj = [[TestObject alloc] init];
+
+        NSLog(@"%zd", malloc_size((__bridge const void *)(obj)));
+        NSLog(@"%zd", class_getInstanceSize([obj class]));
 
     }
     return 0;

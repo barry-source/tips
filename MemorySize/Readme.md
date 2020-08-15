@@ -234,18 +234,57 @@ NSLog(@"%zd", sizeof(s));
 ```
 // NSOject 的展现形式
 struct NSObject_IMPL {
-Class isa;
+    Class isa;
 };
 #pragma pack(8)
 // 继承NSOject的TestObject展现形式
 struct TestObject_IMPL {
 struct NSObject_IMPL NSObject_IVARS; // 这里可以直接用 Class isa;替换
-int p1;
-int p2;
-char p3;
+    int p1;
+    int p2;
+    char p3;
 };
 #pragma pack()
 struct TestObject_IMPL s;
 NSLog(@"%zd", sizeof(s));
 ```
 三种方式的打印结果分别是 `24` `20` `24`,由此得出iOS平台的对齐系数为 `8`
+
+- 补充 `class_getInstanceSize`返回的是对齐之后的空间大小。
+`class_getInstanceSize`实现如下：
+```
+size_t class_getInstanceSize(Class cls)
+{
+    if (!cls) return 0;
+    return cls->alignedInstanceSize(); //返回的是对齐之后的大小
+}
+```
+
+`alignedInstanceSize`实现如下：
+```
+// Class's ivar size rounded up to a pointer-size boundary.
+uint32_t alignedInstanceSize() const {
+    return word_align(unalignedInstanceSize()); // 将未对齐的空间进行对齐
+}
+```
+`word_align`是一个宏定义，其定义如下：
+
+```
+#ifdef __LP64__
+#   define WORD_SHIFT 3UL
+#   define WORD_MASK 7UL
+#   define WORD_BITS 64
+#else
+#   define WORD_SHIFT 2UL
+#   define WORD_MASK 3UL
+#   define WORD_BITS 32
+#endif
+
+static inline size_t word_align(size_t x) {
+    return (x + WORD_MASK) & ~WORD_MASK;
+}
+```
+由于当前Mac 系统为 10.15.6，为64位系统，故 `#ifdef __LP64__`成立，**WORD_MASK = 7**，`word_align`的计算结果为  (x + 7) & 0xFFFFFFF8, 对于一个空的NSObject来说，至少包含一个**isa**指针，所以x的大小至少是8，所以 (x + 7) & 0xFFFFFFF8的结果至少是8
+
+- LP64: 在64位机器上，如果int是32位，long是64位，pointer也是64位，那么该机器就是LP64的，其中的L表示Long，P表示Pointer，64表示Long和Pointer都是64位的.(Unix 和 Unix 类的系统 )
+
