@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TestObject.h"
 #import <objc/runtime.h>
 #import <malloc/malloc.h>
-
 
 // 对齐原则：
 //1、数据成员对齐规则：结构体的首个数据成员放在偏移量为0的地方，后序的数据成员偏移量为 #pragma pack(n) 指定的数据 n 和数据成员占用字节大小的最小值的整数倍，少则补齐.
@@ -132,21 +132,62 @@ void pack4llAllTest() {
     NSLog(@"%zd", sizeof(a));
 }
 
+// __attribute__((packed)) 告诉编译器不做任务优化
+void packAttribute() {
+// 即使设置了#pragma pack(4)，由于结构体中使用了__attribute__((packed)) 属性，依然取消了设置的对齐方式
+#pragma pack(4)
+    struct CustomType {
+        char a;     // 占用1个字节
+        short b;    // 占用2字节
+        char c;     // 占用1个字节
+        int d;      // 占用4个字节
+        char e;     // 占用1个字节
+    } __attribute__((packed));
+    // __attribute__((packed)) 状态下总共占用 9 个字节
+#pragma pack()
+    struct CustomType a;
+    NSLog(@"%zd", sizeof(a));
+}
+
+/// 测试xcode 平台的对齐系统
+void testXcodePack() {
+    // NSOject 的展现形式
+    struct NSObject_IMPL {
+        Class isa;
+    };
+    #pragma pack(8)
+//    #pragma pack(4)
+    // 继承NSOject的TestObject展现形式
+    struct TestObject_IMPL {
+        struct NSObject_IMPL NSObject_IVARS; // 这里可以直接用 Class isa;替换
+        int p1;
+        int p2;
+        char p3;
+    };
+    #pragma pack()
+    struct TestObject_IMPL s;
+    NSLog(@"%zd", sizeof(s));
+}
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
        
-        pack1test();
-        pack2test();
-        pack4test();
-        pack8test();
-        pack4StructTest();
-        pack4llAllTest();
-//        #pragma pack(8)
+//        packAttribute();
+//        pack1test();
+//        pack2test();
+//        pack4test();
+//        pack8test();
+//        pack4StructTest();
+//        pack4llAllTest();
+//        packAttribute();
+        testXcodePack();
+//        struct TestObject_IMPL s;
+//        NSLog(@"%zd", sizeof(s));
+//        TestObject *obj = [[TestObject alloc] init];
 //
-//        struct s {
-//
-//        } __attribute__((packed));
-//        #pragma pack()
+//        NSLog(@"%zd", malloc_size((__bridge const void *)(obj)));
+//        NSLog(@"%zd", class_getInstanceSize([obj class]));
+
     }
     return 0;
 }

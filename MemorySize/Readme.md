@@ -133,6 +133,8 @@ struct CustomType {
 
 ![结构体嵌套.jpg](https://upload-images.jianshu.io/upload_images/1846524-cd49f8e573058583.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
+- **X**为补齐部分
+
 ## 案例6：#pragma pack(4) 综合展示
 ```Objective-C
 struct CustomType {
@@ -160,3 +162,90 @@ struct CustomType {
 
 
 -  **X**为补齐部分
+
+## 取消编译器的自动对齐
+
+- 一是通过案例1中的方式 `#pragma pack(1)`和`#pragma pack( )`
+- 二是通过GNU C 中的`__attribute__`机制, 具体来说就是使用 `__attribute__((packed))`,示例如下：
+```Objective-C
+// 即使设置了#pragma pack(4)，由于结构体中使用了__attribute__((packed)) 属性，依然取消了设置的对齐方式
+#pragma pack(4)
+struct CustomType {
+    char a;     // 占用1个字节
+    short b;    // 占用2字节
+    char c;     // 占用1个字节
+    int d;      // 占用4个字节
+    char e;     // 占用1个字节
+} __attribute__((packed));
+// __attribute__((packed)) 状态下总共占用 9 个字节
+#pragma pack()
+```
+
+#### - 上述代码中设置了#pragma pack(4)，但是由于结构体中使用了__attribute__((packed)) 属性，依然取消了设置的对齐方式
+#### - __attribute__ ((aligned (1))) 方式，目前在xcode中不起使用,参考![链接](https://stackoverflow.com/questions/10371296/pragma-pack1-nor-attribute-aligned-1-works)
+
+## iOS平台对齐
+
+iOS平台的对齐系数为8，可以通过下述论证。
+
+
+由[一个NSObject占用多少空间](https://github.com/barry-source/tips/tree/master/NSObjectSize)文章可知，NSObject对象底层的表现形式为c++中的结构体。
+利用`xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc -fpack-struct=8 TestObject.m -o testObject.cpp`命令可以生成相应的c++代码
+由底层代码可以构造以下结构：
+
+##### 正常形式
+```
+// NSOject 的展现形式
+struct NSObject_IMPL {
+    Class isa;
+};
+// 继承NSOject的TestObject展现形式
+struct TestObject_IMPL {
+    struct NSObject_IMPL NSObject_IVARS; // 这里可以直接用 Class isa;替换
+    int p1;
+    int p2;
+    char p3;
+};
+struct TestObject_IMPL s;
+NSLog(@"%zd", sizeof(s));
+```
+
+##### #pragma pack(4)
+
+```
+// NSOject 的展现形式
+struct NSObject_IMPL {
+    Class isa;
+};
+#pragma pack(4)
+// 继承NSOject的TestObject展现形式
+struct TestObject_IMPL {
+struct NSObject_IMPL NSObject_IVARS; // 这里可以直接用 Class isa;替换
+    int p1;
+    int p2;
+    char p3;
+};
+#pragma pack()
+struct TestObject_IMPL s;
+NSLog(@"%zd", sizeof(s));
+```
+##### #pragma pack(8)
+
+```
+// NSOject 的展现形式
+struct NSObject_IMPL {
+Class isa;
+};
+#pragma pack(8)
+// 继承NSOject的TestObject展现形式
+struct TestObject_IMPL {
+struct NSObject_IMPL NSObject_IVARS; // 这里可以直接用 Class isa;替换
+int p1;
+int p2;
+char p3;
+};
+#pragma pack()
+struct TestObject_IMPL s;
+NSLog(@"%zd", sizeof(s));
+```
+三种方式的打印结果分别是 `24` `20` `24`,由此得出iOS平台的对齐系数为 `8`
