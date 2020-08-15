@@ -10,3 +10,23 @@
 ```
 
 
+## 案例1：#pragma pack(1) 一字节对齐
+```Objective-C
+#pragma pack(1)
+struct CustomType {
+    //1、数据成员对齐规则
+    char a;     // 占用空间大小1 = 1, 偏移量为 1 的倍数, 偏移量为 0, 存放空间位置 [0]
+    short b;    // 占用空间大小2 > 1, 偏移量为 1 的倍数, 偏移量为 1, 存放空间位置 [1, 2]
+    char c;     // 占用空间大小1 = 1, 偏移量为 1 的倍数, 偏移量为 3, 存放空间位置 [3]
+    int d;      // 占用空间大小4 > 1, 偏移量为 1 的倍数, 偏移量为 4, 存放空间位置 [4, 7]
+    char e;     // 占用空间大小1 = 1, 偏移量为 1 的倍数, 偏移量为 8, 存放空间位置 [8]
+    // 数据成员总共占用空间为 [0, 8] 共9个字节
+};
+//3、结构体的整体对齐规则: min(1, max(short, char, int)) = 1, 9 是 1 的整数倍，所以结构体最终占用空间为9个字节。
+#pragma pack()
+```
+
+### 对齐示意图：
+
+![pack(1).jpg](https://upload-images.jianshu.io/upload_images/1846524-98586fbbf290d7a6.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
