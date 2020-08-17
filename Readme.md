@@ -5,5 +5,7 @@
 
 [iOS内存分配原则](https://github.com/barry-source/tips/tree/master/MemorySize)
 
+[NSObject内部构造](https://github.com/barry-source/tips/tree/master/NSObjectInterStruct)
+
 
 

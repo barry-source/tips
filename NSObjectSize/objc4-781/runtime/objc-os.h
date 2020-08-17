@@ -33,6 +33,8 @@
 #include <TargetConditionals.h>
 #include "objc-config.h"
 #include "objc-private.h"
+#include <pthread/qos_private.h>
+#include <os/lock_private.h>
 
 #ifdef __LP64__
 #   define WORD_SHIFT 3UL
