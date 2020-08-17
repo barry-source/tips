@@ -111,9 +111,10 @@ struct objc_class {
 类对象的`super_class `指向它的父类的类对象，父类的`super_class `指向根类的类对象，根类的`super_class `为nil
 元类对象的`super_class `指向它的父类的元类对象，父类的`super_class `指向根类的元类对象，根类的`super_class `指向的是根类的类对象**（这块比较特殊）**
 
-https://pic3.zhimg.com/80/v2-c8a3414dc3e955b172668141f703b0fd_1440w.jpg
+
+![经典图片,一图胜万言](https://pic3.zhimg.com/80/v2-c8a3414dc3e955b172668141f703b0fd_1440w.jpg)
 
 
 ## 参考文档
 
-![经典图片](http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html)
+[类对象和元类对象](http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html)
