@@ -14,7 +14,7 @@ int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
         Class obj = [NSObject class];
-
+        [obj class];
         object_getClass(obj);
     }
     return 0;
