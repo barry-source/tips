@@ -7,12 +7,15 @@
 
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
+#import "debug-objc-Bridging-Header.h"
+
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-
         // insert code here...
-        object_getClass([NSObject class]);
+        Class obj = [NSObject class];
+
+        object_getClass(obj);
     }
     return 0;
 }

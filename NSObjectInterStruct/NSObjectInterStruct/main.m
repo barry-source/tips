@@ -34,6 +34,8 @@ void getObject() {
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
+        getObject();
+        
         //获取实例对象
         NSObject *obj1 = [[NSObject alloc] init];
         NSObject *obj2 = [[NSObject alloc] init];

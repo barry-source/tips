@@ -25,6 +25,10 @@
 * objc-runtime-new.m
 * Support for new-ABI classes and images.
 **********************************************************************/
+#include "objc-private.h"
+#include <cstddef>  // for nullptr_t
+#include <stdint.h>
+#include <assert.h>
 
 #if __OBJC2__
 
@@ -3562,6 +3566,8 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
             _getObjc2NonlazyClassList(hi, &count);
         for (i = 0; i < count; i++) {
             Class cls = remapClass(classlist[i]);
+            printf(cls->mangledName());
+            printf("\n");
             if (!cls) continue;
 
             addClassTableEntry(cls);

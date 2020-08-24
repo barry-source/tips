@@ -1,7 +1,7 @@
 
 # NSObject内部构造
 
-### Objective-C中对象分为三类：分别是实例对象，类对象和元类对象。可以通过以下方式获取。
+### 1、Objective-C中对象分为三类：分别是实例对象，类对象和元类对象。可以通过以下方式获取。
 
 - 实例对象：通过 `alloc` 、`init`的方式返回的就是一个实例对象。
 - 类对象：通过runtime中的方法 `object_getClass`,传入一个**实例**对象，获取的是一个类对象。（类对象的获取也可以通过实例对象调用 `class`方法的方式或类名调用类方法`class`的方式。）
@@ -44,9 +44,9 @@ NSLog(@"元类对象地址：%p--%p", m1, m2);
     return object_getClass(self);
 }
 ```
-### 三种对象存放的信息
+### 2、三种对象存放的信息
 
-由上可知，类对象和元类对象的类型都是**Class**, 先看下Class的里面包含什么内容。对于旧版本的结构体定义，在`runtime.h`中,  `typedef struct objc_class *Class`由此知，Class 是 `struct objc_class *`的别名。
+由上可知，类对象和元类对象的类型都是**Class**, 先看下**Class**里面包含什么内容。对于旧版本的结构体定义，在`runtime.h`中,  `typedef struct objc_class *Class`由此知，**Class **是 `struct objc_class *`的别名。
 旧版本`objc_class`结构体的形式如下：
 ```
 struct objc_class {
@@ -98,23 +98,27 @@ struct objc_class {
 - 类对象方法 methodLists
 - 缓存 cache
 
-### isa 指向
+### 3、isa 和super_class 指向
 三种对象的内部构造中都包含了一个**isa**指针。**isa**指针有什么作用？
-实例对象的**isa**指针指向它的类对象，类对象描述实例对象的数据（分配的空间大小，变量类型和布局）和行为（响应的selector和实现的实例方法）
-类对象的**isa**指针指向它的元类对象，元类对象是对类对象的描述，其中包括类方法等。
-元类对象的**isa**指针指向根元类对象，根元类对象的**isa**指针指向它自己，形成了一个闭环。
+- 实例对象的**isa**指针指向它的类对象，类对象描述实例对象的数据（分配的空间大小，变量类型和布局）和行为（响应的selector和实现的实例方法）
+- 类对象的**isa**指针指向它的元类对象，元类对象是对类对象的描述，其中包括类方法等。
+- 元类对象的**isa**指针指向根元类对象，根元类对象的**isa**指针指向它自己，形成了一个闭环。
 
 ### super_class 指向
 `super_class `是类继承的桥梁。通过和`isa`的配合，可以实现子类调用父类中的方法等。
 
-`super_class `指针只存在于`Class`类型中，也就是说只存在于类对象和元类对象中。
-类对象的`super_class `指向它的父类的类对象，父类的`super_class `指向根类的类对象，根类的`super_class `为nil
-元类对象的`super_class `指向它的父类的元类对象，父类的`super_class `指向根类的元类对象，根类的`super_class `指向的是根类的类对象**（这块比较特殊）**
+- `super_class `指针只存在于`Class`类型中，也就是说只存在于类对象和元类对象中。
+- 类对象的`super_class `指向它的父类的类对象，父类的`super_class `指向根类的类对象，根类的`super_class `为nil
+- 元类对象的`super_class `指向它的父类的元类对象，父类的`super_class `指向根类的元类对象，根类的`super_class `指向的是根类的类对象**（这块比较特殊）**
 
 
 ####  isa和super_class整体指向流程
 
 ![经典图片,一图胜万言](https://upload-images.jianshu.io/upload_images/1846524-10db010c7ab34c79.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+### 4、NSObject 实际存储结构
+
+
 
 ## 参考文档
 
