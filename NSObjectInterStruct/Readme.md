@@ -117,8 +117,60 @@ struct objc_class {
 ![经典图片,一图胜万言](https://upload-images.jianshu.io/upload_images/1846524-10db010c7ab34c79.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 4、NSObject 实际存储结构
+#### 4.1、`objc_object` 和`objc_class`的关系如下图
+
+![UML.jpg](https://upload-images.jianshu.io/upload_images/1846524-c7054124a491e3df.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+从上图中可以看到OC上层的一些操作在底层的实现方式。
+
+#### 4.2、目前无法Xcode内断点查看`objc_object`和`objc_class`构造，可以通过改造源码的方式进行桥接。
+部分改造源码如下：
+
+```Objective-C
+
+struct debug_objc_object {
+    isa_t *isa;
+
+public:
+    bool isTaggedPointer();
+    Class getIsa();
+    Class ISA();
+};
+
+struct debug_objc_class : debug_objc_object {
+    Class superclass;
+    cache_t cache;
+    class_data_bits_t bits;
+public:
+    class_rw_t* data() {
+        return bits.data();
+    }
+};
+```
+测试代码参考如下：
+```Objective-C
+NSObject *obj = [[NSObject alloc] init];
+Animal *animal = [[Animal alloc] init];
+Dog *dog = [[Dog alloc] init];
+
+Class objOrinalClass = [obj class];
+Class animalOrinalClass = [animal class];
+Class dogOrinalClass = [dog class];
+
+Class objOrinalMetaClass = object_getClass([NSObject class]);
+Class animalOrinalMetaClass = object_getClass([Animal class]);
+Class dogOrinalMetaClass = object_getClass([Dog class]);
 
 
+debug_objc_class *objClass = (__bridge struct debug_objc_class *)(objOrinalClass);
+debug_objc_class *animalClass = (__bridge struct debug_objc_class *)(animalOrinalClass);
+debug_objc_class *dogClass = (__bridge struct debug_objc_class *)(dogOrinalClass);
+
+debug_objc_class *objMetaClass = (__bridge struct debug_objc_class *)(objOrinalMetaClass);
+debug_objc_class *animalMetaClass = (__bridge struct debug_objc_class *)(animalOrinalMetaClass);
+debug_objc_class *dogMetaClass = (__bridge struct debug_objc_class *)(dogOrinalMetaClass);
+```
+
+![地址流程图.jpg](https://upload-images.jianshu.io/upload_images/1846524-52aef0a86cef5ff7.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 参考文档
 

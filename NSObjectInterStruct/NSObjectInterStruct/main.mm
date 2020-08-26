@@ -31,26 +31,63 @@ void getObject() {
 }
 
 
+void isaTesByTerinal() {
+    // 0x00007ffffffffff8ULL
+    NSObject *obj = [[NSObject alloc] init];
+    Animal *animal = [[Animal alloc] init];
+    Dog *dog = [[Dog alloc] init];
+    
+    Class objOrinalClass = [obj class];
+    Class animalOrinalClass = [animal class];
+    Class dogOrinalClass = [dog class];
+
+    Class objOrinalMetaClass = object_getClass([NSObject class]);
+    Class animalOrinalMetaClass = object_getClass([Animal class]);
+    Class dogOrinalMetaClass = object_getClass([Dog class]);
+    
+    
+    debug_objc_class *objClass = (__bridge struct debug_objc_class *)(objOrinalClass);
+    debug_objc_class *animalClass = (__bridge struct debug_objc_class *)(animalOrinalClass);
+    debug_objc_class *dogClass = (__bridge struct debug_objc_class *)(dogOrinalClass);
+
+    debug_objc_class *objMetaClass = (__bridge struct debug_objc_class *)(objOrinalMetaClass);
+    debug_objc_class *animalMetaClass = (__bridge struct debug_objc_class *)(animalOrinalMetaClass);
+    debug_objc_class *dogMetaClass = (__bridge struct debug_objc_class *)(dogOrinalMetaClass);
+
+    // Direct access to Objective-C's isa is deprecated in favor of object_getClass()
+    NSLog(@"%p", &(objClass->isa));
+    NSLog(@"adf");
+}
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
 //        getObject();
-
-        NSObject *obj = [[NSObject alloc] init];
-        Animal *animal = [[Animal alloc] init];
-        Dog *dog = [[Dog alloc] init];
-
-        debug_objc_class *objClass = (__bridge struct debug_objc_class *)([obj class]);
-        debug_objc_class *animalClass = (__bridge struct debug_objc_class *)([animal class]);
-        debug_objc_class *dogClass = (__bridge struct debug_objc_class *)([dog class]);
-
-        debug_objc_class *objMetaClass = (__bridge struct debug_objc_class *)(object_getClass([NSObject class]));
-        debug_objc_class *animalMetaClass = (__bridge struct debug_objc_class *)(object_getClass([Animal class]));
-        debug_objc_class *dogMetaClass = (__bridge struct debug_objc_class *)(object_getClass([Dog class]));
+        isaTesByTerinal();
         
-        
-        class_rw_t *objClassData = objClass->data();
-        class_rw_t *animalClassData = animalClass->data();
-        class_rw_t *dogClassData = dogClass->data();
+//        NSObject *obj = [[NSObject alloc] init];
+//        Animal *animal = [[Animal alloc] init];
+//        Dog *dog = [[Dog alloc] init];
+//
+//        Class objOrinalClass = [obj class];
+//        Class animalOrinalClass = [animal class];
+//        Class dogOrinalClass = [dog class];
+//
+//        Class objOrinalMetaClass = object_getClass([NSObject class]);
+//        Class animalOrinalMetaClass = object_getClass([Animal class]);
+//        Class dogOrinalMetaClass = object_getClass([Dog class]);
+//
+//        debug_objc_class *objClass = (__bridge struct debug_objc_class *)(objOrinalClass);
+//        debug_objc_class *animalClass = (__bridge struct debug_objc_class *)(animalOrinalClass);
+//        debug_objc_class *dogClass = (__bridge struct debug_objc_class *)(dogOrinalClass);
+//
+//        debug_objc_class *objMetaClass = (__bridge struct debug_objc_class *)(objOrinalMetaClass);
+//        debug_objc_class *animalMetaClass = (__bridge struct debug_objc_class *)(animalOrinalMetaClass);
+//        debug_objc_class *dogMetaClass = (__bridge struct debug_objc_class *)(dogOrinalMetaClass);
+//
+//
+//        class_rw_t *objClassData = objClass->data();
+//        class_rw_t *animalClassData = animalClass->data();
+//        class_rw_t *dogClassData = dogClass->data();
 //        // 0x00007ffffffffff8ULL
 //        NSObject *animal = [[Animal alloc] init];
 //        debug_objc_class *animalClass = (__bridge struct debug_objc_class *)([animal class]);
@@ -62,7 +99,7 @@ int main(int argc, const char * argv[]) {
 //        debug_objc_class *dogMetaClass = dogClass->metaClass();
 //
 
-        NSLog(@"adf");
+        
 //        NSObject *object = [[NSObject alloc] init];
 //        Person *person = [[Person alloc] init];
 //        Student *student = [[Student alloc] init];

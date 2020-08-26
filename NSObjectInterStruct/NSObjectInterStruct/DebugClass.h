@@ -166,7 +166,6 @@ public:
 union isa_t {
     isa_t() { }
     isa_t(uintptr_t value) : bits(value) {
-        printf("sdf");
     }
     
     Class cls;
@@ -195,55 +194,50 @@ public:
     class_rw_t* data() {
         return bits.data();
     }
-    
-//    debug_objc_class* metaClass() {
-//        return (debug_objc_class *)((long long)isa & ISA_MASK);
-//    }
-    
 };
 
 #endif /* DebugClass_h */
 
-//typedef struct debug_objc_object *debugId;
-//
-//Class debug_object_getClass(debugId obj) {
-//    if (obj) return obj->getIsa();
-//    else return Nil;
-//}
-//
-//inline Class
-//debug_objc_object::getIsa()
-//{
-//    if (fastpath(!isTaggedPointer())) return ISA();
-//    return Nil;
-//}
-//
-//inline Class
-//debug_objc_object::ISA()
-//{
-//#if SUPPORT_INDEXED_ISA
-//    if (isa.nonpointer) {
-//        uintptr_t slot = isa.indexcls;
-//        return classForIndex((unsigned)slot);
-//    }
-//    return (Class)isa.bits;
-//#else
-//    return (Class)(isa->bits & ISA_MASK);
-//#endif
-//}
-//
-//
-//static inline bool
-//_objc_isTaggedPointer(const void * _Nullable ptr)
-//{
-//    return ((uintptr_t)ptr & _OBJC_TAG_MASK) == _OBJC_TAG_MASK;
-//}
-//
-//inline bool
-//debug_objc_object::isTaggedPointer()
-//{
-//    return _objc_isTaggedPointer(this);
-//}
-//
-//
-//
+typedef struct debug_objc_object *debugId;
+
+Class debug_object_getClass(debugId obj) {
+    if (obj) return obj->getIsa();
+    else return Nil;
+}
+
+inline Class
+debug_objc_object::getIsa()
+{
+    if (fastpath(!isTaggedPointer())) return ISA();
+    return Nil;
+}
+
+inline Class
+debug_objc_object::ISA()
+{
+#if SUPPORT_INDEXED_ISA
+    if (isa.nonpointer) {
+        uintptr_t slot = isa.indexcls;
+        return classForIndex((unsigned)slot);
+    }
+    return (Class)isa.bits;
+#else
+    return (Class)(isa->bits & ISA_MASK);
+#endif
+}
+
+
+static inline bool
+_objc_isTaggedPointer(const void * _Nullable ptr)
+{
+    return ((uintptr_t)ptr & _OBJC_TAG_MASK) == _OBJC_TAG_MASK;
+}
+
+inline bool
+debug_objc_object::isTaggedPointer()
+{
+    return _objc_isTaggedPointer(this);
+}
+
+
+
