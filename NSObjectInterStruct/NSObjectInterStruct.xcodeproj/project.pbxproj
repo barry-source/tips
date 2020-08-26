@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E78CB49224E8C12F00D8FE8D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E78CB49124E8C12F00D8FE8D /* main.m */; };
+		7125DA3024F3845C008494D3 /* Animal.m in Sources */ = {isa = PBXBuildFile; fileRef = 7125DA2F24F3845C008494D3 /* Animal.m */; };
+		7125DA3324F3846D008494D3 /* Dog.m in Sources */ = {isa = PBXBuildFile; fileRef = 7125DA3224F3846D008494D3 /* Dog.m */; };
+		E78CB49224E8C12F00D8FE8D /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = E78CB49124E8C12F00D8FE8D /* main.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +25,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7125DA2D24F3834A008494D3 /* DebugClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugClass.h; sourceTree = "<group>"; };
+		7125DA2E24F3845C008494D3 /* Animal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Animal.h; sourceTree = "<group>"; };
+		7125DA2F24F3845C008494D3 /* Animal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Animal.m; sourceTree = "<group>"; };
+		7125DA3124F3846D008494D3 /* Dog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dog.h; sourceTree = "<group>"; };
+		7125DA3224F3846D008494D3 /* Dog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Dog.m; sourceTree = "<group>"; };
 		E78CB48E24E8C12F00D8FE8D /* NSObjectInterStruct */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NSObjectInterStruct; sourceTree = BUILT_PRODUCTS_DIR; };
-		E78CB49124E8C12F00D8FE8D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E78CB49124E8C12F00D8FE8D /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		E78CB49824E8F75A00D8FE8D /* main_arm64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main_arm64.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,8 +65,13 @@
 		E78CB49024E8C12F00D8FE8D /* NSObjectInterStruct */ = {
 			isa = PBXGroup;
 			children = (
+				7125DA2D24F3834A008494D3 /* DebugClass.h */,
 				E78CB49824E8F75A00D8FE8D /* main_arm64.cpp */,
-				E78CB49124E8C12F00D8FE8D /* main.m */,
+				E78CB49124E8C12F00D8FE8D /* main.mm */,
+				7125DA2E24F3845C008494D3 /* Animal.h */,
+				7125DA2F24F3845C008494D3 /* Animal.m */,
+				7125DA3124F3846D008494D3 /* Dog.h */,
+				7125DA3224F3846D008494D3 /* Dog.m */,
 			);
 			path = NSObjectInterStruct;
 			sourceTree = "<group>";
@@ -121,7 +133,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E78CB49224E8C12F00D8FE8D /* main.m in Sources */,
+				7125DA3324F3846D008494D3 /* Dog.m in Sources */,
+				E78CB49224E8C12F00D8FE8D /* main.mm in Sources */,
+				7125DA3024F3845C008494D3 /* Animal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +254,7 @@
 		E78CB49624E8C12F00D8FE8D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -248,6 +263,7 @@
 		E78CB49724E8C12F00D8FE8D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

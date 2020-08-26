@@ -322,7 +322,6 @@
 		9672F7ED14D5F488007CEC96 /* NSObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = NSObject.mm; path = runtime/NSObject.mm; sourceTree = "<group>"; };
 		BC8B5D1212D3D48100C78A5B /* libauto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libauto.dylib; path = /usr/lib/libauto.dylib; sourceTree = "<absolute>"; };
 		D2AAC0630554660B00DB518D /* libobjc.A.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libobjc.A.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7118CF224F294B500CBDCD5 /* DebugClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugClass.h; sourceTree = "<group>"; };
 		E771809C24EF582900AEF2D5 /* debug-objc-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "debug-objc-Bridging-Header.h"; sourceTree = "<group>"; };
 		E771809D24EF582A00AEF2D5 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		E78CB53D24E91E3E00D8FE8D /* _simple 3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "_simple 3.h"; sourceTree = "<group>"; };
@@ -510,7 +509,6 @@
 				3044E26B23D47C0E006763E3 /* main.m */,
 				E771809D24EF582A00AEF2D5 /* Test.swift */,
 				E771809C24EF582900AEF2D5 /* debug-objc-Bridging-Header.h */,
-				E7118CF224F294B500CBDCD5 /* DebugClass.h */,
 			);
 			path = "debug-objc";
 			sourceTree = "<group>";
