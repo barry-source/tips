@@ -402,6 +402,10 @@ xy:
 - 通过上面的对比发现新创建的类对象重写了`setX`、`setY`、`class`、`dealloc`和`_isKVOA`五个方法，对于没有观察的属性`z`没有被重写。
 - 对于`class` 方法重写之后，其发消息获取的对象是旧的类对象，这是apple做了一层掩盖。如果想获取具体的类型可通过函数`object_getClass`。`dealloc`方法处理一些收尾工作。还有一个`_isKVOA`方法，看起来像是一个私有方法。
 
+##  简单总结
+
+![简单总结.jpg](https://upload-images.jianshu.io/upload_images/1846524-56bab2d9ec6ec161.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 demo纯属展示里面的一些细节
 
 [手动实现kvoDemo](https://github.com/tsc000/Exploration/tree/master/OverrideKVO)
