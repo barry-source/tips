@@ -276,7 +276,7 @@ typedef NS_ENUM(NSUInteger, NSKeyValueChange) {
 ```
 ## 四、KVO原理
 
-KVO是通过isa-swizzling技术实现的([官方文档](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueObserving/Articles/KVOImplementation.html#//apple_ref/doc/uid/20002307-BAJEAIEE)就是一句话概括的)。具体来说就是在运行时动态创建一个中间类对象，这个中间类对象是原类对象的子类(即superClass指针指向原来的类对象)，并动态修改当前实例对象的isa指向中间类对象。并且将class方法重写，返回原类对象的Class。所以苹果建议在开发中不应该依赖isa指针，而是通过class实例方法来获取实例对象的类型。
+KVO是通过`isa-swizzling`技术实现的([官方文档](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/KeyValueObserving/Articles/KVOImplementation.html#//apple_ref/doc/uid/20002307-BAJEAIEE)就是一句话概括的)。具体来说就是在运行时动态创建一个中间类对象，这个中间类对象是原类对象的子类(即`superClass`指针指向原来的类对象)，并动态修改当前实例对象的`isa`指向中间类对象。并且将class方法重写，返回原类对象的`Class`。所以苹果建议在开发中不应该依赖`isa`指针，而是通过class实例方法来获取实例对象的类型。
 测试代码
 
 .h文件
@@ -362,7 +362,7 @@ struct temp_objc_class {
         method_getImplementation(class_getInstanceMethod(object_getClass(x), @selector(setX:))));
 }
 ```
-然后创建了4个DeepSearch实例，每一个都使用了不同的观察方式。x实例有一个观察者x观察key x，y实例有一个观察者y观察key y, xy实例有一个观察者观察key x和y。为了做比较，key z没有观察者。最后control实例没有任何观察者。
+然后创建了4个DeepSearch实例，每一个都使用了不同的观察方式。`x`实例有一个观察者`x`观察`key x`，`y`实例有一个观察者`y观察`key y , `xy`实例有一个观察者观察`key x`和`y`。为了做比较，`key z`没有观察者。最后`control`实例没有任何观察者。
 下面打印的结果：
 ```Objective-C
 control: 
@@ -415,6 +415,24 @@ demo纯属展示里面的一些细节
 - `context`无用
 为了解决上一个问题引入了context，通过context可以分离父类和当前的操作。必须保证context是唯一的。这个事实的结果是你不能使用上下文指针来实际保存上下文。
 - `-removeObserver:forKeyPath: `没有提供足够的参数。当前根据`context`移除观察者的时候，不确定移除的是父类的还是当类的，或者两个都移除。
-##[demo](https://github.com/tsc000/Exploration)
+
+可能的面试题：
+## 1、KVO的本质是什么？
+
+利用RuntimeAPI动态生成一个子类，并且让instance对象的isa指向这个全新的子类
+当修改instance对象的属性时，会调用Foundation的_NSSetXXXValueAndNotify函数
+willChangeValueForKey:
+父类原来的setter
+didChangeValueForKey:
+内部会触发监听器（Oberser）的监听方法( observeValueForKeyPath:ofObject:change:context:）
+
+## 2、能不能手动触发KVO？
+可以，手动调用willChangeValueForKey:和didChangeValueForKey:
+
+## 3、直接修改成员变量会触发KVO么？
+
+不会
+
+[demo](https://github.com/tsc000/Exploration)
 
 
