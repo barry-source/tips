@@ -52,6 +52,7 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     static NSInteger i = 0;
+    //##### 注： 数组一定要通过这种方法取出，否则不会触发通知
     NSMutableSet *tempset = [self mutableSetValueForKey:@"set"];
     switch (i % 4) { // add
         case 0:

@@ -24,6 +24,9 @@
 		71B347BB2281D2D000E3675E /* kvoexplorer in Resources */ = {isa = PBXBuildFile; fileRef = 71B347BA2281D2D000E3675E /* kvoexplorer */; };
 		E7479A9624F8B043006030BF /* OrderedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7479A9524F8B043006030BF /* OrderedViewController.m */; };
 		E7479A9924F8DC78006030BF /* UnorderedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7479A9824F8DC78006030BF /* UnorderedViewController.m */; };
+		E7479A9C24F8ED2F006030BF /* DependentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7479A9B24F8ED2F006030BF /* DependentViewController.m */; };
+		E7479A9F24F8F1B9006030BF /* Employee.m in Sources */ = {isa = PBXBuildFile; fileRef = E7479A9E24F8F1B9006030BF /* Employee.m */; };
+		E7479AA224F8FBB4006030BF /* DeepSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E7479AA124F8FBB4006030BF /* DeepSearchViewController.m */; };
 		E77D478724F7470100E47F98 /* UsageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E77D478624F7470100E47F98 /* UsageViewController.m */; };
 		E77D478A24F74BCA00E47F98 /* UsageContextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E77D478924F74BCA00E47F98 /* UsageContextViewController.m */; };
 		E77D478D24F77ED100E47F98 /* ManualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E77D478C24F77ED100E47F98 /* ManualViewController.m */; };
@@ -79,6 +82,12 @@
 		E7479A9524F8B043006030BF /* OrderedViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderedViewController.m; sourceTree = "<group>"; };
 		E7479A9724F8DC78006030BF /* UnorderedViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnorderedViewController.h; sourceTree = "<group>"; };
 		E7479A9824F8DC78006030BF /* UnorderedViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnorderedViewController.m; sourceTree = "<group>"; };
+		E7479A9A24F8ED2F006030BF /* DependentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DependentViewController.h; sourceTree = "<group>"; };
+		E7479A9B24F8ED2F006030BF /* DependentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DependentViewController.m; sourceTree = "<group>"; };
+		E7479A9D24F8F1B9006030BF /* Employee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Employee.h; sourceTree = "<group>"; };
+		E7479A9E24F8F1B9006030BF /* Employee.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Employee.m; sourceTree = "<group>"; };
+		E7479AA024F8FBB4006030BF /* DeepSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeepSearchViewController.h; sourceTree = "<group>"; };
+		E7479AA124F8FBB4006030BF /* DeepSearchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeepSearchViewController.m; sourceTree = "<group>"; };
 		E77D478524F7470100E47F98 /* UsageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UsageViewController.h; sourceTree = "<group>"; };
 		E77D478624F7470100E47F98 /* UsageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UsageViewController.m; sourceTree = "<group>"; };
 		E77D478824F74BCA00E47F98 /* UsageContextViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UsageContextViewController.h; sourceTree = "<group>"; };
@@ -213,6 +222,10 @@
 			children = (
 				71B347AF228198C200E3675E /* DependentKeys.h */,
 				71B347B0228198C200E3675E /* DependentKeys.m */,
+				E7479A9A24F8ED2F006030BF /* DependentViewController.h */,
+				E7479A9B24F8ED2F006030BF /* DependentViewController.m */,
+				E7479A9D24F8F1B9006030BF /* Employee.h */,
+				E7479A9E24F8F1B9006030BF /* Employee.m */,
 			);
 			name = DependentKeys;
 			sourceTree = "<group>";
@@ -224,6 +237,8 @@
 				71B347B22281A5C600E3675E /* DeepSearch.h */,
 				71B347B32281A5C600E3675E /* DeepSearch.m */,
 				71B347B62281D0FE00E3675E /* kvoexplorer.m */,
+				E7479AA024F8FBB4006030BF /* DeepSearchViewController.h */,
+				E7479AA124F8FBB4006030BF /* DeepSearchViewController.m */,
 			);
 			path = Theory;
 			sourceTree = "<group>";
@@ -364,7 +379,10 @@
 				71B3477522815ABD00E3675E /* ViewController.m in Sources */,
 				71B347B1228198C200E3675E /* DependentKeys.m in Sources */,
 				71B3478022815ABF00E3675E /* main.m in Sources */,
+				E7479A9F24F8F1B9006030BF /* Employee.m in Sources */,
 				71B347B42281A5C600E3675E /* DeepSearch.m in Sources */,
+				E7479A9C24F8ED2F006030BF /* DependentViewController.m in Sources */,
+				E7479AA224F8FBB4006030BF /* DeepSearchViewController.m in Sources */,
 				71B347A622815B0000E3675E /* Person.m in Sources */,
 				71B347A922815B0900E3675E /* Account.m in Sources */,
 				71B347AD2281889D00E3675E /* ManualObject.m in Sources */,

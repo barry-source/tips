@@ -1,6 +1,6 @@
 > KVO(Key-value observing)提供一种在其它对象的属性更改时通知观察它的对象的一种机制。当然它和通知都是[观察者模式](https://www.jianshu.com/p/eab7dcfd8c9a)的实现，只是侧重点不同而已。KVO在模型和控制器之前的交互起着非常重要的作用。在`OSX`平台中，控制器层的绑定技术很依赖`KVO`。可以利用`KVO`观察简单属性，一对一关系的属性和一对多关系的属性。下面会一一展示三种情况
 
-##[Demo](https://github.com/barry-source/tips/tree/master/KVO)
+[Demo](https://github.com/barry-source/tips/tree/master/KVO)
 
 ## 一、基本用法
 
@@ -73,6 +73,80 @@
 - 观察者在dealloc的时候不会自己移除自己，所以必须手动移除，但是被观察的对象的属性在发生改变的时候一定要确保观察者是存在的，否则会触发一个内存异常（memory access exception）
 - NSKeyValueObserving没有提供对象是否是观察者或者是否正在被观察这样的属性所以要确保add和remove操作必须成对且有序的操作.apple提供的一个正常的流程是在init 或 viewDidLoad里注册观察者，在dealloc里移除观察者
 
+#### 1.4、观察List（ordered, unOrdered）
+
+核心示例如下：
+
+```
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = UIColor.whiteColor;
+    // 无法监听array的属性
+    //    [self.array addObserver:self forKeyPath:@"count" options:(NSKeyValueObservingOptionNew) context:nil];
+
+    // 设置了NSKeyValueObservingOptionInitial 之后就会立即触发了一个NSKeyValueChangeSetting类型的通知
+    [self addObserver:self forKeyPath:@"array" options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld | NSKeyValueObservingOptionInitial context:nil];
+}
+
+//typedef NS_ENUM(NSUInteger, NSKeyValueChange) {
+//    NSKeyValueChangeSetting = 1,
+//    NSKeyValueChangeInsertion = 2,
+//    NSKeyValueChangeRemoval = 3,
+//    NSKeyValueChangeReplacement = 4,
+//};
+
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change context:(nullable void *)context {
+    NSInteger kind = [change[@"kind"] integerValue];
+    switch (kind) {
+        case NSKeyValueChangeSetting:
+            NSLog(@"NSKeyValueChangeSetting");
+            break;
+        case NSKeyValueChangeInsertion:
+            NSLog(@"NSKeyValueChangeInsertion");
+            break;
+        case NSKeyValueChangeRemoval:
+            NSLog(@"NSKeyValueChangeRemoval");
+            break;
+        case NSKeyValueChangeReplacement:
+            NSLog(@"NSKeyValueChangeReplacement");
+            break;
+    }
+    NSLog(@"%@", change);
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    static NSInteger i = 0;
+    //##### 注： 数组一定要通过这种方法取出，否则不会触发通知
+    NSMutableArray *tempArray = [self mutableArrayValueForKey:@"array"];
+    switch (i % 4) { // add
+        case 0:
+            [tempArray addObject:@"1"];
+            break;
+        case 1:  // replace
+            [tempArray replaceObjectAtIndex:0 withObject:@"2"];
+            break;
+        case 2: // remove
+            [tempArray removeObjectAtIndex:0];
+            break;
+        case 3:
+            [tempArray removeAllObjects]; // 不会触发通知
+            break;
+        default:
+            break;
+    }
+    i ++;
+}
+
+@end
+
+```
+其它的序列如NSMutableSet, NSMutableOrderedSet 类似，只不过取值方式一一样
+
+- NSMutableArray -------> `mutableArrayValueForKey`
+- NSMutableSet -------> `mutableSetValueForKey`
+- NSMutableOrderedSet -------> `mutableOrderedSetValueForKey`
+
 ## 二、手动干预观察流程
 
 #### 2.1、使某一属性只有在新值和旧值不相同时发通知
@@ -143,6 +217,9 @@ typedef NS_ENUM(NSUInteger, NSKeyValueChange) {
 #### 3.1、To-one Relationships 的属性依赖
 下面的例子中监听firstName, lastName和fullName，当firstName, lastName中的任一一个值更改时都会触发fullName更改的通知
 ```Objective-C
+
+// 只要 firstName 和 lastName 有一个改变就会触发fullName的通知
+// 方式 1
 + (NSSet<NSString *> *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
     NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
     if ([key isEqualToString:@"fullName"]) {
@@ -151,18 +228,20 @@ typedef NS_ENUM(NSUInteger, NSKeyValueChange) {
     }
     return keyPaths;
 }
-//这里的get方法必须写，这个会自动触发
+
 - (NSString *)fullName {
     return [NSString stringWithFormat:@"%@ %@",self.firstName, self.lastName];
 }
 ```
 或者可以利用简便的方法
 ```Objective-C
-//这里的get方法必须写，这个会自动触发
+
 - (NSString *)fullName {
     return [NSString stringWithFormat:@"%@ %@",self.firstName, self.lastName];
 }
 
+// 只要 firstName 和 lastName 有一个改变就会触发fullName的通知
+// 方式 2
 + (NSSet<NSString *> *)keyPathsForValuesAffectingFullName {
     return [NSSet setWithObjects:@"lastName", @"firstName", nil];
 }
@@ -275,55 +354,56 @@ struct temp_objc_class {
     [DeepSearch PrintDescription:@"y" obj:y];
     [DeepSearch PrintDescription:@"xy" obj:xy];
 
-    printf("Using NSObject methods, normal setX: is %p, overridden setX: is %p\n",
-    [control methodForSelector:@selector(setX:)],
-    [x methodForSelector:@selector(setX:)]);
-    printf("Using libobjc functions, normal setX: is %p, overridden setX: is %p\n",
-    method_getImplementation(class_getInstanceMethod(object_getClass(control),
-    @selector(setX:))),
-    method_getImplementation(class_getInstanceMethod(object_getClass(x),
-    @selector(setX:))));
+    printf("使用NSObject方法, 正常的 setX 地址: is %p, 重写 setX后的地址: is %p\n",
+        [control methodForSelector:@selector(setX:)],
+        [x methodForSelector:@selector(setX:)]);
+    printf("使用libobjc方法, 正常的 setX 地址: is %p, 重写 setX后的地址: is %p\n",
+        method_getImplementation(class_getInstanceMethod(object_getClass(control), @selector(setX:))),
+        method_getImplementation(class_getInstanceMethod(object_getClass(x), @selector(setX:))));
 }
 ```
 然后创建了4个DeepSearch实例，每一个都使用了不同的观察方式。x实例有一个观察者x观察key x，y实例有一个观察者y观察key y, xy实例有一个观察者观察key x和y。为了做比较，key z没有观察者。最后control实例没有任何观察者。
 下面打印的结果：
 ```Objective-C
 control: 
-当前对象 --- <DeepSearch: 0x6000017263c0>
-class_getName([obj class]) --- DeepSearch
-class_getName(c->isa) --- DeepSearch
-implements methods --- <setZ:, x, setX:, y, setY:, z>
-父类方法 --- _isMKClusterAnnotation, ...中间方法太多省略了..., isFault
-x: 
-当前对象 --- <DeepSearch: 0x600001726420>
-class_getName([obj class]) --- DeepSearch
-class_getName(c->isa) --- NSKVONotifying_DeepSearch
-implements methods --- <setY:, setX:, class, dealloc, _isKVOA>
-父类方法 --- setZ:, x, setX:, y, setY:, z
+    当前对象 --- <DeepSearch: 0x6000017263c0>
+    class_getName([obj class]) --- DeepSearch
+    class_getName(c->isa) --- DeepSearch
+    implements methods --- <setZ:, x, setX:, y, setY:, z>
+    父类方法 --- _isMKClusterAnnotation, ...中间方法太多省略了..., isFault
+    x: 
+    当前对象 --- <DeepSearch: 0x600001726420>
+    class_getName([obj class]) --- DeepSearch
+    class_getName(c->isa) --- NSKVONotifying_DeepSearch
+    implements methods --- <setY:, setX:, class, dealloc, _isKVOA>
+    父类方法 --- setZ:, x, setX:, y, setY:, z
 y: 
-当前对象 --- <DeepSearch: 0x600001726400>
-class_getName([obj class]) --- DeepSearch
-class_getName(c->isa) --- NSKVONotifying_DeepSearch
-implements methods --- <setY:, setX:, class, dealloc, _isKVOA>
-父类方法 --- setZ:, x, setX:, y, setY:, z
+    当前对象 --- <DeepSearch: 0x600001726400>
+    class_getName([obj class]) --- DeepSearch
+    class_getName(c->isa) --- NSKVONotifying_DeepSearch
+    implements methods --- <setY:, setX:, class, dealloc, _isKVOA>
+    父类方法 --- setZ:, x, setX:, y, setY:, z
 xy: 
-当前对象 --- <DeepSearch: 0x6000017263e0>
-class_getName([obj class]) --- DeepSearch
-class_getName(c->isa) --- NSKVONotifying_DeepSearch
-implements methods --- <setY:, setX:, class, dealloc, _isKVOA>
-父类方法 --- setZ:, x, setX:, y, setY:, z
-Using NSObject methods, normal setX: is 0x104e2b850, overridden setX: is 0x10518a3d2
-Using libobjc functions, normal setX: is 0x104e2b850, overridden setX: is 0x10518a3d2
+    当前对象 --- <DeepSearch: 0x6000017263e0>
+    class_getName([obj class]) --- DeepSearch
+    class_getName(c->isa) --- NSKVONotifying_DeepSearch
+    implements methods --- <setY:, setX:, class, dealloc, _isKVOA>
+    父类方法 --- setZ:, x, setX:, y, setY:, z
+    使用NSObject方法, 正常的 setX 地址: is 0x104e2b850, 重写 setX后的地址: is 0x10518a3d2
+    使用libobjc方法, 正常的 setX 地址: is 0x104e2b850, 重写 setX后的地址: is 0x10518a3d2
 
 ```
 打印结果分析：
-- `control` 没有观察任何属性通过`class_getName([obj class])`获取的是`DeepSearch`,而`x`,`y`和`xy`都观察了对象的属性，通过`class_getName([obj class])`,获取的是`NSKVONotifying_DeepSearch`，
-同样通过`class_getName(c->isa)`指针获取的当前类类对象`control`是`DeepSearch`，而`x`,`y`,`xy`是`NSKVONotifying_DeepSearch`。**所以说明确实在运行时动态创建了一个类对象，当前实例对象的isa指针指向了新的类对象**。
-- `control`通过`[self ClassMethodNames:cSuper->superclass]`获取的父类类对象方法是`NSObject`的方法，而`x`,`y`,`xy`获取的父类类对象的方法是原来的类对象的。**所以说明新创建的类对象的superclass指向了旧的类对象**。
+- `control` 没有观察任何属性，
+    1、通过`class_getName([obj class])`获取的是`DeepSearch`, 而`x`,`y`和`xy`都观察了对象的属性，通过`class_getName([obj class])`,获取的是`NSKVONotifying_DeepSearch`，
+    2、`class_getName(c->isa)`指针获取的当前类类对象`control`是`DeepSearch`，而`x`,`y`,`xy`是`NSKVONotifying_DeepSearch`。
+    **所以说明确实在运行时动态创建了一个类对象，当前实例对象的`isa`指针指向了新的类对象**。
+- `control`通过`[self ClassMethodNames:cSuper->superclass]`获取的父类类对象方法是`NSObject`的方法，而`x`,`y`,`xy`获取的父类类对象的方法是原来的类对象的。**所以说明新创建的类对象的`superclass`指向了旧的类对象**。
 - 通过上面的对比发现新创建的类对象重写了`setX`、`setY`、`class`、`dealloc`和`_isKVOA`五个方法，对于没有观察的属性`z`没有被重写。
 - 对于`class` 方法重写之后，其发消息获取的对象是旧的类对象，这是apple做了一层掩盖。如果想获取具体的类型可通过函数`object_getClass`。`dealloc`方法处理一些收尾工作。还有一个`_isKVOA`方法，看起来像是一个私有方法。
 
 demo纯属展示里面的一些细节
+
 [手动实现kvoDemo](https://github.com/tsc000/Exploration/tree/master/OverrideKVO)
 
 [mikeash大神KVO实现](https://github.com/mikeash/MAKVONotificationCenter)
