@@ -54,6 +54,8 @@ void isaTesByTerinal() {
     debug_objc_class *animalMetaClass = (__bridge struct debug_objc_class *)(animalOrinalMetaClass);
     debug_objc_class *dogMetaClass = (__bridge struct debug_objc_class *)(dogOrinalMetaClass);
 
+    
+    class_rw_t *animalClassData = animalClass->data();
     // Direct access to Objective-C's isa is deprecated in favor of object_getClass()
     NSLog(@"%p", &(objClass->isa));
     NSLog(@"adf");

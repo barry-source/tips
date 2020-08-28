@@ -153,7 +153,11 @@ struct class_rw_t {
     char *demangledName;
 };
 
+#if __LP64__
+
 #define FAST_DATA_MASK          0x00007ffffffffff8UL
+
+#endif
 
 struct class_data_bits_t {
     uintptr_t bits;

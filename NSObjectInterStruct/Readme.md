@@ -145,6 +145,7 @@ public:
         return bits.data();
     }
 };
+
 ```
 测试代码参考如下：
 ```Objective-C
@@ -171,6 +172,11 @@ debug_objc_class *dogMetaClass = (__bridge struct debug_objc_class *)(dogOrinalM
 ```
 
 ![地址流程图.jpg](https://upload-images.jianshu.io/upload_images/1846524-52aef0a86cef5ff7.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+#### 4.3、
+
+- 万能指针`id`: 
 
 ## 参考文档
 

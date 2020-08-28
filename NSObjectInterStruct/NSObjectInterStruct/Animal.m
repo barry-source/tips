@@ -9,5 +9,7 @@
 #import "Animal.h"
 
 @implementation Animal
-
+- (void)test {
+    
+}
 @end
