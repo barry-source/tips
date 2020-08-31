@@ -13,9 +13,13 @@
 
 ## 三、基本操作
 `KVC`对属性的操作主要分为：
-`基础属性`--标量(整型，浮点型等)，字符串，布尔类型，NSNumber, NSColor等
-`一对一关系的属性`--当前对象有一个对象属性，对象属性在改变自己内部属性的时候，对象属性不会改变
-`一对多关系的属性`--通过NSArray或NSSet包含的其它对象集合
+
+- `基础属性`--标量(整型，浮点型等)，字符串，布尔类型，NSNumber, NSColor等
+
+- `一对一关系的属性`--当前对象有一个对象属性，对象属性在改变自己内部属性的时候，对象属性不会改变
+
+- `一对多关系的属性`--通过NSArray或NSSet包含的其它对象集合
+
 ### 3.1 基础属性
 ```Objective-C
 //银行账户
@@ -37,8 +41,6 @@ NSLog(@"currentBalance--%@", [self.account valueForKey:@"currentBalance"]);//通
 ### 3.2 一对一关系的属性和Key Paths
 ```Objective-C
 // 个人信息
-NS_ASSUME_NONNULL_BEGIN
-
 @interface Person : NSObject
 
 @property (nonatomic, copy) NSString *name;
@@ -207,15 +209,15 @@ NSLog(@"%@",error);
 NSObject提供的NSKeyValueCoding协议的默认实现使用明确定义的一套规则将基于`Key`的访问器的调用映射到对象的内部属性。也就是说内部有自己的一套访问存取方法，实例变量和其它的一些相关方法。
 这是valueForKey:的默认实现，给定一个key当做输入参数，开始下面的步骤，在这个接收valueForKey:方法调用的类内部进行操作。
 
-- 1通过getter方法搜索实例，搜索顺序为`get<Key>`, `<key>`, `is<Key>`, `_get<Key>`,`_<key>`方法
-- 2如果相应的存取方法没找到，那么查找下面四个方法`countOf<Key>`,` get<Key>:range:`,`objectIn<Key>AtIndex:`, `<key>AtIndexes:`，第一个方法实现的情况下，剩下的三个方法实现其一就行，上面三个方法的顺序就是他们的调用优先级,此过程是响应NSArray对应的方法(看样子只是对`NSArray`类型有实际作用)，如果上面相应的方法没有实现进入步骤3
-- 3 查找`countOf<Key>`, `enumeratorOf<Key>`, `and memberOf<Key>:`方法,此过程是响应NSSet对应的方法(看样子只是对`NSSet`类型有实际作用)，如果没有找到进入步骤4
-- 4如果第3步还是没有找到，且`accessInstanceVariablesDirectly`是返回YES的。
-- 5根据顺序搜索一个名为`_<key>`、`_is<Key>`、`<key>`、`is<Key>`的实例变量，然后返回。
+- 1、通过getter方法搜索实例，搜索顺序为`get<Key>`, `<key>`, `is<Key>`, `_get<Key>`,`_<key>`方法
+- 2、如果相应的存取方法没找到，那么查找下面四个方法`countOf<Key>`,` get<Key>:range:`,`objectIn<Key>AtIndex:`, `<key>AtIndexes:`，第一个方法实现的情况下，剩下的三个方法实现其一就行，上面三个方法的顺序就是他们的调用优先级,此过程是响应NSArray对应的方法(看样子只是对`NSArray`类型有实际作用)，如果上面相应的方法没有实现进入步骤3
+- 3、 查找`countOf<Key>`, `enumeratorOf<Key>`, `and memberOf<Key>:`方法,此过程是响应NSSet对应的方法(看样子只是对`NSSet`类型有实际作用)，如果没有找到进入步骤4
+- 4、如果第3步还是没有找到，且`accessInstanceVariablesDirectly`是返回YES的。
+- 5、根据顺序搜索一个名为`_<key>`、`_is<Key>`、`<key>`、`is<Key>`的实例变量，然后返回。
 如果取回的是一个对象指针，则直接返回这个结果。
 如果取回的是一个基础数据类型，但是这个基础数据类型是被`NSNumber`支持的，则存储为`NSNumber`并返回。
 如果取回的是一个不支持`NSNumber`的基础数据类型，则通过`NSValue`进行存储并返回。
-- 6如果所有情况都失败，则调用`valueForUndefinedKey:`方法并抛出异常，这是默认行为。但是子类可以重写此方法,处理异常或什么也不操作
+- 6、如果所有情况都失败，则调用`valueForUndefinedKey:`方法并抛出异常，这是默认行为。但是子类可以重写此方法,处理异常或什么也不操作
 
 **搜索路径如下图：**
 ![搜索路径.png](https://upload-images.jianshu.io/upload_images/1846524-ba6990d6dc9909ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -223,27 +225,31 @@ NSObject提供的NSKeyValueCoding协议的默认实现使用明确定义的一�
 ## 七、基本Setter搜索模式
 这是`setValue:forKey:`的默认实现，根据给定的`key`设置相应的`value`
 
-- 查找`set<Key>:`或`_set<Key>`命名的setter，按照这个顺序，如果找到的话，调用这个方法并将值传进去(根据需要进行对象转换)。
-- 如果没有发现一个简单的setter，但是`accessInstanceVariablesDirectly`类属性返回`YES`，则查找一个命名规则为`_<key>`、`_is<Key>`、`<key>`、`is<Key>`的实例变量。根据这个顺序，如果发现则将value赋值给实例变量。
+- 1、查找`set<Key>:`或`_set<Key>`命名的setter，按照这个顺序，如果找到的话，调用这个方法并将值传进去(根据需要进行对象转换)。
+- 2、如果没有发现一个简单的setter，但是`accessInstanceVariablesDirectly`类属性返回`YES`，则查找一个命名规则为`_<key>`、`_is<Key>`、`<key>`、`is<Key>`的实例变量。根据这个顺序，如果发现则将value赋值给实例变量。
 如果没有发现setter或实例变量，则调用`setValue:forUndefinedKey:`方法，并默认抛出一个异常，子类可以重写，指定自己的行为
+
 **搜索路径如下图：**
+
 ![图片.png](https://upload-images.jianshu.io/upload_images/1846524-b5a1f1925081b096.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ## 八、可变数组搜索模式
 `mutableArrayValueForKey:`根据给定的`key`返回一个可变的`value`（可变数组）
 **`mutableArrayValueForKey:`内部调用顺序如下：**
 
-- 1实现可变数组方法`insertObject:in<Key>AtIndex:`和`removeObjectFrom<Key>AtIndex:` (对应NSMutableArray中的`insertObject:atIndex: `and `removeObjectAtIndex:)`这对操作与`insert<Key>:atIndexes: `和`remove<Key>AtIndexes:`（对应`NSMutableArray`中的`insertObjects:atIndexes`和`removeObjectsAtIndexes:`）这对操作从中选一个`insert`操作和一个`remove`操作即可。
+- 1、实现可变数组方法`insertObject:in<Key>AtIndex:`和`removeObjectFrom<Key>AtIndex:` (对应NSMutableArray中的`insertObject:atIndex: `and `removeObjectAtIndex:)`这对操作与`insert<Key>:atIndexes: `和`remove<Key>AtIndexes:`（对应`NSMutableArray`中的`insertObjects:atIndexes`和`removeObjectsAtIndexes:`）这对操作从中选一个`insert`操作和一个`remove`操作即可。
 如果还实现了操作`replaceObjectIn<Key>AtIndex:withObject:`或`replace<Key>AtIndexes:with<Key>:,`代理对象会在适当的情况下使用它们，以获得最佳性能
-- 2如果没有实现可变数组方法，那么会找相应的存取器方法`set<Key>:`方法和`<key>`方法（这个点和官方文档不太一致，实测只有同时实现setter方法和getter方法才会正常运行，否则崩溃）.set方法的搜索按`set<Key>:`，`_set<Key>`这个顺序，get方法的搜索按`get<Key>`, `<key>`, `is<Key>`, `_get<Key>`,`_<key>`这个顺序
-- 3如果第2步还是没有找到，且`accessInstanceVariablesDirectly`是返回YES的。执行第4步
-- 4按顺序搜索一个名为`_<key>`、`_is<Key>`、`<key>`、`is<Key>`的实例变量，然后返回。
-- 5如果所有情况都失败，则调用`valueForUndefinedKey:`方法并抛出异常，这是默认行为。但是子类可以重写此方法,处理异常或什么也不操作
+- 2、如果没有实现可变数组方法，那么会找相应的存取器方法`set<Key>:`方法和`<key>`方法（这个点和官方文档不太一致，实测只有同时实现setter方法和getter方法才会正常运行，否则崩溃）.set方法的搜索按`set<Key>:`，`_set<Key>`这个顺序，get方法的搜索按`get<Key>`, `<key>`, `is<Key>`, `_get<Key>`,`_<key>`这个顺序
+- 3、如果第2步还是没有找到，且`accessInstanceVariablesDirectly`是返回YES的。执行第4步
+- 4、按顺序搜索一个名为`_<key>`、`_is<Key>`、`<key>`、`is<Key>`的实例变量，然后返回。
+- 5、如果所有情况都失败，则调用`valueForUndefinedKey:`方法并抛出异常，这是默认行为。但是子类可以重写此方法,处理异常或什么也不操作
 
 **搜索路径如下图：**
 ![图片.png](https://upload-images.jianshu.io/upload_images/1846524-eb495c2393646af6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 ## 九、可变有序Set搜索模式
 `mutableOrderedSetValueForKey:`根据给定的`key`返回一个可变的`value`（有序可变Set）
 其实现流程和可变数组大致一致，不再赘述，可看[demo](https://github.com/tsc000/KVC)
+
 ## 十、可变Set搜索模式
 `mutableSetValueForKey:`,根据给定的`key`返回一个可变的`value`（可变Set）
 其实现流程和可变数组大致一致，这里只给一个流程图，具体可查看demo
