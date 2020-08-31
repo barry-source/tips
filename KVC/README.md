@@ -10,7 +10,8 @@
 
 ## 二、NSKeyValueCoding
 ![图片.png](https://upload-images.jianshu.io/upload_images/1846524-3e957ef0119543c8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/650)
-##三、基本操作
+
+## 三、基本操作
 `KVC`对属性的操作主要分为：
 `基础属性`--标量(整型，浮点型等)，字符串，布尔类型，NSNumber, NSColor等
 `一对一关系的属性`--当前对象有一个对象属性，对象属性在改变自己内部属性的时候，对象属性不会改变
@@ -135,7 +136,7 @@ KVC支持scalar和结构体，对于KVC中的value,必须是一个对象类型�
 - **结构体可以使用NSValue包裹**
 ```Objective-C
 typedef struct {
-float x, y, z;
+    float x, y, z;
 } ThreeFloats;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -148,18 +149,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 ```
 ```Objective-C
-StructValueTest *myClass = [[StructValueTest alloc] init];
-NSValue *result = [myClass valueForKey:@"threeFloats"]; 
-ThreeFloats temp;
-[result getValue:&temp];   //通过getValue获取真实的类型
-NSLog(@"修改前x-%f,y-%f,z-%f", temp.x, temp.y, temp.z);
+    StructValueTest *myClass = [[StructValueTest alloc] init];
+    NSValue *result = [myClass valueForKey:@"threeFloats"]; 
+    ThreeFloats temp;
+    [result getValue:&temp];   //通过getValue获取真实的类型
+    NSLog(@"修改前x-%f,y-%f,z-%f", temp.x, temp.y, temp.z);
 
-ThreeFloats floats = {1., 2., 3.};
-NSValue* value = [NSValue valueWithBytes:&floats objCType:@encode(ThreeFloats)];
-[myClass setValue:value forKey:@"threeFloats"]; //设置新值
-result = [myClass valueForKey:@"threeFloats"]; 
-[result getValue:&temp];   //通过getValue获取真实的类型
-NSLog(@"修改前x-%f,y-%f,z-%f", temp.x, temp.y, temp.z);
+    ThreeFloats floats = {1., 2., 3.};
+    NSValue* value = [NSValue valueWithBytes:&floats objCType:@encode(ThreeFloats)];
+    [myClass setValue:value forKey:@"threeFloats"]; //设置新值
+    result = [myClass valueForKey:@"threeFloats"]; 
+    [result getValue:&temp];   //通过getValue获取真实的类型
+    NSLog(@"修改前x-%f,y-%f,z-%f", temp.x, temp.y, temp.z);
 ```
 
 ## 五、属性的验证
@@ -177,26 +178,26 @@ NSLog(@"%@",error);
 - **验证`validateName:error:`**
 ```Objective-C
 - (BOOL)validateName:(id *)ioValue error:(NSError **)outError {
-//这里只判断类型是不是NSString类型，是返回true，否返回false
-NSString *result = (NSString *)*ioValue;
-if ([result isKindOfClass:[NSString class]]) {
-return true;
-}
-NSError *error = [[NSError alloc] initWithDomain:@"0" code:100 userInfo:@{@"info":@"type error"}];
-*outError = error;
-return false;
+    //这里只判断类型是不是NSString类型，是返回true，否返回false
+    NSString *result = (NSString *)*ioValue;
+    if ([result isKindOfClass:[NSString class]]) {
+        return true;
+    }
+    NSError *error = [[NSError alloc] initWithDomain:@"0" code:100 userInfo:@{@"info":@"type error"}];
+    *outError = error;
+    return false;
 }
 ```
 ```Objective-C
 //属性验证
 - (void)validateProperty {
-Person* person = [[Person alloc] init];
-NSError* error;
-//    NSString* name = @"John";
-NSNumber *num = [NSNumber numberWithInt:12];
-if (![person validateValue:&num forKey:@"name" error:&error]) {
-NSLog(@"%@",error);
-}
+    Person* person = [[Person alloc] init];
+    NSError* error;
+    //    NSString* name = @"John";
+    NSNumber *num = [NSNumber numberWithInt:12];
+    if (![person validateValue:&num forKey:@"name" error:&error]) {
+        NSLog(@"%@",error);
+    }
 }
 ```
 验证结果：
