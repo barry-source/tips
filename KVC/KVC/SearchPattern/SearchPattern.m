@@ -47,24 +47,24 @@
 //}
 /*********************************************************************************************************************/
 ////第二搜索梯队
-//- (NSInteger)countOfName {
-//    return self->_interalArray.count;
-//}
-//
-////优先级最高
-//- (void)getName:(id _Nonnull __unsafe_unretained [_Nonnull])objects range:(NSRange)range {
-//    [self->_interalArray getObjects:objects range:range];
-//}
-//
-////优先级其次
-//- (id)objectInNameAtIndex: (NSInteger)index {
-//    return [self->_interalArray objectAtIndex:index];
-//}
-//
-////优先级最低
-//- (NSArray<id> *)NameAtIndexes:(NSIndexSet *)indexes {
-//    return [self->_interalArray objectsAtIndexes:indexes];
-//}
+- (NSInteger)countOfName {
+    return self->_interalArray.count;
+}
+
+//优先级最高
+- (void)getName:(id _Nonnull __unsafe_unretained [_Nonnull])objects range:(NSRange)range {
+    [self->_interalArray getObjects:objects range:range];
+}
+
+//优先级其次
+- (id)objectInNameAtIndex: (NSInteger)index {
+    return [self->_interalArray objectAtIndex:index];
+}
+
+//优先级最低
+- (NSArray<id> *)NameAtIndexes:(NSIndexSet *)indexes {
+    return [self->_interalArray objectsAtIndexes:indexes];
+}
 /*********************************************************************************************************************/
 //第三搜索梯队
 //- (NSInteger)countOfName {

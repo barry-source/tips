@@ -29,10 +29,10 @@
 //    [self nestedOperator];
 //    [self nonObjectType];
 //    [self validateProperty];
-//    [self searchPattern];
+    [self searchPattern];
 //    [self mutableArraySearchPattern];
 //    [self mutableOrderedSetSearchPattern];
-    [self mutableSetSearchPath];
+//    [self mutableSetSearchPath];
 }
 
 //可变set

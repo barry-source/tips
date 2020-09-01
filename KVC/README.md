@@ -37,6 +37,10 @@
 NSLog(@"currentBalance--%@", [self.account valueForKey:@"currentBalance"]);//通过key获取属性
 [self.account setValue:@(111) forKey:@"currentBalance"];                   //通过key设置属性值
 NSLog(@"currentBalance--%@", [self.account valueForKey:@"currentBalance"]);//通过key获取属性
+
+// 打印结果：
+2020-08-31 14:26:42.267687+0800 KVC[49331:3977060] currentBalance--1000
+2020-08-31 14:26:42.267820+0800 KVC[49331:3977060] currentBalance--111
 ```
 ### 3.2 一对一关系的属性和Key Paths
 ```Objective-C
@@ -55,6 +59,10 @@ NSLog(@"currentBalance--%@", [self.account valueForKey:@"currentBalance"]);//通
 NSLog(@"name--%@", [self.account valueForKeyPath:@"owner.name"]); //通过keypath获取属性
 [self.account setValue:@"NewName" forKeyPath:@"owner.name"];      //通过keypath设置属性值
 NSLog(@"name--%@", [self.account valueForKeyPath:@"owner.name"]); //通过keypath获取属性
+
+// 打印结果：
+2020-08-31 14:26:42.267945+0800 KVC[49331:3977060] name--OldName
+2020-08-31 14:26:42.268038+0800 KVC[49331:3977060] name--NewName
 ```
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;所谓`Key Paths` 是指由一串点分隔键组成的字符串，用于指定要遍历的对象属性序列。字符串序列中的第一个键的属性是相对于接收者的(owner是 self.account的属性，接收者是self.account),子序列中的第一个键的属性是相对于前一个属性的(name是owner的属性)
 
@@ -174,7 +182,7 @@ Person* person = [[Person alloc] init];
 NSError* error;
 NSString* name = @"John";
 if (![person validateValue:&name forKey:@"name" error:&error]) {
-NSLog(@"%@",error);
+    NSLog(@"%@",error);
 }
 ```
 - **验证`validateName:error:`**
