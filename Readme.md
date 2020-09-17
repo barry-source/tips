@@ -11,5 +11,7 @@
 
 [[底层原理] KVC底层原理](https://github.com/barry-source/tips/tree/master/KVC)
 
+[[底层原理] Category的本质](https://github.com/barry-source/tips/tree/master/Category)
+
 
 
