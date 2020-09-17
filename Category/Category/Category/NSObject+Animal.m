@@ -8,13 +8,13 @@
 
 #import "NSObject+Animal.h"
 
-@implementation NSObject (Animal)
+@implementation NSObject (Animal) 
 
 - (void)animalInstanceMethod {
     
 }
 
-- (void)animalClassMethod {
++ (void)animalClassMethod {
     
 }
 

@@ -10,10 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSObject (Animal)
+@interface NSObject (Animal)<NSCopying>
+
+@property (nonatomic, assign) NSInteger age;
 
 - (void)animalInstanceMethod;
-- (void)animalClassMethod;
++ (void)animalClassMethod;
 
 @end
 

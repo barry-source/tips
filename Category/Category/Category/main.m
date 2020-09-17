@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Animal.h"
+#import "NSObject+Animal.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
-        NSLog(@"Hello, World!");
+        NSLog(@"%s", @selector(animalInstanceMethod));
     }
     return 0;
 }

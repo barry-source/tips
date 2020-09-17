@@ -4,6 +4,6 @@
 
 > Category中有load方法吗？load方法的调用时机？load 方法能继承吗？
 
-> initialize方法的调用时机
+> load、initialize在category中的调用的顺序，以及出现继承时他们之间的调用的过程
 
 > load、initialize的区别，以及它们在category重写的时候的调用的次序。
