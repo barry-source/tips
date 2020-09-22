@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "Animal.h"
-#import "NSObject+Animal.h"
+#import "Animal+Function1.h"
+#import "Animal+Function2.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        // insert code here...
-        NSLog(@"%s", @selector(animalInstanceMethod));
+        [[Animal new] animalInstanceMethod];
     }
     return 0;
 }

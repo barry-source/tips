@@ -1,18 +1,16 @@
 //
-//  Animal.h
+//  Animal+Function2.h
 //  Category
 //
-//  Created by TSC on 2020/9/16.
+//  Created by TSC on 2020/9/21.
 //  Copyright © 2020 TSC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "Animal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Animal : NSObject
-
-- (void)run;
+@interface Animal (Function2)
 
 @end
 

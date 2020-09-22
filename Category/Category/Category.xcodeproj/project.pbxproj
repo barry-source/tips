@@ -8,8 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7103B48C2511A33000DA6050 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7103B48B2511A33000DA6050 /* main.m */; };
-		7103B4942511A37E00DA6050 /* NSObject+Animal.m in Sources */ = {isa = PBXBuildFile; fileRef = 7103B4932511A37E00DA6050 /* NSObject+Animal.m */; };
 		7103B4972511A38F00DA6050 /* Animal.m in Sources */ = {isa = PBXBuildFile; fileRef = 7103B4962511A38F00DA6050 /* Animal.m */; };
+		7121F8B1251834B500981DCF /* Animal+Function1.m in Sources */ = {isa = PBXBuildFile; fileRef = 7121F8B0251834B500981DCF /* Animal+Function1.m */; };
+		7121F8B4251834C500981DCF /* Animal+Function2.m in Sources */ = {isa = PBXBuildFile; fileRef = 7121F8B3251834C500981DCF /* Animal+Function2.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,11 +28,13 @@
 /* Begin PBXFileReference section */
 		7103B4882511A33000DA6050 /* Category */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Category; sourceTree = BUILT_PRODUCTS_DIR; };
 		7103B48B2511A33000DA6050 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		7103B4922511A37E00DA6050 /* NSObject+Animal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+Animal.h"; sourceTree = "<group>"; };
-		7103B4932511A37E00DA6050 /* NSObject+Animal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Animal.m"; sourceTree = "<group>"; };
 		7103B4952511A38F00DA6050 /* Animal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Animal.h; sourceTree = "<group>"; };
 		7103B4962511A38F00DA6050 /* Animal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Animal.m; sourceTree = "<group>"; };
-		7103B4982511A44200DA6050 /* NSObject+Animal.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "NSObject+Animal.cpp"; sourceTree = "<group>"; };
+		7121F8AF251834B500981DCF /* Animal+Function1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Animal+Function1.h"; sourceTree = "<group>"; };
+		7121F8B0251834B500981DCF /* Animal+Function1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Animal+Function1.m"; sourceTree = "<group>"; };
+		7121F8B2251834C500981DCF /* Animal+Function2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Animal+Function2.h"; sourceTree = "<group>"; };
+		7121F8B3251834C500981DCF /* Animal+Function2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Animal+Function2.m"; sourceTree = "<group>"; };
+		7121F8B5251836FE00981DCF /* Animal+Function1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Animal+Function1.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,12 +67,14 @@
 		7103B48A2511A33000DA6050 /* Category */ = {
 			isa = PBXGroup;
 			children = (
-				7103B4982511A44200DA6050 /* NSObject+Animal.cpp */,
+				7121F8B5251836FE00981DCF /* Animal+Function1.cpp */,
 				7103B48B2511A33000DA6050 /* main.m */,
-				7103B4922511A37E00DA6050 /* NSObject+Animal.h */,
-				7103B4932511A37E00DA6050 /* NSObject+Animal.m */,
 				7103B4952511A38F00DA6050 /* Animal.h */,
 				7103B4962511A38F00DA6050 /* Animal.m */,
+				7121F8AF251834B500981DCF /* Animal+Function1.h */,
+				7121F8B0251834B500981DCF /* Animal+Function1.m */,
+				7121F8B2251834C500981DCF /* Animal+Function2.h */,
+				7121F8B3251834C500981DCF /* Animal+Function2.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -132,8 +137,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7103B4972511A38F00DA6050 /* Animal.m in Sources */,
+				7121F8B4251834C500981DCF /* Animal+Function2.m in Sources */,
+				7121F8B1251834B500981DCF /* Animal+Function1.m in Sources */,
 				7103B48C2511A33000DA6050 /* main.m in Sources */,
-				7103B4942511A37E00DA6050 /* NSObject+Animal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,20 +258,24 @@
 		7103B4902511A33000DA6050 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = D2M5X57582;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
 		7103B4912511A33000DA6050 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = D2M5X57582;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

@@ -10,6 +10,8 @@
 
 @implementation Animal
 
-
+- (void)run {
+    NSLog(@"Animal --- run");
+}
 
 @end
