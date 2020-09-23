@@ -106,14 +106,18 @@ struct __AtAutoreleasePool {
 };
 
 #define __OFFSETOFIVAR__(TYPE, MEMBER) ((long long) &((TYPE *)0)->MEMBER)
-static __NSConstantStringImpl __NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_1924cc_mi_0 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"Function1 --- animalInstanceMethod",34};
-static __NSConstantStringImpl __NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_1924cc_mi_1 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"%s",2};
+static __NSConstantStringImpl __NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_c6f528_mi_0 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"Function1 --- run",17};
+static __NSConstantStringImpl __NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_c6f528_mi_1 __attribute__ ((section ("__DATA, __cfstring"))) = {__CFConstantStringClassReference,0x000007c8,"Function1 --- animalInstanceMethod",34};
 
 
 
 
 
 
+
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
 
 
@@ -33861,7 +33865,7 @@ struct Animal_IMPL {
 };
 
 
-
+// - (void)run;
 
 /* @end */
 
@@ -33869,7 +33873,7 @@ struct Animal_IMPL {
 
 #pragma clang assume_nonnull begin
 
-// @interface Animal (Function1)<NSCopying>
+// @interface Animal (Function1) <NSCopying>
 
 // @property (nonatomic, assign) NSInteger age;
 
@@ -33883,9 +33887,13 @@ struct Animal_IMPL {
 // @implementation Animal (Function1)
 
 
+static void _I_Animal_Function1_run(Animal * self, SEL _cmd) {
+    NSLog((NSString *)&__NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_c6f528_mi_0);
+}
+
+
 static void _I_Animal_Function1_animalInstanceMethod(Animal * self, SEL _cmd) {
-    NSLog((NSString *)&__NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_1924cc_mi_0);
-    NSLog((NSString *)&__NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_1924cc_mi_1, self);
+    NSLog((NSString *)&__NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_c6f528_mi_1);
 }
 
 
@@ -33901,6 +33909,11 @@ static NSInteger _I_Animal_Function1_age(Animal * self, SEL _cmd) {
 
 static void _I_Animal_Function1_setAge_(Animal * self, SEL _cmd, NSInteger age) {
 
+}
+
+
+static id _Nonnull _I_Animal_Function1_copyWithZone_(Animal * self, SEL _cmd, NSZone * _Nullable zone) {
+    return ((Animal *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("Animal"), sel_registerName("new"));
 }
 
 // @end
@@ -33975,13 +33988,15 @@ extern "C" __declspec(dllimport) struct objc_cache _objc_empty_cache;
 static struct /*_method_list_t*/ {
 	unsigned int entsize;  // sizeof(struct _objc_method)
 	unsigned int method_count;
-	struct _objc_method method_list[3];
+	struct _objc_method method_list[5];
 } _OBJC_$_CATEGORY_INSTANCE_METHODS_Animal_$_Function1 __attribute__ ((used, section ("__DATA,__objc_const"))) = {
 	sizeof(_objc_method),
-	3,
-	{{(struct objc_selector *)"animalInstanceMethod", "v16@0:8", (void *)_I_Animal_Function1_animalInstanceMethod},
+	5,
+	{{(struct objc_selector *)"run", "v16@0:8", (void *)_I_Animal_Function1_run},
+	{(struct objc_selector *)"animalInstanceMethod", "v16@0:8", (void *)_I_Animal_Function1_animalInstanceMethod},
 	{(struct objc_selector *)"age", "q16@0:8", (void *)_I_Animal_Function1_age},
-	{(struct objc_selector *)"setAge:", "v24@0:8q16", (void *)_I_Animal_Function1_setAge_}}
+	{(struct objc_selector *)"setAge:", "v24@0:8q16", (void *)_I_Animal_Function1_setAge_},
+	{(struct objc_selector *)"copyWithZone:", "@24@0:8^{_NSZone=}16", (void *)_I_Animal_Function1_copyWithZone_}}
 };
 
 static struct /*_method_list_t*/ {
@@ -34044,14 +34059,23 @@ static struct /*_prop_list_t*/ {
 
 extern "C" __declspec(dllimport) struct _class_t OBJC_CLASS_$_Animal;
 
-static struct _category_t _OBJC_$_CATEGORY_Animal_$_Function1  =
+struct _category_t {
+    const char *name;
+    struct _class_t *cls;
+    const struct _method_list_t *instance_methods;
+    const struct _method_list_t *class_methods;
+    const struct _protocol_list_t *protocols;
+    const struct _prop_list_t *properties;
+};
+
+static struct _category_t _OBJC_$_CATEGORY_Animal_$_Function1 __attribute__ ((used, section ("__DATA,__objc_const"))) = 
 {
-	"Animal",
-	0, // &OBJC_CLASS_$_Animal,
-	(const struct _method_list_t *)&_OBJC_$_CATEGORY_INSTANCE_METHODS_Animal_$_Function1,
-	(const struct _method_list_t *)&_OBJC_$_CATEGORY_CLASS_METHODS_Animal_$_Function1,
-	(const struct _protocol_list_t *)&_OBJC_CATEGORY_PROTOCOLS_$_Animal_$_Function1,
-	(const struct _prop_list_t *)&_OBJC_$_PROP_LIST_Animal_$_Function1,
+	"Animal",                                                                             // name
+	0,                                                                                    // cls -> &OBJC_CLASS_$_Animal,
+	(const struct _method_list_t *)&_OBJC_$_CATEGORY_INSTANCE_METHODS_Animal_$_Function1, // instance_methods
+	(const struct _method_list_t *)&_OBJC_$_CATEGORY_CLASS_METHODS_Animal_$_Function1,    // class_methods
+	(const struct _protocol_list_t *)&_OBJC_CATEGORY_PROTOCOLS_$_Animal_$_Function1,      // protocols
+	(const struct _prop_list_t *)&_OBJC_$_PROP_LIST_Animal_$_Function1,                   // properties
 };
 
 static void OBJC_CATEGORY_SETUP_$_Animal_$_Function1(void ) {

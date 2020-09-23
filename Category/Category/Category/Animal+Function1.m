@@ -19,6 +19,7 @@
 
 - (void)animalInstanceMethod {
     NSLog(@"Function1 --- animalInstanceMethod");
+    NSLog(@"%@--%s", self, _cmd);
 }
 
 + (void)animalClassMethod {
