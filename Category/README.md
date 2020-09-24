@@ -8,6 +8,7 @@
 
 > load、initialize的区别，以及它们在category重写的时候的调用的次序。
 
+下面先来段测试代码
 
 ```Objective-C
 
@@ -160,9 +161,9 @@ struct _objc_method {
 };
 ```
 
-```Objective-C
 objc_selector * 和 SEL 是等价的，其源码描述如下：
 
+```Objective-C
 /// An opaque type that represents a method selector.
 typedef struct objc_selector *SEL; 
 ```
@@ -432,3 +433,7 @@ static struct /*_prop_list_t*/ {
     {{"age","Tq,N"}}
 };
 ```
+
+下面以一张对分类的结构做个总结
+
+![category结构图.jpg](https://upload-images.jianshu.io/upload_images/1846524-30b244e8bb546e2d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
