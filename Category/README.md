@@ -239,6 +239,37 @@ func(@"test", @selector(run));
 
 ```
 
+另外Clang命令生成的方法中也可验证，代码展示如下：
+
+```
+static void _I_Animal_Function1_run(Animal * self, SEL _cmd) {
+    NSLog((NSString *)&__NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_c6f528_mi_0);
+}
+
+static void _I_Animal_Function1_animalInstanceMethod(Animal * self, SEL _cmd) {
+    NSLog((NSString *)&__NSConstantStringImpl__var_folders_ds_rx2r4gh92f90vnk3_x0v2qcc0000gn_T_Animal_Function1_c6f528_mi_1);
+}
+
+static void _C_Animal_Function1_animalClassMethod(Class self, SEL _cmd) {
+
+}
+
+static NSInteger _I_Animal_Function1_age(Animal * self, SEL _cmd) {
+    return 10;
+}
+
+static void _I_Animal_Function1_setAge_(Animal * self, SEL _cmd, NSInteger age) {
+
+}
+
+static id _Nonnull _I_Animal_Function1_copyWithZone_(Animal * self, SEL _cmd, NSZone * _Nullable zone) {
+    return ((Animal *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("Animal"), sel_registerName("new"));
+}
+
+```
+每一个方法的参数一定包含一个对象self(在这里类型是`Animal`), 和一个_cmd变量。
+
+
 总结一下：
 
 - SEL: selector的简写, 方法选择器,实质存储的是方法的名称
@@ -251,7 +282,7 @@ func(@"test", @selector(run));
 
 命令生成：
 
-```
+```Objective-C
 struct _prop_t {
     const char *name;
     const char *attributes;
@@ -280,12 +311,12 @@ OC的底层生成了一个名为 `_OBJC_$_CATEGORY_Animal_$_Function1`类型为`
 
 - ###### cls
 classref_t 的定义如下
-```
+```Objective-C
 // classref_t is unremapped class_t*  // classref_t是未进行重新映射的class_t
 typedef struct classref * classref_t;
 ```
 `class_t`的实现源码中并未公开，不过在Clang生成的源码中可以发现可能过时的定义(说过期是因为可能内部的构造被更改了)
-```
+```Objective-C
 struct _class_t {
     struct _class_t *isa;
     struct _class_t *superclass;
@@ -299,7 +330,7 @@ struct _class_t {
 - ###### instanceMethods
 
 instanceMethods 的值被 `_OBJC_$_CATEGORY_INSTANCE_METHODS_Animal_$_Function1` 变量填充，其定义如下：
-```
+```Objective-C
 static struct /*_method_list_t*/ {
     unsigned int entsize;                // sizeof(struct _objc_method)，每个方法结构体占用的大小，利用 method_count * entsize即得出所有方法占用的空间
     unsigned int method_count;           // 包含的方法数量
@@ -321,7 +352,7 @@ static struct /*_method_list_t*/ {
 
 classMethods 的结构和instanceMethods是一致的，具体可以查看下面的源码
 
-```
+```Objective-C
 static struct /*_method_list_t*/ {
     unsigned int entsize;  // sizeof(struct _objc_method)
     unsigned int method_count;
@@ -336,7 +367,7 @@ static struct /*_method_list_t*/ {
 
 首先简单介绍下_protocol_t
 源码中protocol_t的定义如下(定义特别长，只截取部分展示)：
-```
+```Objective-C
 struct protocol_t : objc_object {
     const char *mangledName;
     struct protocol_list_t *protocols;
@@ -362,7 +393,7 @@ struct protocol_t : objc_object {
 从上面可以看出 它是继承`objc_object`，所以具备`objc_object`的一些特性
 
 
-```
+```Objective-C
 static struct /*_protocol_list_t*/ {
     long protocol_count;  // Note, this is 32/64 bit
     struct _protocol_t *super_protocols[1];
@@ -390,7 +421,7 @@ struct _protocol_t _OBJC_PROTOCOL_NSCopying __attribute__ ((used)) = {
 
 变量`_OBJC_$_PROP_LIST_Animal_$_Function1`在Clang中的定义如下：
 
-```
+```Objective-C
 static struct /*_prop_list_t*/ {
     unsigned int entsize;  // sizeof(struct _prop_t)
     unsigned int count_of_properties;
