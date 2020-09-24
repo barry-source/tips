@@ -218,7 +218,7 @@ IMP 就是一个函数指针，其在源码中的定义如下：
 ```Objective-C
 typedef void (*IMP)(void /* id, SEL, ... */ ); 
 ```
-上面已明确提示出，IMP一定包括id和SEL类型，也就是说方法内部会包含两个隐藏的参数self和_cmd，它们的类型就是对应的id和SEL
+上面已明确指出，IMP一定包括id和SEL类型，也就是说方法内部会包含两个隐藏的参数self和_cmd，它们的类型就是对应的id和SEL
 验证如下:
 
 ```Objective-C
@@ -245,14 +245,159 @@ func(@"test", @selector(run));
 - IMP: implement的简写, 方法实现,源码中它就是一个函数指针
 - method_type: 描述方法的参数和返回值类型
 
+#### 1.2、prop_t属性定义
 
-- 分类的构造
+源码中没有发现`prop_t`的定义。
 
-利用clang生成的代码中可以发现 分类*Animal+Function2.m*的的定义，如下图展示：
+命令生成：
+
+```
+struct _prop_t {
+    const char *name;
+    const char *attributes;
+};
+
+```
+由上看出属性包含了名字和特征两个字段。
+名字即为代码中出现的属性名。例如 `@property (nonatomic, assign) NSInteger age;`这是name = age
+特征表明这个属性是什么类型和有哪些修饰关键字，例如：`{"age","Tq,N"}` 中 `T -> Type` ，`q -> long long` , `N -> nonatomic`等
+
+
+
+#### 1.3、分类的构造
+
+利用clang生成的代码中可以发现 分类`Animal+Function2.m`的的定义，如下图展示：
 
 ![category.png](https://upload-images.jianshu.io/upload_images/1846524-713588a5e0d3131a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 从上图可以发现
-OC的底层生成了一个名为 _OBJC_$_CATEGORY_Animal_$_Function1类型为*struct _category_t*的变量，_OBJC_$_CATEGORY_Animal_$_Function1 变量的值已经被对应的数据进行填充。
+OC的底层生成了一个名为 `_OBJC_$_CATEGORY_Animal_$_Function1`类型为`struct _category_t*`的变量，`_OBJC_$_CATEGORY_Animal_$_Function1` 变量的值已经被对应的数据进行填充。
+
+下面展示下对应的数据
+
+- ###### name
+`Animal_$_Function1`的原类为`Animal`,所以这里的值 是`Animal`
+
+- ###### cls
+classref_t 的定义如下
+```
+// classref_t is unremapped class_t*  // classref_t是未进行重新映射的class_t
+typedef struct classref * classref_t;
+```
+`class_t`的实现源码中并未公开，不过在Clang生成的源码中可以发现可能过时的定义(说过期是因为可能内部的构造被更改了)
+```
+struct _class_t {
+    struct _class_t *isa;
+    struct _class_t *superclass;
+    void *cache;
+    void *vtable;
+    struct _class_ro_t *ro;
+};
+```
+前三项是和`objc_class`结构体的定义保持一致
+
+- ###### instanceMethods
+
+instanceMethods 的值被 `_OBJC_$_CATEGORY_INSTANCE_METHODS_Animal_$_Function1` 变量填充，其定义如下：
+```
+static struct /*_method_list_t*/ {
+    unsigned int entsize;                // sizeof(struct _objc_method)，每个方法结构体占用的大小，利用 method_count * entsize即得出所有方法占用的空间
+    unsigned int method_count;           // 包含的方法数量
+    struct _objc_method method_list[5];  // _objc_method 类型上面已经描述过 
+} _OBJC_$_CATEGORY_INSTANCE_METHODS_Animal_$_Function1 __attribute__ ((used, section ("__DATA,__objc_const"))) = {
+    sizeof(_objc_method),
+    5,
+    {{(struct objc_selector *)"run", "v16@0:8", (void *)_I_Animal_Function1_run},
+    {(struct objc_selector *)"animalInstanceMethod", "v16@0:8", (void *)_I_Animal_Function1_animalInstanceMethod},
+    {(struct objc_selector *)"age", "q16@0:8", (void *)_I_Animal_Function1_age},
+    {(struct objc_selector *)"setAge:", "v24@0:8q16", (void *)_I_Animal_Function1_setAge_},
+    {(struct objc_selector *)"copyWithZone:", "@24@0:8^{_NSZone=}16", (void *)_I_Animal_Function1_copyWithZone_}}
+};
+```
+上述代码中下面一部分可以看出分类中包含的`run` 、`animalInstanceMethod`， `age`， `setAge:`， `copyWithZone` 五个实例方法以及对应的方法类型和方法实现
 
 
+- ###### classMethods
+
+classMethods 的结构和instanceMethods是一致的，具体可以查看下面的源码
+
+```
+static struct /*_method_list_t*/ {
+    unsigned int entsize;  // sizeof(struct _objc_method)
+    unsigned int method_count;
+    struct _objc_method method_list[1];
+} _OBJC_$_CATEGORY_CLASS_METHODS_Animal_$_Function1 __attribute__ ((used, section ("__DATA,__objc_const"))) = {
+    sizeof(_objc_method),
+    1,
+    {{(struct objc_selector *)"animalClassMethod", "v16@0:8", (void *)_C_Animal_Function1_animalClassMethod}}
+};
+```
+- ###### protocols
+
+首先简单介绍下_protocol_t
+源码中protocol_t的定义如下(定义特别长，只截取部分展示)：
+```
+struct protocol_t : objc_object {
+    const char *mangledName;
+    struct protocol_list_t *protocols;
+    method_list_t *instanceMethods;
+    method_list_t *classMethods;
+    method_list_t *optionalInstanceMethods;
+    method_list_t *optionalClassMethods;
+    property_list_t *instanceProperties;
+    uint32_t size;   // sizeof(protocol_t)
+    uint32_t flags;
+    // Fields below this point are not always present on disk.
+    const char **_extendedMethodTypes;
+    const char *_demangledName;
+    property_list_t *_classProperties;
+
+    const char *demangledName();
+
+    const char *nameForLogging() {
+    return demangledName();
+}
+```
+
+从上面可以看出 它是继承`objc_object`，所以具备`objc_object`的一些特性
+
+
+```
+static struct /*_protocol_list_t*/ {
+    long protocol_count;  // Note, this is 32/64 bit
+    struct _protocol_t *super_protocols[1];
+} _OBJC_CATEGORY_PROTOCOLS_$_Animal_$_Function1 __attribute__ ((used, section ("__DATA,__objc_const"))) = {
+    1,
+    &_OBJC_PROTOCOL_NSCopying
+};
+
+struct _protocol_t _OBJC_PROTOCOL_NSCopying __attribute__ ((used)) = {
+    0,  // isa指针为空                    
+    "NSCopying",   // 协议名
+    0,             // 协议列表为空
+    (const struct method_list_t *)&_OBJC_PROTOCOL_INSTANCE_METHODS_NSCopying,   // 协议目前只有一个实例方法
+    0,             // 类方法列表为空
+    0,             // 可选实例方法列表为空
+    0,             // 可选类方法列表为空
+    0,             // 实例属性列表为空
+    sizeof(_protocol_t), // _protocol_t占用大小
+    0,             // flags
+    (const char **)&_OBJC_PROTOCOL_METHOD_TYPES_NSCopying // 方法类型列表
+};
+```
+
+- ###### properties
+
+变量`_OBJC_$_PROP_LIST_Animal_$_Function1`在Clang中的定义如下：
+
+```
+static struct /*_prop_list_t*/ {
+    unsigned int entsize;  // sizeof(struct _prop_t)
+    unsigned int count_of_properties;
+    struct _prop_t prop_list[1];
+} _OBJC_$_PROP_LIST_Animal_$_Function1 __attribute__ ((used, section ("__DATA,__objc_const"))) = {
+    sizeof(_prop_t),    
+    1,
+    {{"age","Tq,N"}}
+};
+```
