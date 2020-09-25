@@ -534,30 +534,31 @@ map_images_nolock(unsigned mhCount, const char * const mhPaths[],
                 // no objc data in this entry
                 continue;
             }
-            ....
-            省略代码
-            ....
+            
+            /**************
+                省略代码
+            **************/
             
             hList[hCount++] = hi;
             
-            ....
-            省略代码
-            ....
+            /**************
+                省略代码
+            **************/
         }
     }
     
-    ....
-    省略代码
-    ....
+    /**************
+        省略代码
+    **************/
     
     // 这里根据计算出的数据进行模块的读取
     if (hCount > 0) {
         _read_images(hList, hCount, totalClasses, unoptimizedTotalClasses);
     }
     
-    ....
-    省略代码
-    ....
+    /**************
+        省略代码
+    **************/
 }
 ```
 -  _read_images 函数
@@ -584,9 +585,9 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
     hIndex < hCount && (hi = hList[hIndex]); \
     hIndex++
     
-    ....
-    省略代码
-    ....
+    /**************
+        省略代码
+    **************/
     
     
     // Discover categories. Only do this after the initial category
@@ -601,9 +602,9 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
         }
     }
     
-    ....
+    /**************
     省略代码
-    ....
+    **************/
 }
 ```
 
@@ -656,9 +657,9 @@ static void load_categories_nolock(header_info *hi) {
             ....
             // Process this category.
             if (cls->isStubClass()) {
-                ....
-                省略代码
-                ....
+                /**************
+                    省略代码
+                **************/
             } else {
                 // 这里处理分类的实例方法，attachCategories是最终处理分类的方法
                 if (cat->instanceMethods ||  cat->protocols
@@ -823,7 +824,10 @@ void attachLists(List* const * addedLists, uint32_t addedCount) {
 }
 ```
 
-列表的拼接分了三种情况，1：lists列表中存在多条数据， 2：lists中列表只存在一个元素，3：lists列表中不存在数据且addedLists列表只有一个元素， 
+列表的拼接分了三种情况，
+- 1：lists列表中存在多条数据，
+- 2：lists中列表只存在一个元素，
+- 3：lists列表中不存在数据且addedLists列表只有一个元素， 
 
 对于情况3，只需要取出addedLists列表中的首个元素赋给lists列表即可
 
@@ -832,3 +836,26 @@ void attachLists(List* const * addedLists, uint32_t addedCount) {
 
 对于情况2，逻辑展示如下图：
 ![cat](https://upload-images.jianshu.io/upload_images/1846524-8069573f5b5237ab.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+- 一个注意点
+
+在设置分类列表的时候，会出现`setArray` 、`hasArray`等相关方法,如下图
+
+```
+bool hasArray() const {
+    return arrayAndFlag & 1;
+}
+
+array_t *array() const {
+    return (array_t *)(arrayAndFlag & ~1);
+}
+
+void setArray(array_t *array) {
+    arrayAndFlag = (uintptr_t)array | 1;
+}
+```
+
+在`setArray`的时候会取出参数`array`的地址，然后将最后一位置1,在取`array`的时候（ 调用`array()` ），又会将最后一位复位，有一个疑问就是在置位的时候如果地址的最后一位是个1，然后再调用array()的时候不就出现了问题。
+其实这个问题不会出现。原因是内存对齐和arrayAndFlag的类型是`uintptr_t`，它占用4个字节，即偶数个字节，所以在内存对齐的时候，分配给`arrayAndFlag`的地址必然是2的倍数，所以地址的最后一位一定是0。如果类型占用奇数个字节就会可能出现地址为1的情况，比如：char类型
+
+到此，分类的加载过程结束
