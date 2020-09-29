@@ -10,6 +10,14 @@
 
 @implementation Animal
 
++ (void)initialize {
+    
+}
+
++ (void)load {
+    NSLog(@"Animal --- load");
+}
+
 - (void)run {
     NSLog(@"Animal --- run");
 }

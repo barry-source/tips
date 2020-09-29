@@ -494,7 +494,7 @@ map_images 函数内部调用了`map_images_nolock`,并传入相应的mach-o hea
 
 这里源码比较长，下面截取研究分类流程部分
 
-```
+```Objective-C
 void 
 map_images_nolock(unsigned mhCount, const char * const mhPaths[],
                  const struct mach_header * const mhdrs[])
@@ -564,7 +564,7 @@ map_images_nolock(unsigned mhCount, const char * const mhPaths[],
 -  _read_images 函数
 
 
-```
+```Objective-C
 void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int unoptimizedTotalClasses)
 {
     header_info *hi;
@@ -611,7 +611,7 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
 上面有部分处理分类的代码，其中`didInitialAttachCategories`变量值默认是false,它只有在load_images中才会变成true，源码展示如下：
 
 
-```
+```Objective-C
 static bool didInitialAttachCategories = false;
 
 void
@@ -644,7 +644,7 @@ load_images(const char *path __unused, const struct mach_header *mh)
 
 接下来进入`load_categories_nolock`函数，这里主要装载分类。
 
-```
+```Objective-C
 static void load_categories_nolock(header_info *hi) {
 
     bool hasClassProperties = hi->info()->hasCategoryClassProperties();
@@ -695,8 +695,7 @@ static void load_categories_nolock(header_info *hi) {
 
 源码和相关解释如下
 
-```
-
+```Objective-C
 // Attach method lists and properties and protocols from categories to a class.
 // Assumes the categories in cats are all loaded and sorted by load order, 
 // oldest categories first.
@@ -793,7 +792,7 @@ attachCategories(Class cls, const locstamped_category_t *cats_list, uint32_t cat
 
 下面是将分类中的数据拼接到类上的具体操作，源码如下：
 
-```
+```Objective-C
 void attachLists(List* const * addedLists, uint32_t addedCount) {
     if (addedCount == 0) return;
 
@@ -837,11 +836,14 @@ void attachLists(List* const * addedLists, uint32_t addedCount) {
 对于情况2，逻辑展示如下图：
 ![c2](https://upload-images.jianshu.io/upload_images/1846524-be7ee224ac4e43ff.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
+
+对于协议和属性的处理和上述类似，不再赘述。
+
 - 一个注意点
 
 在设置分类列表的时候，会出现`setArray` 、`hasArray`等相关方法,如下图
 
-```
+```Objective-C
 bool hasArray() const {
     return arrayAndFlag & 1;
 }
@@ -859,3 +861,78 @@ void setArray(array_t *array) {
 其实这个问题不会出现。原因是内存对齐和arrayAndFlag的类型是`uintptr_t`，它占用4个字节，即偶数个字节，所以在内存对齐的时候，分配给`arrayAndFlag`的地址必然是2的倍数，所以地址的最后一位一定是0。如果类型占用奇数个字节就会可能出现地址为1的情况，比如：char类型
 
 到此，分类的加载过程结束
+
+## 二、load的加载过程
+
+上述讲解分类的过程中有个`load_images`方法，里面有个`call_load_methods`方法调用，这里即是处理所有的`+ load`方法。
+
+#### 2.1 call_load_methods函数
+
+```Objective-C
+void call_load_methods(void)
+{
+    static bool loading = NO;
+    bool more_categories;
+
+    loadMethodLock.assertLocked();
+
+    // Re-entrant calls do nothing; the outermost call will finish the job.
+    if (loading) return;
+    loading = YES;
+
+    void *pool = objc_autoreleasePoolPush();
+
+    do {
+        // 1. Repeatedly call class +loads until there aren't any more
+        while (loadable_classes_used > 0) {
+        call_class_loads();
+    }
+
+    // 2. Call category +loads ONCE
+    more_categories = call_category_loads();
+
+    // 3. Run more +loads if there are classes OR more untried categories
+    } while (loadable_classes_used > 0  ||  more_categories);
+
+    objc_autoreleasePoolPop(pool);
+
+    loading = NO;
+}
+```
+源码之前有一段注释，注释里面已经清晰的标明了调用的流程：
+
+```Objective-C
+* 1. Repeatedly call class +loads until there aren't any more
+* 2. Call category +loads ONCE.
+* 3. Run more +loads if:
+*    (a) there are more classes to load, OR
+*    (b) there are some potential category +loads that have 
+*        still never been attempted.
+```
+
+- 1、首先调用所有类的 `+load`的方法
+- 2、所有再调用所有分类的`+load`的方法，只调用一次
+- 3、如果还有未加载的类和分类，按上述操作再次进行处理
+
+`call_class_loads`函数处理所有的类中的`+load`方法
+`call_category_loads`函数处理所有的分类中的`+load`方法
+
+`call_class_loads`函数中有个`loadable_classes`变量,变量的定义如下：
+
+```Objective-C
+// List of classes that need +load called (pending superclass +load)
+// This list always has superclasses first because of the way it is constructed
+// 由于构造方式的问题，父类的+ load方法总是优先调用
+static struct loadable_class *loadable_classes = nil;
+```
+
+
+## 二、initialize的加载过程
+
+先利用Xcode 中bt 命令查看`initialize`调用堆栈，展示如下图：
+
+![image.png](https://upload-images.jianshu.io/upload_images/1846524-af0ea2016c5a6d28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+`_objc_msgSend_uncached`是在汇编中进行处理，源码中我们能找到的只有`lookUpImpOrForward`
+
+

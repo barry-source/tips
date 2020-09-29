@@ -32,11 +32,10 @@ typedef void (*Test)(int);
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         
+    
         Animal *animal = [Animal new];
         [animal run];
-        
-//        Animal *animal = [Animal new];
-//
+
 //        [Animal animalClassMethod];
 //        // 获取selector
 //        SEL selector = @selector(animalInstanceMethod);
