@@ -137,8 +137,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7103B4972511A38F00DA6050 /* Animal.m in Sources */,
-				7121F8B4251834C500981DCF /* Animal+Function2.m in Sources */,
 				7121F8B1251834B500981DCF /* Animal+Function1.m in Sources */,
+				7121F8B4251834C500981DCF /* Animal+Function2.m in Sources */,
 				7103B48C2511A33000DA6050 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

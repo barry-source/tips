@@ -31,17 +31,21 @@ typedef void (*Test)(int);
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
+        
         Animal *animal = [Animal new];
-
-        [Animal animalClassMethod];
-        // 获取selector
-        SEL selector = @selector(animalInstanceMethod);
-        // 获取animal中对应selector的方法实现
-        IMP imp = [animal methodForSelector: selector];
-        // 构造一个和IMP一样的函数指针，参数必须包括id和SEL两个参数,少则报错，多不影响
-        void (*func)(id, SEL) = (void *)imp;
-        // 下面故意将两个参数的值修改成其它
-        func(@"test", @selector(run));
+        [animal run];
+        
+//        Animal *animal = [Animal new];
+//
+//        [Animal animalClassMethod];
+//        // 获取selector
+//        SEL selector = @selector(animalInstanceMethod);
+//        // 获取animal中对应selector的方法实现
+//        IMP imp = [animal methodForSelector: selector];
+//        // 构造一个和IMP一样的函数指针，参数必须包括id和SEL两个参数,少则报错，多不影响
+//        void (*func)(id, SEL) = (void *)imp;
+//        // 下面故意将两个参数的值修改成其它
+//        func(@"test", @selector(run));
         
 //        struct objc_selector *s = {{"firstVar"}, 100};
 //        NSLog(@"%s", s);

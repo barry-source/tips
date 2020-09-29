@@ -832,10 +832,10 @@ void attachLists(List* const * addedLists, uint32_t addedCount) {
 对于情况3，只需要取出addedLists列表中的首个元素赋给lists列表即可
 
 对于情况1，逻辑展示如下图：
-![category](https://upload-images.jianshu.io/upload_images/1846524-ab3a1eddb6c2eb88.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![c1](https://upload-images.jianshu.io/upload_images/1846524-c9464573d701fa9d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 对于情况2，逻辑展示如下图：
-![cat](https://upload-images.jianshu.io/upload_images/1846524-8069573f5b5237ab.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![c2](https://upload-images.jianshu.io/upload_images/1846524-be7ee224ac4e43ff.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 - 一个注意点
 
