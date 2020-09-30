@@ -6,7 +6,6 @@
 
 > load、initialize在category中的调用的顺序，以及出现继承时他们之间的调用的过程
 
-> load、initialize的区别，以及它们在category重写的时候的调用的次序。
 
 下面先来段测试代码
 
@@ -603,7 +602,7 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
     }
     
     /**************
-    省略代码
+        省略代码
     **************/
 }
 ```
@@ -652,9 +651,9 @@ static void load_categories_nolock(header_info *hi) {
     size_t count;
     auto processCatlist = [&](category_t * const *catlist) {
         for (unsigned i = 0; i < count; i++) {
-            ....
-            省略代码
-            ....
+            /**************
+                省略代码
+            **************/
             // Process this category.
             if (cls->isStubClass()) {
                 /**************
@@ -934,5 +933,141 @@ static struct loadable_class *loadable_classes = nil;
 ![image.png](https://upload-images.jianshu.io/upload_images/1846524-af0ea2016c5a6d28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 `_objc_msgSend_uncached`是在汇编中进行处理，源码中我们能找到的只有`lookUpImpOrForward`
+
+`lookUpImpOrForward`部分源码如下：
+
+```Objective-C
+IMP lookUpImpOrForward(id inst, SEL sel, Class cls, int behavior)
+{
+    const IMP forward_imp = (IMP)_objc_msgForward_impcache;
+    IMP imp = nil;
+    Class curClass;
+
+    runtimeLock.assertUnlocked();
+
+    // Optimistic cache lookup
+    if (fastpath(behavior & LOOKUP_CACHE)) {
+        imp = cache_getImp(cls, sel);
+        if (imp) goto done_nolock;
+    }
+    runtimeLock.lock();
+
+    checkIsKnownClass(cls);
+
+    if (slowpath(!cls->isRealized())) {
+        cls = realizeClassMaybeSwiftAndLeaveLocked(cls, runtimeLock);
+        // runtimeLock may have been dropped but is now locked again
+    }
+
+    if (slowpath((behavior & LOOKUP_INITIALIZE) && !cls->isInitialized())) {
+        cls = initializeAndLeaveLocked(cls, inst, runtimeLock);
+    }
+
+    /**************
+        省略代码
+    **************/
+    return imp;
+}
+```
+内部调用了`initializeAndLeaveLocked`函数
+
+`initializeAndLeaveLocked`源码如下：
+```Objective-C
+static Class initializeAndLeaveLocked(Class cls, id obj, mutex_t& lock)
+{
+    return initializeAndMaybeRelock(cls, obj, lock, true);
+}
+```
+`initializeAndMaybeRelock`部分源码如下：
+```Objective-C
+static Class initializeAndMaybeRelock(Class cls, id inst,
+mutex_t& lock, bool leaveLocked)
+{
+
+    /**************
+        省略代码
+    **************/
+    // runtimeLock is now unlocked, for +initialize dispatch
+    ASSERT(nonmeta->isRealized());
+    initializeNonMetaClass(nonmeta);
+
+    if (leaveLocked) runtimeLock.lock();
+    return cls;
+}
+```
+`initializeNonMetaClass`部分源码如下：
+
+```Objective-C
+/***********************************************************************
+* class_initialize.  Send the '+initialize' message on demand to any
+* uninitialized class. Force initialization of superclasses first.
+**********************************************************************/
+void initializeNonMetaClass(Class cls)
+{
+    ASSERT(!cls->isMetaClass());
+
+    Class supercls;
+    bool reallyInitialize = NO;
+
+    // Make sure super is done initializing BEFORE beginning to initialize cls.
+    // See note about deadlock above.
+    // 优先处理父类的初始化方法
+    supercls = cls->superclass;
+    if (supercls  &&  !supercls->isInitialized()) {
+        initializeNonMetaClass(supercls);
+    }
+
+    /**************
+        省略代码
+    **************/
+    @try
+    {
+        // 初始化之后调用callInitialize函数
+        callInitialize(cls);
+
+        if (PrintInitializing) {
+            _objc_inform("INITIALIZE: thread %p: finished +[%s initialize]",
+            objc_thread_self(), cls->nameForLogging());
+        }
+    }
+    /**************
+        省略代码
+    **************/
+}
+
+```
+
+`callInitialize`源码如下：
+
+```Objective-C
+void callInitialize(Class cls)
+{
+    ((void(*)(Class, SEL))objc_msgSend)(cls, @selector(initialize));
+    asm("");
+}
+```
+
+从上可以看出`initialize`方法就是普通的方法调用。即给对象发消息。那么它的调用过程也就是方法查找的过程 。
+
+### 总结
+
+
+> Category的实现原理，Category能不能加属性。如果不能，为什么？
+
+实现原理如文章所述。简述，在编译的时候分类会形成自己的结构，在运行时会把这些结构数据加载到原类中。这些结构中不包含变量信息(即原类中的ivar)，也就说不能添加变量。
+可以添加属性，但是属性没有对应的变量，而属性的set get方法需要自己实现。
+
+
+> Category中有load方法吗？load方法的调用时机？load 方法能继承吗？
+有，load方法的调用是在原类的load方法调用之后。可以继承
+
+> load、initialize在category中的调用的顺序，以及出现继承时他们之间的调用的过程
+
+load: 先调用原类的load方法，如果原类有父类，那么先调用父类的load方法，直到所有原类调用结束，
+再调用分类的load方法，分类的load方法调用顺序是谁在最后谁先调用，每个分类的load方法都会调用。
+
+initialize： 在第一次给对象发消息时调用。实质也是给对象发送消息。
+原类和父类同时实现initialize会先调用父类的initialize方法（前提是写了super 方式调用），再调用原类的initialize方法。
+分类实现了initialize方法，会优先调用分类的。
 
 
