@@ -37,6 +37,7 @@ void blockType() {
 }
 
 ```
+
 验证结果如下：
 
 ![Block类型验证.png](https://upload-images.jianshu.io/upload_images/1846524-aa02579d106e61fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -46,6 +47,73 @@ void blockType() {
 Block三种类型的存储区域如下图所示：
 
 ![Block存储区域.jpg](https://upload-images.jianshu.io/upload_images/1846524-f05c17653a1456c4.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+###  3、 Block实质
+
+利用`Clang`命令可以将`OC`代码转换成底层的`c++`代码，大致看下底层的内部构造，当然也可以通过苹果官方提供的源码查看。
+
+#### 3.1 无参无返回值Block底层构造
+
+源码如下：
+```python
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        void (^blk)(void) = ^{
+            
+        };
+        
+        blk();
+    }
+    return 0;
+}
+```
+转换之后的代码如下：
+```python
+// block的定义
+struct __block_impl {
+  void *isa;
+  int Flags;
+  int Reserved;
+  void *FuncPtr;
+};
+
+// main函数中blk的底层构造
+struct __main_block_impl_0 {
+  struct __block_impl impl;         // block的实现
+  struct __main_block_desc_0* Desc; // block的描述
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) { // 构造函数
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+
+// 外部的block执行代码被转换成了c语言的普通静态函数
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+    printf("Block\n");
+}
+
+static struct __main_block_desc_0 {
+  size_t reserved;      // 保留字段
+  size_t Block_size;    // Block结构体大小
+} __main_block_desc_0_DATA = { 0, sizeof(struct __main_block_impl_0)};
+
+int main(int argc, const char * argv[]) {
+    /* @autoreleasepool */ { __AtAutoreleasePool __autoreleasepool; 
+        void (*blk)(void) = ((void (*)())&__main_block_impl_0((void *)__main_block_func_0, &__main_block_desc_0_DATA));
+        ((void (*)(__block_impl *))((__block_impl *)blk)->FuncPtr)((__block_impl *)blk);
+        
+        // 简化代码
+        blk = __main_block_impl_0(
+                                  __main_block_func_0,
+                                  &__main_block_desc_0_DATA
+                                  );
+        blk->FuncPtr(blk);
+    }
+    return 0;
+}
+```
 
 ## 参考文档
 
