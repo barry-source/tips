@@ -1059,6 +1059,7 @@ void callInitialize(Class cls)
 
 
 > Category中有load方法吗？load方法的调用时机？load 方法能继承吗？
+
 有，load方法的调用是在原类的load方法调用之后。可以继承
 
 > load、initialize在category中的调用的顺序，以及出现继承时他们之间的调用的过程
