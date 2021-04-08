@@ -157,8 +157,11 @@ typedef struct NCTbl {
 
 ```
 因为添加观察者(`addObserver`)的时候 `name` 和`object`都是可选的，所以 `NCTbl`将三种可能情况都进行了考虑：
+
 一是`name`和`object`都不存在，这时所有的观察者都放入了`wildcard`中
+
 二是`name`存在，后续的操作都放入到`named`中（这里会包括`object`不存在的情况）
+
 三是`name`不存在，后续的操作都放入到`nameless`中
 
 第一、二种情况的结构展示如下图：
