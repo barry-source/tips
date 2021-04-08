@@ -34,24 +34,24 @@ open class NSNotification : NSObject, NSCopying, NSCoding {
 ```python
 public struct Notification : ReferenceConvertible, Equatable, Hashable {
 
-public typealias ReferenceType = NSNotification
+    public typealias ReferenceType = NSNotification
 
-/// A tag identifying the notification.
-public var name: Notification.Name
+    /// A tag identifying the notification.
+    public var name: Notification.Name
 
-/// An object that the poster wishes to send to observers.
-///
-/// Typically this is the object that posted the notification.
-public var object: Any?
+    /// An object that the poster wishes to send to observers.
+    ///
+    /// Typically this is the object that posted the notification.
+    public var object: Any?
 
-/// Storage for values or objects related to this notification.
-public var userInfo: [AnyHashable : Any]?
+    /// Storage for values or objects related to this notification.
+    public var userInfo: [AnyHashable : Any]?
 
-/// Initialize a new `Notification`.
-///
-/// The default value for `userInfo` is nil.
-public init(name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable : Any]? = nil)
-
+    /// Initialize a new `Notification`.
+    ///
+    /// The default value for `userInfo` is nil.
+    public init(name: Notification.Name, object: Any? = nil, userInfo: [AnyHashable : Any]? = nil)
+}
 ```
 可见`name` 、`object` 、`userInfo`变成了可读可写的了。但是`Notification`内部还是使用的`NSNotification`
 
