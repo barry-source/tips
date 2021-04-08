@@ -257,6 +257,20 @@ void blk() {
 1、`int autoVal`的初始值为` 1`
 2、`__Block_byref_autoVal_0 *__forwarding`的值指向了自身，所以可以通过 `autoVal->__forwarding->autoVal`来存取内部`int autoVal`的值。
 
+
+```
+void (^Blk1)(void);
+
+void blk() {
+    __block int autoVal = 1;
+    void (^Blk2)(void) = ^{
+        autoVal += 1;
+    };
+    Blk1 = Blk2;
+}
+
+```
+
 假如声明一个全局Block变量`Blk1`，同样在栈上声明一个Block变量`Blk2`，并进行了赋值操作，将`Blk2`赋值给`Blk1`, 正常在MRC下，`Blk2`所在的栈被销毁，那么`Blk2`也将被销毁，
 这时调用`Blk1`将会出现异常，销毁示意图如下：
 
@@ -273,26 +287,8 @@ void blk() {
 在`ARC`下，栈上的`Bock`会被进行`copy`, `copy`之后会将栈上的`__forwarding`指向堆上的`Block`,这样无论在栈上或者堆上都可以正常的存取捕获的变量
 所以`__forwarding`的作用就是无论在栈上或者堆上都可以正确访问`__block`变量
 
-代码展示如下：
-```
-void (^Blk1)(void);
-
-void blk() {
-    __block int autoVal = 1;
-    void (^Blk2)(void) = ^{
-        autoVal += 1;
-    };
-    Blk1 = Blk2;
-}
-
-```
-
-现在存在两个问题：
-1、`Block`超出作用域可存在的原因
-2、`__block`变量使用结构体成员变量`__forwarding`的原因
 
 #### 3.2 访问全局变量或静态变量的Block底层构造
-
 
 
 #### 3.2 捕获局部变量Block底层构造
