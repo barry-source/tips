@@ -66,5 +66,86 @@ NSOperation 基于gcd封装，更加面向对象，比gcd多了一些功能。
 让任务一个接着一个地执行（一个任务执行完毕后，再执行下一个任务）
 
 
-![同步和异步]
-(https://upload-images.jianshu.io/upload_images/1846524-6918dda9d7573cf9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+##### 队列和同步、异步之间的关系
+
+![同步和异步](https://upload-images.jianshu.io/upload_images/1846524-64c994e1bef068cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+# 几个多线程案例
+
+### iOS多个网络请求完成后执行下一步
+
+> 1、使用GCD的DispatchGroup。每次网络请求前先enter，请求回调后再leave，enter和leave必须配合使用，有几次enter就要有几次leave，否则group会一直存在。
+
+当所有enter的block都leave后，会执行notify的block。
+
+```python
+let group = DispatchGroup()
+group.enter()
+DispatchQueue.global().async {
+    print("线程1执行结束")
+    group.leave()
+}
+group.enter()
+DispatchQueue.global().async {
+    print("线程2执行结束")
+    group.leave()
+}
+group.notify(queue: .main) {
+    print("两个线程全部执行结束")
+}
+```
+> 1、使用GCD的信号量DispatchSemaphore
+
+DispatchSemaphore信号量为基于计数器的一种多线程同步机制。如果semaphore计数大于等于1，计数-1，返回，程序继续运行。如果计数为0，则等待。dispatch_semaphore_signal(semaphore)为计数+1操作,dispatch_semaphore_wait为设置等待时间，这里设置的等待时间是一直等待。创建semaphore为0，等待，等10个网络请求都完成了，dispatch_semaphore_signal(semaphore)为计数+1，然后计数-1返回
+
+```python
+//初始化信号量为1
+let semaphore = DispatchSemaphore(value: 0)
+
+var count = 0
+DispatchQueue.global().async() {
+    count += 1
+    print("线程1执行结束")
+    if count == 2 {
+        semaphore.signal()
+    }
+}
+
+DispatchQueue.global().async() {
+    count += 1
+    print("线程2执行结束")
+    if count == 2 {
+        semaphore.signal()
+    }
+}
+
+_ = semaphore.wait(timeout: .distantFuture)
+DispatchQueue.global().async() {
+    print("两个线程执行结束")
+}
+
+```
+### 异步操作两组数据时, 执行完第一组之后, 才能执行第二组
+
+```
+let queue = DispatchQueue(label: "name", qos: .default, attributes: .concurrent, autoreleaseFrequency: .never, target: nil)
+queue.async {
+    print("-----A")
+}
+queue.async {
+    print("-----B")
+}
+queue.async(flags: .barrier) {
+    print("-----C")
+}
+queue.async {
+    print("-----D")
+}
+queue.async {
+    print("-----E")
+}
+```
+
+
+
+ 
