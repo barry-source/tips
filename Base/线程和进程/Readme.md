@@ -169,6 +169,8 @@ queue.async {
  
  ![锁性能对比](https://upload-images.jianshu.io/upload_images/1846524-ece6f0029b5569cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
  
+ [锁](http://www.cocoachina.com/articles/22402)
+ 
 ## iOS死锁案例
 
 最常见的就是 同步函数 + 主队列 的组合，本质是队列阻塞。
