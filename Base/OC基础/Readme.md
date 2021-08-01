@@ -264,7 +264,34 @@ Swift：
 - private: 其修饰的属性和方法只能在本类被访问和使用，不包括扩展类
 - fileprivate:  其修饰的属性可以再同一个文件被访问、继承和重写
 
-### 控制器生命周期
+### 25 控制器生命周期
 
-![image.png](https://upload-images.jianshu.io/upload_images/1846524-e7958ad4aa61eb12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+1：initialize函数并不会每次创建对象都调用，只有在这个类第一次创建对象时才会调用，
+
+2：init方法和initCoder方法相似，只是被调用的环境不一样，如果用代码进行初始化，会调用init，从nib文件或者归档进行初始化，会调用initCoder。
+
+3：loadView方法是开始加载视图的起始方法，除非手动调用，否则在ViewController的生命周期中没特殊情况只会被调用一次。
+
+4：viewDidLoad方法是我们最常用的方法的，类中成员对象和变量的初始化我们都会放在这个方法中，在类创建后，无论视图的展现或消失，这个方法也是只会在将要布局时调用一次。
+
+5：viewWillAppare：视图将要展现时会调用。
+
+6：viewWillLayoutSubviews：在viewWillAppare后调用，将要对子视图进行布局。
+
+7：viewDidLayoutSubviews：已经布局完成子视图。
+
+8：viewDidAppare：视图完成显示时调用。
+
+9：viewWillDisappare：视图将要消失时调用。
+
+10：viewDidDisappare：视图已经消失时调用。
+
+11：dealloc：controller被释放时调用。
+
+
+### 懒汉模式和饿汉模式
+
+懒汉式在类加载时不初始化，延迟加载。（配置文件），懒汉式需要加synchronized，否则不安全。(alloc时才分配)
+饿汉式在类加载时初始化，加载慢，获取对象快。饿汉式是线程安全的，(load时分配)
+
 
