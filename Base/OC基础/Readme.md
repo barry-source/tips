@@ -116,6 +116,24 @@
 
     堆空间一般存放对象本身，block 的 copy 等
 
+### 7 进程线程的区别：
+
+进程：是并发执行的程序在执行过程中分配和管理资源的基本单位，是一个动态概念，竞争计算机系统资源的基本单位（包工头）。
+
+线程：是进程的一个执行单元，是进程内调度实体（工人）。比进程更小的独立运行的基本单位。线程也被称为轻量级进程。
+
+一个程序至少一个进程，一个进程至少一个线程。
+
+地址空间：同一进程的线程共享本进程的地址空间，而进程之间则是独立的地址空间。
+资源拥有：同一进程内的线程共享本进程的资源如内存、I/O、cpu等，但是进程之间的资源是独立的。
+　　　　　一个进程崩溃后，在保护模式下不会对其他进程产生影响，但是一个线程崩溃整个进程都死掉。所以多进程要比多线程健壮。
+
+　　　　　进程切换时，消耗的资源大，效率高。所以涉及到频繁的切换时，使用线程要好于进程。同样如果要求同时进行并且又要共享某些变量的并发操作，只能用线程不能用进程
+
+执行过程：每个独立的进程程有一个程序运行的入口、顺序执行序列和程序入口。但是线程不能独立执行，必须依存在应用程序中，由应用程序提供多个线程执行控制。
+线程是处理器调度的基本单位，但是进程不是。
+两者均可并发执行。
+
 ### 7、@property 的本质是什么？
 
 @property = ivar(实例变量) + getter + setter;
@@ -186,12 +204,67 @@ volatile应该解释为“直接存取原始内存地址”比较合适
 
 ### 19、OC消息机制
 
+发送消息步骤：
+
+- 消息查找
+- 消息转发
+    - 动态方法解析
+    - 消息转发给某一个的target
+    - 再次消息转发
+
+
+
 ![image.png](https://upload-images.jianshu.io/upload_images/1846524-35a99eba8965d30f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-33. How many autoreleasepool you can create in your application? Is there any limit?
+### 20、 How many autoreleasepool you can create in your application? Is there any limit?
 没有限制
 
+### 21. self.跟self->什么区别？
+`self.`是调用get方法或者set方法, 这是OC的操作
+
+OC对象的底层就是一个结构体，而平时使用时都是定义一个对象指针，也即结构体指针。
+`self`是当前本身，是一个指向当前对象的指针, 
+`self->`是直接访问成员变量
 
 
+### 22、 nil、Nil、NULL和NSNull
 
+- NULL 表示一个空指针, (stddef.h 文件中的定义 define NULL ((void*)0))
+- 
+- nil一般赋值给空对象；（objc.h 有定义 ，其它本质上和NULL相同）
+
+- Nil 用于表示Objective-C类（Class）类型的变量值为空
+
+- NSNull 表示OC中的空对象
+
+
+### 23. What is predicate?
+
+OC中的谓词操作是针对于数组类型的，他就好比数据库中的查询操作，数据源就是数组，这样的好处是我们不需要编写很多代码就可以去操作数组，同时也起到过滤的作用，我们可以编写简单的谓词语句，就可以从数组中过滤出我们想要的数据。
+
+### 24. OC和swift 的存取权限
+
+OC 严格来说没有私有变量， @private修饰的变量可以通过runtime进行修改, kvc 
+
+OC:
+
+- @public : 所有的类都可以访问
+- @private : 只有当前类可以访问
+- @protected : （默认） 当前类和子类可访问
+- @package： 对于framework内部是@protected的权限，对于外部的类是@private，相当于框架级的保护权限，适合使用在静态库.a中
+
+@public > (@package，@protected) > @private
+
+
+Swift：
+
+- open : 可以在任何地方访问、继承和重写
+- public: 可以在任何地方被访问, 不可继承
+- interal: 默认访问级别，在整个模块内都可以被访问
+- private: 其修饰的属性和方法只能在本类被访问和使用，不包括扩展类
+- fileprivate:  其修饰的属性可以再同一个文件被访问、继承和重写
+
+### 控制器生命周期
+
+![image.png](https://upload-images.jianshu.io/upload_images/1846524-e7958ad4aa61eb12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
