@@ -47,7 +47,6 @@
 		6ECD0B1F2244999E00910D88 /* llvm-DenseSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 6ECD0B1E2244999E00910D88 /* llvm-DenseSet.h */; };
 		7121F88D25144FB300981DCF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7121F88C25144FB300981DCF /* main.m */; };
 		7121F8932514558600981DCF /* libobjc.A.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libobjc.A.dylib */; };
-		7121F895251456A500981DCF /* libobjc.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libobjc.A.dylib */; };
 		7121F8A425182FC000981DCF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7121F8A325182FC000981DCF /* main.m */; };
 		7213C36321FA7C730090A271 /* NSObject-internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 7213C36221FA7C730090A271 /* NSObject-internal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7593EC58202248E50046AB96 /* objc-object.h in Headers */ = {isa = PBXBuildFile; fileRef = 7593EC57202248DF0046AB96 /* objc-object.h */; };
@@ -133,6 +132,9 @@
 		87BB4EA70EC39854005D08E1 /* objc-probes.d in Sources */ = {isa = PBXBuildFile; fileRef = 87BB4E900EC39633005D08E1 /* objc-probes.d */; };
 		9672F7EE14D5F488007CEC96 /* NSObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9672F7ED14D5F488007CEC96 /* NSObject.mm */; };
 		C2E6D3FC2225DCF00059DFAA /* DenseMapExtras.h in Headers */ = {isa = PBXBuildFile; fileRef = C2E6D3FB2225DCF00059DFAA /* DenseMapExtras.h */; };
+		E7DD3E2C26B631620098B8ED /* libobjc.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E7DD3E2B26B631620098B8ED /* libobjc.A.tbd */; };
+		E7DD3E2E26B631760098B8ED /* libobjc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E7DD3E2D26B631760098B8ED /* libobjc.tbd */; };
+		E7DD3E3026B6317E0098B8ED /* libobjc-trampolines.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E7DD3E2F26B6317E0098B8ED /* libobjc-trampolines.tbd */; };
 		E8923DA5116AB2820071B552 /* objc-block-trampolines.mm in Sources */ = {isa = PBXBuildFile; fileRef = E8923DA0116AB2820071B552 /* objc-block-trampolines.mm */; };
 		F9BCC71B205C68E800DD9AFC /* objc-blocktramps-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = 8379996D13CBAF6F007C2B5F /* objc-blocktramps-arm64.s */; };
 /* End PBXBuildFile section */
@@ -293,6 +295,9 @@
 		BC8B5D1212D3D48100C78A5B /* libauto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libauto.dylib; path = /usr/lib/libauto.dylib; sourceTree = "<absolute>"; };
 		C2E6D3FB2225DCF00059DFAA /* DenseMapExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DenseMapExtras.h; path = runtime/DenseMapExtras.h; sourceTree = "<group>"; };
 		D2AAC0630554660B00DB518D /* libobjc.A.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libobjc.A.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		E7DD3E2B26B631620098B8ED /* libobjc.A.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libobjc.A.tbd; path = usr/lib/libobjc.A.tbd; sourceTree = SDKROOT; };
+		E7DD3E2D26B631760098B8ED /* libobjc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libobjc.tbd; path = usr/lib/libobjc.tbd; sourceTree = SDKROOT; };
+		E7DD3E2F26B6317E0098B8ED /* libobjc-trampolines.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libobjc-trampolines.tbd"; path = "usr/lib/libobjc-trampolines.tbd"; sourceTree = SDKROOT; };
 		E8923D9C116AB2820071B552 /* objc-blocktramps-i386.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = "objc-blocktramps-i386.s"; path = "runtime/objc-blocktramps-i386.s"; sourceTree = "<group>"; };
 		E8923D9D116AB2820071B552 /* objc-blocktramps-x86_64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = "objc-blocktramps-x86_64.s"; path = "runtime/objc-blocktramps-x86_64.s"; sourceTree = "<group>"; };
 		E8923DA0116AB2820071B552 /* objc-block-trampolines.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = "objc-block-trampolines.mm"; path = "runtime/objc-block-trampolines.mm"; sourceTree = "<group>"; };
@@ -304,7 +309,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7121F895251456A500981DCF /* libobjc.A.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +323,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7DD3E3026B6317E0098B8ED /* libobjc-trampolines.tbd in Frameworks */,
+				E7DD3E2E26B631760098B8ED /* libobjc.tbd in Frameworks */,
+				E7DD3E2C26B631620098B8ED /* libobjc.A.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,6 +543,9 @@
 		F9BCC72A205C6A1600DD9AFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E7DD3E2F26B6317E0098B8ED /* libobjc-trampolines.tbd */,
+				E7DD3E2D26B631760098B8ED /* libobjc.tbd */,
+				E7DD3E2B26B631620098B8ED /* libobjc.A.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

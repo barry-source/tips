@@ -37,7 +37,7 @@
 		393CEAC60DC69E67000B69DE /* objc-references.h in Headers */ = {isa = PBXBuildFile; fileRef = 393CEAC50DC69E67000B69DE /* objc-references.h */; };
 		39ABD72312F0B61800D1054C /* objc-weak.h in Headers */ = {isa = PBXBuildFile; fileRef = 39ABD71F12F0B61800D1054C /* objc-weak.h */; };
 		39ABD72412F0B61800D1054C /* objc-weak.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39ABD72012F0B61800D1054C /* objc-weak.mm */; };
-		711740C324F34BB3006D4F4D /* libobjc.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libobjc.A.dylib */; };
+		711740C324F34BB3006D4F4D /* libobjc.A.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2AAC0630554660B00DB518D /* libobjc.A.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		7593EC58202248E50046AB96 /* objc-object.h in Headers */ = {isa = PBXBuildFile; fileRef = 7593EC57202248DF0046AB96 /* objc-object.h */; };
 		75A9504F202BAA0600D7D56F /* objc-locks-new.h in Headers */ = {isa = PBXBuildFile; fileRef = 75A9504E202BAA0300D7D56F /* objc-locks-new.h */; };
 		75A95051202BAA9A00D7D56F /* objc-locks.h in Headers */ = {isa = PBXBuildFile; fileRef = 75A95050202BAA9A00D7D56F /* objc-locks.h */; };
@@ -187,8 +187,10 @@
 		E78CB5CE24E91E3F00D8FE8D /* objc-shared-cache.h in Headers */ = {isa = PBXBuildFile; fileRef = E78CB58924E91E3F00D8FE8D /* objc-shared-cache.h */; };
 		E78CB5CF24E91E3F00D8FE8D /* dyld_priv.h in Headers */ = {isa = PBXBuildFile; fileRef = E78CB58B24E91E3F00D8FE8D /* dyld_priv.h */; };
 		E78CB5D024E91E3F00D8FE8D /* OSCrossEndian.h in Headers */ = {isa = PBXBuildFile; fileRef = E78CB58D24E91E3F00D8FE8D /* OSCrossEndian.h */; };
+		E7A5F54825139BA10045556A /* NSObject+Animal.m in Sources */ = {isa = PBXBuildFile; fileRef = E7A5F54725139BA10045556A /* NSObject+Animal.m */; };
 		E7B75C2024F62FB500D29FDB /* Animal.m in Sources */ = {isa = PBXBuildFile; fileRef = E7B75C1D24F62FB500D29FDB /* Animal.m */; };
 		E7B75C2124F62FB500D29FDB /* Dog.m in Sources */ = {isa = PBXBuildFile; fileRef = E7B75C1E24F62FB500D29FDB /* Dog.m */; };
+		E7DD3E2A26B630670098B8ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7DD3E2926B630670098B8ED /* Foundation.framework */; };
 		E8923DA5116AB2820071B552 /* objc-block-trampolines.mm in Sources */ = {isa = PBXBuildFile; fileRef = E8923DA0116AB2820071B552 /* objc-block-trampolines.mm */; };
 		F9BCC71B205C68E800DD9AFC /* objc-blocktramps-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = 8379996D13CBAF6F007C2B5F /* objc-blocktramps-arm64.s */; };
 /* End PBXBuildFile section */
@@ -393,10 +395,13 @@
 		E78CB58924E91E3F00D8FE8D /* objc-shared-cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "objc-shared-cache.h"; sourceTree = "<group>"; };
 		E78CB58B24E91E3F00D8FE8D /* dyld_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
 		E78CB58D24E91E3F00D8FE8D /* OSCrossEndian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSCrossEndian.h; sourceTree = "<group>"; };
+		E7A5F54625139BA10045556A /* NSObject+Animal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Animal.h"; sourceTree = "<group>"; };
+		E7A5F54725139BA10045556A /* NSObject+Animal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Animal.m"; sourceTree = "<group>"; };
 		E7B75C1C24F62FB500D29FDB /* Animal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Animal.h; path = ../../NSObjectInterStruct/NSObjectInterStruct/Animal.h; sourceTree = "<group>"; };
 		E7B75C1D24F62FB500D29FDB /* Animal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Animal.m; path = ../../NSObjectInterStruct/NSObjectInterStruct/Animal.m; sourceTree = "<group>"; };
 		E7B75C1E24F62FB500D29FDB /* Dog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Dog.m; path = ../../NSObjectInterStruct/NSObjectInterStruct/Dog.m; sourceTree = "<group>"; };
 		E7B75C1F24F62FB500D29FDB /* Dog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dog.h; path = ../../NSObjectInterStruct/NSObjectInterStruct/Dog.h; sourceTree = "<group>"; };
+		E7DD3E2926B630670098B8ED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E8923D9C116AB2820071B552 /* objc-blocktramps-i386.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = "objc-blocktramps-i386.s"; path = "runtime/objc-blocktramps-i386.s"; sourceTree = "<group>"; };
 		E8923D9D116AB2820071B552 /* objc-blocktramps-x86_64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = "objc-blocktramps-x86_64.s"; path = "runtime/objc-blocktramps-x86_64.s"; sourceTree = "<group>"; };
 		E8923DA0116AB2820071B552 /* objc-block-trampolines.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = "objc-block-trampolines.mm"; path = "runtime/objc-block-trampolines.mm"; sourceTree = "<group>"; };
@@ -408,6 +413,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7DD3E2A26B630670098B8ED /* Foundation.framework in Frameworks */,
 				711740C324F34BB3006D4F4D /* libobjc.A.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -512,6 +518,8 @@
 		3044E26A23D47C0E006763E3 /* debug-objc */ = {
 			isa = PBXGroup;
 			children = (
+				E7A5F54625139BA10045556A /* NSObject+Animal.h */,
+				E7A5F54725139BA10045556A /* NSObject+Animal.m */,
 				E7B75C1C24F62FB500D29FDB /* Animal.h */,
 				E7B75C1D24F62FB500D29FDB /* Animal.m */,
 				E7B75C1F24F62FB500D29FDB /* Dog.h */,
@@ -803,6 +811,7 @@
 		F9BCC72A205C6A1600DD9AFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E7DD3E2926B630670098B8ED /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1094,6 +1103,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7B75C2124F62FB500D29FDB /* Dog.m in Sources */,
+				E7A5F54825139BA10045556A /* NSObject+Animal.m in Sources */,
 				3044E26C23D47C0E006763E3 /* main.m in Sources */,
 				E7B75C2024F62FB500D29FDB /* Animal.m in Sources */,
 			);

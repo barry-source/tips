@@ -29,6 +29,7 @@
 #include <cstddef>  // for nullptr_t
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
 
 #if __OBJC2__
 
@@ -2493,6 +2494,9 @@ static Class realizeClassWithoutSwift(Class cls, Class previously)
     //   or that Swift's initializers have already been called.
     //   fixme that assumption will be wrong if we add support
     //   for ObjC subclasses of Swift classes.
+    //FIXME: 测试
+    objc_class *objClass = (objc_class *)cls;
+//    printf("%@, \t %s \n", objClass->mangledName(), objClass->superclass);
     supercls = realizeClassWithoutSwift(remapClass(cls->superclass), nil);
     metacls = realizeClassWithoutSwift(remapClass(cls->ISA()), nil);
 
@@ -3493,6 +3497,11 @@ void _read_images(header_info **hList, uint32_t hCount, int totalClasses, int un
                 category_t *cat = catlist[i];
                 Class cls = remapClass(cat->cls);
                 locstamped_category_t lc{cat, hi};
+                objc_class *objClass = (objc_class *)cls;
+                printf("%s\n", objClass->mangledName());
+                if (strcasecmp(objClass->mangledName(), "Animal") == 0) {
+                    printf("%s\n", objClass->mangledName());
+                }
                 
                 if (!cls) {
                     // Category's target class is missing (probably weak-linked).

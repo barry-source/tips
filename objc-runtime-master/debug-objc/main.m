@@ -10,12 +10,14 @@
 #import "debug-objc-Bridging-Header.h"
 #import "Dog.h"
 #import "Animal.h"
+#import "NSObject+Animal.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         
         NSObject *obj = [[NSObject alloc] init];
         Animal *animal = [[Animal alloc] init];
+        [animal animalInstanceMethod];
         Dog *dog = [[Dog alloc] init];
         
         Class objClass = [obj class];

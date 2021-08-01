@@ -104,11 +104,11 @@
 
     对于堆来说，释放工作由程序员控制，容易产生内存泄露(memory leak)
 
-从申请大小大小方面讲
+从申请大小方面讲
 
     栈空间比较小
 
-    堆控件比较大
+    堆空间比较大
 
 从数据存储方面来讲
 
@@ -151,5 +151,47 @@
 volatile是一个特征修饰符,volatile的作用是作为指令关键字，确保本条指令不会因编译器的优化而省略，且要求每次直接读值。
 
 volatile应该解释为“直接存取原始内存地址”比较合适
+
+### 10、对于语句NSString*obj = [[NSData alloc] init]; ，编译时和运行时obj分别是什么类型？
+解：编译时是NSString类型，运行时是NSData类型
+
+### 11. #import 跟#include、@class有什么区别？#import<> 跟 #import""又什么区别？
+都可以完整包含某个文件的内容，但是#import能防止一个文件被包含多次
+@class仅仅是声明一个类名，并不会包含类的完整声明；@class还能解决循环包含的问题
+#import<> 用来包含系统自带的文件，#import""用来包含自定义的文件
+
+### 12、 属性readwrite，readonly，assign，retain，copy，nonatomic 各是什么作用，在那种情况下用？
+- readwrite：同时生成get方法和set方法的声明和实现
+- readonly：只生成get方法的声明和实现
+- assign：set方法的实现是直接赋值，用于基本数据类型
+- retain：set方法的实现是release旧值，retain新值，用于OC对象类型
+- copy：set方法的实现是release旧值，copy新值，用于NSString、block等类型
+- nonatomic：非原子性，set方法的实现不加锁（比atomic性能高）
+
+### 13. What is advantage of categories? What is difference between implementing a category and inheritance?
+- 分类可以在不修改原来类模型的基础上拓充方法
+- 分类只能扩充方法、不能扩充成员变量；继承可以扩充方法和成员变量
+- 继承会产生新的类
+
+### 14. Difference between categories and extensions?
+- 分类是有名称的，类扩展没有名称
+- 分类只能扩充方法、不能扩充成员变量；类扩展可以扩充方法和成员变量
+- 类扩展一般就写在.m文件中，用来扩充私有的方法和成员变量（属性）
+
+
+### 18. When we call Objective-C is runtime language what does it mean?
+- 动态绑定：对象类型在运行时才真正确定
+- 多态性
+- 消息机制
+
+### 19、OC消息机制
+
+![image.png](https://upload-images.jianshu.io/upload_images/1846524-35a99eba8965d30f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+33. How many autoreleasepool you can create in your application? Is there any limit?
+没有限制
+
+
+
 
 
