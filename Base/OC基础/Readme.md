@@ -264,7 +264,7 @@ Swift：
 - private: 其修饰的属性和方法只能在本类被访问和使用，不包括扩展类
 - fileprivate:  其修饰的属性可以再同一个文件被访问、继承和重写
 
-### 25 控制器生命周期
+### 25、 控制器生命周期
 
 1：initialize函数并不会每次创建对象都调用，只有在这个类第一次创建对象时才会调用，
 
@@ -289,9 +289,45 @@ Swift：
 11：dealloc：controller被释放时调用。
 
 
-### 懒汉模式和饿汉模式
+### 26、懒汉模式和饿汉模式
 
 懒汉式在类加载时不初始化，延迟加载。（配置文件），懒汉式需要加synchronized，否则不安全。(alloc时才分配)
 饿汉式在类加载时初始化，加载慢，获取对象快。饿汉式是线程安全的，(load时分配)
 
+### 27、Swift 和OC对比
 
+1）Swift是强类型（静态）语言，有类型推断，Objective-C弱类型（动态）语言
+2）Swift面向协议编程，Objective-C面向对象编程
+3）Swift注重值类型，Objective-C注重引用类型
+4）Swift支持泛型，Objective-C只支持轻量泛型（给集合添加泛型）
+5）Swift支持静态派发（效率高）、动态派发（函数表派发、消息派发）方式，Objective-C支持动态派发（消息派发）方式
+6）Swift支持函数式编程（高阶函数）
+7）Swift的协议不仅可以被类实现，也可以被Struct和Enum实现
+8）Swift有元组类型、支持运算符重载
+9）Swift支持命名空间
+10）Swift支持默认参数
+11）Swift比Objective-C代码更简洁
+
+### 28、讲讲Swift的派发机制
+
+1）函数的派发机制：静态派发（直接派发）、函数表派发、消息派发
+
+2）Swift派发机制总结：
+
+    Swift中所有ValueType（值类型：Struct、Enum）使用直接派发；
+    Swift中协议的Extensions使用直接派发，初始声明函数使用函数表派发；
+    Swift中Class中Extensions使用直接派发，初始声明函数使用函数表派发，dynamic修饰的函数使用消息派发；
+    Swift中NSObject的子类用@nonobjc或final修饰的函数使用直接派发，初始声明函数使用函数表派发，dynamic修饰的Extensions使用消息派发；
+    
+3）Swift中函数派发查看方式: 可将Swift代码转换为SIL（中间码）
+
+    swiftc -emit-silgen -O example.swift
+
+
+### 29、Swift如何显示指定派发方式？
+
+    添加final关键字的函数使用直接派发
+    添加static关键字函数使用直接派发
+    添加dynamic关键字函数使用消息派发
+    添加@objc关键字的函数使用消息派发
+    添加@inline关键字的函数会告诉编译器可以使用直接派发
