@@ -26,5 +26,7 @@
 
 [[底层原理] 多线程](https://github.com/barry-source/tips/tree/master/multiThread)
 
+[[底层原理] 多线程同步（锁）](https://github.com/barry-source/tips/tree/master/multiThreadLock)
+
 
 
