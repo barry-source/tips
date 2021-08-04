@@ -16,6 +16,7 @@
 		E756D18726BA216400D7769A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E756D18626BA216400D7769A /* main.m */; };
 		E756D19126BA216500D7769A /* RunloopTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E756D19026BA216500D7769A /* RunloopTests.m */; };
 		E756D19C26BA216500D7769A /* RunloopUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = E756D19B26BA216500D7769A /* RunloopUITests.m */; };
+		E756D1AB26BA7ADE00D7769A /* PermenantThread.m in Sources */ = {isa = PBXBuildFile; fileRef = E756D1AA26BA7ADE00D7769A /* PermenantThread.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		E756D19726BA216500D7769A /* RunloopUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunloopUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E756D19B26BA216500D7769A /* RunloopUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RunloopUITests.m; sourceTree = "<group>"; };
 		E756D19D26BA216500D7769A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E756D1A926BA7ADE00D7769A /* PermenantThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PermenantThread.h; sourceTree = "<group>"; };
+		E756D1AA26BA7ADE00D7769A /* PermenantThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PermenantThread.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +107,8 @@
 		E756D17326BA216200D7769A /* Runloop */ = {
 			isa = PBXGroup;
 			children = (
+				E756D1A926BA7ADE00D7769A /* PermenantThread.h */,
+				E756D1AA26BA7ADE00D7769A /* PermenantThread.m */,
 				E756D17426BA216200D7769A /* AppDelegate.h */,
 				E756D17526BA216200D7769A /* AppDelegate.m */,
 				E756D17726BA216200D7769A /* SceneDelegate.h */,
@@ -267,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E756D17C26BA216200D7769A /* ViewController.m in Sources */,
+				E756D1AB26BA7ADE00D7769A /* PermenantThread.m in Sources */,
 				E756D17626BA216200D7769A /* AppDelegate.m in Sources */,
 				E756D18726BA216400D7769A /* main.m in Sources */,
 				E756D17926BA216200D7769A /* SceneDelegate.m in Sources */,

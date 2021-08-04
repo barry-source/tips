@@ -467,6 +467,147 @@ static int32_t __CFRunLoopRun(CFRunLoopRef rl, CFRunLoopModeRef rlm, CFTimeInter
 
 ## 4、应用
 
+- 控制线程生命周期（线程保活）
+
+```ruby
+
+@interface PermenantThread()
+@property (strong, nonatomic) TestThread *innerThread;
+@end
+
+@implementation PermenantThread
+#pragma mark - public methods
+
+- (instancetype)init
+{
+    if (self = [super init]) {
+        self.innerThread = [[TestThread alloc] initWithBlock:^{
+            // 创建上下文（要初始化一下结构体）
+            CFRunLoopSourceContext context = {0};
+            // 创建source
+            CFRunLoopSourceRef source = CFRunLoopSourceCreate(kCFAllocatorDefault, 0, &context);
+            // 往Runloop中添加source
+            CFRunLoopAddSource(CFRunLoopGetCurrent(), source, kCFRunLoopDefaultMode);
+            // 销毁source
+            CFRelease(source);
+            // 启动
+            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1.0e10, false);
+            
+//            while (weakSelf && !weakSelf.isStopped) {
+//                // 第3个参数：returnAfterSourceHandled，设置为true，代表执行完source后就会退出当前loop
+//                CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1.0e10, true);
+//            }
+            
+            NSLog(@"end----");
+        }];
+        
+        [self.innerThread start];
+    }
+    return self;
+}
+
+- (void)executeTask:(PermenantThreadTask)task {
+    if (!self.innerThread || !task) return;
+    
+    [self performSelector:@selector(__executeTask:) onThread:self.innerThread withObject:task waitUntilDone:NO];
+}
+
+//停止runloop
+- (void)stop {
+    if (!self.innerThread) return;
+    
+    [self performSelector:@selector(__stop) onThread:self.innerThread withObject:nil waitUntilDone:YES];
+}
+
+- (void)dealloc {
+    [self stop];
+}
+
+#pragma mark - private methods
+- (void)__stop {
+    CFRunLoopStop(CFRunLoopGetCurrent());
+    self.innerThread = nil;
+}
+
+- (void)__executeTask:(PermenantThreadTask)task {
+    task();
+}
+```
+
+- 解决NSTimer在滑动时停止工作的问题
+
+```ruby
+- (void)timerWhenTracking {
+    static int count = 0;
+    NSTimer *timer = [NSTimer timerWithTimeInterval:1.0 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        NSLog(@"%d", ++count);
+    }];
+    // NSDefaultRunLoopMode、UITrackingRunLoopMode才是真正存在的模式
+    // NSRunLoopCommonModes并不是一个真的模式，它只是一个标记
+    // timer能在_commonModes数组中存放的模式下工作
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+}
+```
+- 监控应用卡顿
+
+
+```ruby
+
+// 在子线程监控时长
+dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    while (YES) {   // 有信号的话 就查询当前runloop的状态
+        // 假定连续5次超时50ms认为卡顿(当然也包含了单次超时250ms)
+        // 因为下面 runloop 状态改变回调方法runLoopObserverCallBack中会将信号量递增 1,所以每次 runloop 状态改变后,下面的语句都会执行一次
+        // dispatch_semaphore_wait:Returns zero on success, or non-zero if the timeout occurred.
+        long st = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 50*NSEC_PER_MSEC));
+        NSLog(@"dispatch_semaphore_wait:st=%ld,time:%@",st,[self getCurTime]);
+        if (st != 0) {  // 信号量超时了 - 即 runloop 的状态长时间没有发生变更,长期处于某一个状态下
+            if (!observer) {
+                timeoutCount = 0;
+                semaphore = 0;
+                activity = 0;
+                return;
+            }
+            NSLog(@"st = %ld,activity = %lu,timeoutCount = %d,time:%@",st,activity,timeoutCount,[self getCurTime]);
+            // kCFRunLoopBeforeSources - 即将处理source kCFRunLoopAfterWaiting - 刚从休眠中唤醒
+            // 获取kCFRunLoopBeforeSources到kCFRunLoopBeforeWaiting再到kCFRunLoopAfterWaiting的状态就可以知道是否有卡顿的情况。
+            // kCFRunLoopBeforeSources:停留在这个状态,表示在做很多事情，那么就可能产生了耗时操作，
+            if (activity == kCFRunLoopBeforeSources || activity == kCFRunLoopAfterWaiting) {    // 发生卡顿,记录卡顿次数
+                if (++timeoutCount < 5) {
+                    continue;   // 不足 5 次,直接 continue 当次循环,不将timeoutCount置为0
+                }
+                
+                // 收集Crash信息也可用于实时获取各线程的调用堆栈
+                PLCrashReporterConfig *config = [[PLCrashReporterConfig alloc] initWithSignalHandlerType:PLCrashReporterSignalHandlerTypeBSD symbolicationStrategy:PLCrashReporterSymbolicationStrategyAll];
+                
+                PLCrashReporter *crashReporter = [[PLCrashReporter alloc] initWithConfiguration:config];
+                
+                NSData *data = [crashReporter generateLiveReport];
+                PLCrashReport *reporter = [[PLCrashReport alloc] initWithData:data error:NULL];
+                NSString *report = [PLCrashReportTextFormatter stringValueForCrashReport:reporter withTextFormat:PLCrashReportTextFormatiOS];
+                
+                NSLog(@"---------卡顿信息\n%@\n--------------",report);
+            }
+        }
+        NSLog(@"dispatch_semaphore_wait timeoutCount = 0，time:%@",[self getCurTime]);
+        timeoutCount = 0;
+    }
+});
+
+
+// runloop回调
+static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActivity activity, void *info) {
+    BGPerformanceMonitor *monitor = (__bridge BGPerformanceMonitor*)info;
+    // 记录状态值
+    monitor->activity = activity;
+    // 发送信号
+    dispatch_semaphore_t semaphore = monitor->semaphore;
+}
+
+```
+- 性能优化
+
+- crash
 
 
 ## 参考：
