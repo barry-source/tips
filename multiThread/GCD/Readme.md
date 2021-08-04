@@ -34,12 +34,219 @@ GCD 拥有以上这么多的好处，而且在多线程中处于举足轻重的�
 
 ### 1.3、队列和任务的组合情况
 
-| 区别 | 并发队列| 串行队列| 主队列| 
+![Picture1.png](https://upload-images.jianshu.io/upload_images/1846524-2ccec9b142ac1ce0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-| ------ | ------ | ------ |
-| 同步（sync）  |    没有开启新线程，串行执行任务   |   没有开启新线程，串行执行任务    |  死锁卡住不执行 |
-| 异步（async） |     有开启新线程，并发执行任务     | 有开启新线程（1条），串行执行任务     |  没有开启新线程，串行执行任务 |
+## 2. GCD 死锁
 
 
-## 2. GCD 使用
+## 2.1、串行主队列+同步任务
 
+主队列
+```ruby
+- (void)deadLock1 {
+    NSLog(@"任务1");
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    dispatch_sync(queue, ^{
+        NSLog(@"任务2");
+    });
+    NSLog(@"任务3");
+}
+
+解决：开启异步任务
+```
+串行队列
+
+```ruby
+
+- (void)deadLock2 {
+    NSLog(@"任务1");
+    dispatch_queue_t queue = dispatch_queue_create("myQueue", DISPATCH_QUEUE_SERIAL);
+    dispatch_async(queue, ^{
+        NSLog(@"任务2");
+        dispatch_sync(queue, ^{
+            NSLog(@"任务3");
+        });
+    });
+}
+
+解决：同步任务在其它队列执行或开启异步任务或开启并发队列
+```
+
+
+## 3、 GCD 面试题
+
+
+```ruby
+
+- (void)interview {
+    dispatch_queue_t queue = dispatch_queue_create("myQueue", DISPATCH_QUEUE_SERIAL);
+    dispatch_async(queue, ^{
+        NSLog(@"任务1");
+        [self performSelector:@selector(selectorMethod) withObject:nil afterDelay:0];
+        NSLog(@"任务3");
+    });
+}
+
+
+- (void)selectorMethod {
+    NSLog(@"任务2");
+}
+
+结果： 1 3
+
+解：performSelector: withObject:nil afterDelay: 和定时器有关，定时器会加在runloop里面，由于dispatch_async内部没有开启runloop所以2不会打印
+
+```
+
+```ruby
+
+- (void)selectorMethod {
+    NSLog(@"任务2");
+}
+
+- (void)interview2 {
+    NSThread *thread = [[NSThread alloc] initWithBlock:^{
+        NSLog(@"任务1");
+    }];
+    [thread start];
+    
+    [self performSelector:@selector(selectorMethod) onThread:thread withObject:nil waitUntilDone:YES];
+}
+结果： 1 同时崩溃
+
+打印1 是因为没有开启runloop, 崩溃是因为thread被释放
+
+如果将YES 改为NO，就不会产生崩溃
+
+
+```
+
+### 3.1、 GCD 队列组`dispatch_group`
+
+
+```ruby
+
+- (void)groupNotify {
+    NSLog(@"currentThread---%@",[NSThread currentThread]);  // 打印当前线程
+    NSLog(@"group---begin");
+    
+    dispatch_group_t group =  dispatch_group_create();
+    
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSLog(@"1---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSLog(@"2---%@",[NSThread currentThread]);      // 打印当前线程
+    });
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        NSLog(@"3---%@",[NSThread currentThread]);      // 打印当前线程
+        NSLog(@"group---end");
+    });
+}
+
+打印结果： 1或2 然后打印3
+```
+
+### 3.2、 GCD 栅栏方法`dispatch_barrier_async` 和 `dispatch_barrier_async`
+
+`dispatch_barrier_async` 只隔离异步任务，
+`dispatch_barrier_async`只隔离同步任务
+
+```ruby
+- (void)barrierAsync {
+    dispatch_queue_t queue = dispatch_queue_create("test", DISPATCH_QUEUE_CONCURRENT);
+    
+    dispatch_async(queue, ^{
+        NSLog(@"任务1");
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"任务2");
+    });
+    
+    dispatch_barrier_async(queue, ^{
+        NSLog(@"任务3");
+    });
+    
+    dispatch_async(queue, ^{
+        NSLog(@"任务4");
+    });
+    dispatch_async(queue, ^{
+        NSLog(@"任务5");
+    });
+}
+
+打印结果： （1，2），3 （4， 5）,1和2顺序不固定，4和5顺序不固定
+```
+
+```ruby
+- (void)barrierSync {
+    dispatch_queue_t queue = dispatch_queue_create("test", DISPATCH_QUEUE_CONCURRENT);
+    
+    dispatch_async(queue, ^{
+        NSLog(@"任务1");
+    });
+    
+    NSLog(@"任务2");
+    
+    dispatch_barrier_sync(queue, ^{
+        NSLog(@"任务3");
+    });
+    
+    NSLog(@"任务4");
+    
+    dispatch_async(queue, ^{
+        NSLog(@"任务5");
+    });
+}
+
+打印结果： 2 在 3 前，3 在 4 前，1，5随机出现
+```
+
+### 3.4、GCD 快速迭代 `dispatch_apply `
+
+
+快速迭代不能保证顺序
+
+```ruy
+- (void)apply {
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    
+    NSLog(@"apply---begin");
+    dispatch_apply(6, queue, ^(size_t index) {
+        NSLog(@"%zd---%@",index, [NSThread currentThread]);
+    });
+    NSLog(@"apply---end");
+}
+
+```
+
+### 3.4 dispatch_group_enter、dispatch_group_leave
+
+```ruby
+- (void)groupEnterAndLeave {
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_enter(group);
+    dispatch_async(queue, ^{
+        NSLog(@"任务1");
+        dispatch_group_leave(group);
+    });
+    
+    dispatch_group_enter(group);
+    dispatch_async(queue, ^{
+        NSLog(@"任务2");
+        dispatch_group_leave(group);
+    });
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        NSLog(@"任务3");
+    });
+}
+打印结果 （1， 2），3 其中1和2顺序不固定
+```
+
+### 3.5、其它 
+
+`dispatch_once`和`dispatch_after`

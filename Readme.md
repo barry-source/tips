@@ -24,7 +24,7 @@
 [[底层原理] weak底层实现](https://github.com/barry-source/tips/tree/master/Weak)
 
 
-[[底层原理] GCD](https://github.com/barry-source/tips/tree/master/multiThread/GCD)
+[[底层原理] 多线程](https://github.com/barry-source/tips/tree/master/multiThread)
 
 
 
