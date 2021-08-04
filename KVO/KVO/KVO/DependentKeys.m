@@ -30,4 +30,5 @@
 + (NSSet<NSString *> *)keyPathsForValuesAffectingFullName {
    return [NSSet setWithObjects:@"lastName", @"firstName", nil];
 }
+
 @end

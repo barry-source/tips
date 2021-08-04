@@ -9,8 +9,14 @@
 #import "DeepSearchViewController.h"
 #import "DeepSearch.h"
 
+typedef struct {
+    float x, y, z;
+} ThreeFloats;
+
+
 @interface DeepSearchViewController ()
 @property (nonatomic, strong) DeepSearch *deep;
+@property (nonatomic) ThreeFloats threeFloats;
 @end
 
 @implementation DeepSearchViewController
@@ -19,6 +25,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.whiteColor;
     [self deepSearchTest];
+    NSLog(@"%s", @encode(DeepSearchViewController));
 }
 
 

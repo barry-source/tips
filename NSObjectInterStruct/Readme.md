@@ -178,6 +178,8 @@ debug_objc_class *dogMetaClass = (__bridge struct debug_objc_class *)(dogOrinalM
 
 - 万能指针`id`: 
 
+ typedef struct objc_object *id;
+
 ## 参考文档
 
 [类对象和元类对象](http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html)
