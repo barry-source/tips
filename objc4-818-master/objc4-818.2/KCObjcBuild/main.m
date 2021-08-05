@@ -23,6 +23,16 @@ int main(int argc, const char * argv[]) {
         __weak NSObject *o1 = obj;
         __weak NSObject *o2 = obj;
         NSLog(@"%p-%p-%p", obj, &o1, &o2);
+        
+        NSNumber *number1 = @4;
+        NSNumber *number2 = @5;
+        NSNumber *number3 = @(0xFFFFFFFFFFFFFFF);
+        
+//        [number1 setValue:@5 forKey: @"stringValue"];
+        number1 = @5;
+        
+//        NSLog(@"%d %d %d", isTaggedPointer(number1), isTaggedPointer(number2), isTaggedPointer(number3));
+        NSLog(@"%p %p %p", number1, number2, number3);
 //        // insert code here...
 //        NSLog(@"Hello, World!");
 //

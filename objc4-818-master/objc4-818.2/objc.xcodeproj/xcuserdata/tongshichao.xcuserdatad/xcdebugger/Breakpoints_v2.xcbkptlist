@@ -3,4 +3,84 @@
    uuid = "83744914-CCA8-4454-809A-B9DB3E310AEB"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "372D209F-8C2A-425E-9477-99BF479C73BB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "runtime/objc-class.mm"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "343"
+            endingLineNumber = "343"
+            landmarkName = "_object_setIvar(obj, ivar, value, assumeStrong)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "372D209F-8C2A-425E-9477-99BF479C73BB - 9730b0b08941704b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "object_setInstanceVariable"
+                  moduleName = "libobjc.A.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tongshichao/Desktop/tips/objc4-818-master/objc4-818.2/runtime/objc-class.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "343"
+                  endingLineNumber = "343"
+                  offsetFromSymbolStart = "166">
+               </Location>
+               <Location
+                  uuid = "372D209F-8C2A-425E-9477-99BF479C73BB - e15ac9963170861e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "object_setIvar"
+                  moduleName = "libobjc.A.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tongshichao/Desktop/tips/objc4-818-master/objc4-818.2/runtime/objc-class.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "343"
+                  endingLineNumber = "343"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  uuid = "372D209F-8C2A-425E-9477-99BF479C73BB - ed85ed6b7303f56d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "object_setIvarWithStrongDefault"
+                  moduleName = "libobjc.A.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tongshichao/Desktop/tips/objc4-818-master/objc4-818.2/runtime/objc-class.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "343"
+                  endingLineNumber = "343"
+                  offsetFromSymbolStart = "48">
+               </Location>
+               <Location
+                  uuid = "372D209F-8C2A-425E-9477-99BF479C73BB - 84b72615f1d7c65a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "object_setInstanceVariableWithStrongDefault"
+                  moduleName = "libobjc.A.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tongshichao/Desktop/tips/objc4-818-master/objc4-818.2/runtime/objc-class.mm"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "343"
+                  endingLineNumber = "343"
+                  offsetFromSymbolStart = "166">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

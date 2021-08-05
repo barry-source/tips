@@ -23,10 +23,11 @@
 
 [[底层原理] weak底层实现](https://github.com/barry-source/tips/tree/master/Weak)
 
-
 [[底层原理] 多线程](https://github.com/barry-source/tips/tree/master/multiThread)
 
 [[底层原理] 多线程同步（锁）](https://github.com/barry-source/tips/tree/master/multiThreadLock)
+
+[[底层原理] 内存管理 ](https://github.com/barry-source/tips/tree/master/memory)
 
 
 
