@@ -31,5 +31,5 @@
 
 # 基础：
 
-[基础 ](https://github.com/barry-source/tips/tree/master/base)
+[基础 ](https://github.com/barry-source/tips/tree/master/Base)
 
