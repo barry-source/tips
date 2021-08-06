@@ -48,3 +48,9 @@ SSL客户端通过TCP和服务器建立连接之后（443端口），并且在�
 4、实体首部字段
 
 ![实体首部.png](https://upload-images.jianshu.io/upload_images/1846524-a18a912e0a2e6213.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+### 浏览器中输入url后发生了什么
+
+[参考](https://www.jianshu.com/p/c1dfc6caa520)
+
