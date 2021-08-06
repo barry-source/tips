@@ -27,3 +27,24 @@ SSL客户端通过TCP和服务器建立连接之后（443端口），并且在�
 使用对称密钥加密一段握手消息，发送给客户端。客户端解密并计算握手消息的HASH，如果与服务端发来的HASH一致，此时握手过程结束。
 
 ### 四、之后所有的通信数据将由之前浏览器生成的随机密码并利用加密算法进行加密。
+
+
+> 面试： HTTP消息的header都有哪些
+
+
+1、通用首部字段：
+
+![通用首部.png](https://upload-images.jianshu.io/upload_images/1846524-3558a33201ed858e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+2、请求首部字段
+
+![请求首部.png](https://upload-images.jianshu.io/upload_images/1846524-43fb1269ba681b49.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+3、响应首部字段
+
+![响应首部.png](https://upload-images.jianshu.io/upload_images/1846524-f412b63266a0af22.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![image.png](https://upload-images.jianshu.io/upload_images/1846524-5eff99fcc5527957.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+4、实体首部字段
+
+![实体首部.png](https://upload-images.jianshu.io/upload_images/1846524-a18a912e0a2e6213.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
