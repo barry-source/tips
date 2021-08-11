@@ -32,6 +32,7 @@ clang -rewrite-objc -fobjc-arc -stdlib=libc++ -mmacosx-version-min=10.7 -fobjc-r
 
 第一、通过weak编译解析，可以看出来weak通过runtime初始化的并维护的；
 第二、weak和strong都是Object-C的修饰词，而strong是通过runtime维护的一个自动计数表结构。
+
 综上：weak是有Runtime维护的weak表。
 
 在runtime源码中，可以找到`objc-weak.h`和`objc-weak.mm`文件，并且在`objc-weak.h`文件中关于定义weak表的结构体以及相关的方法。
@@ -253,10 +254,15 @@ struct SideTable {
 
 weak被释放为nil，需要对对象整个释放过程了解，如下是对象释放的整体流程：
 1、调用objc_release
+
 2、因为对象的引用计数为0，所以执行dealloc
+
 3、在dealloc中，调用了_objc_rootDealloc函数
+
 4、在_objc_rootDealloc中，调用了object_dispose函数
+
 5、调用objc_destructInstance
+
 6、最后调用objc_clear_deallocating。
 
 对象准备释放时，调用clearDeallocating函数。clearDeallocating函数首先根据对象地址获取所有weak指针地址的数组，然后遍历这个数组把其中的数据设为nil，最后把这个entry从weak表中删除，最后清理对象的记录。
