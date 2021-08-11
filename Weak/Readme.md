@@ -325,8 +325,11 @@ void weak_clear_no_lock(weak_table_t *weak_table, id referent_id)
 objc_clear_deallocating该函数的动作如下：
 
 1、从weak表中获取废弃对象的地址为键值的记录
+
 2、将包含在记录中的所有附有 weak修饰符变量的地址，赋值为nil
+
 3、将weak表中该记录删除
+
 4、从引用计数表中删除废弃对象的地址为键值的记录
 
 其实Weak表是一个hash（哈希）表，然后里面的key是指向的对象地址，Value是Weak指针的地址数组。
