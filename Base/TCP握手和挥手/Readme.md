@@ -50,3 +50,8 @@ client无数据发送时,向sever发送关闭信号，sever对其进行回应，
 
 答：虽然按道理讲，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可以最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文
 
+
+> 面试题：TCP和UDP的区别是什么？
+
+
+[TCP,UDP区别](https://zhuanlan.zhihu.com/p/24860273/)

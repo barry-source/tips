@@ -213,7 +213,7 @@ static id storeWeak(id *location, objc_object *newObj)
 ```
 上述代码的流程图：
 
-[](https://upload-images.jianshu.io/upload_images/2664540-255e050c9fafa044.png?imageMogr2/auto-orient/strip|imageView2/2/w/553)
+[weak](https://upload-images.jianshu.io/upload_images/2664540-255e050c9fafa044.png?imageMogr2/auto-orient/strip|imageView2/2/w/553)
 
 
 另外SideTable的结构如下，它包含了弱引用表。
