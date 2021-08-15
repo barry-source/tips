@@ -66,9 +66,44 @@ NSOperation 基于gcd封装，更加面向对象，比gcd多了一些功能。
 让任务一个接着一个地执行（一个任务执行完毕后，再执行下一个任务）
 
 
+### 总结： 串行队列一次只能派发一个任务，等上个任务执行完成之后才去派发另外一个任务，并发队列可以同时派发多个任务 
+派发的任务是如何执行的 和队列没有半毛钱关系。如果派发的任务是都同步任务，那么不管你是串行队列还是并发队列，所有任务都 是一个接一个执行，如果是异步任务，这个关系就区别出来了
+
+
 ##### 队列和同步、异步之间的关系
 
 ![同步和异步](https://upload-images.jianshu.io/upload_images/1846524-64c994e1bef068cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## ios 线程间通信方式
+
+通信方式
+
+主要包括传统的可用于线程间通信的进程间通信方式，Mach内核核心mach port，NSObject对象、GCD及操作队列等方式。
+
+### 传统方式
+
+- 管道
+- 套接字
+- 共享内存
+
+### iOS
+
+- 共享存储
+- Mach Port
+- NSObject
+ 
+ ```python
+ //主线程
+ - (void)performSelectorOnMainThread:(SEL)aSelector withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray<NSString *> *)array;
+ - (void)performSelectorOnMainThread:(SEL)aSelector withObject:(nullable id)arg waitUntilDone:(BOOL)wait;
+ //指定线程
+ - (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(nullable id)arg waitUntilDone:(BOOL)wait modes:(nullable NSArray<NSString *> *)array;
+ - (void)performSelector:(SEL)aSelector onThread:(NSThread *)thr withObject:(nullable id)arg waitUntilDone:(BOOL)wait;
+```
+ 
+ - GCD  (指的回到主线程)
+ - NSOperation(指的回到主线程)
 
 # 几个多线程案例
 
