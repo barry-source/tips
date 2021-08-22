@@ -1,0 +1,540 @@
+[
+    {
+        "title": "排序",
+        "datas": [
+            {
+                "destination": "BubbleSortViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "冒泡排序"
+            },
+            {
+                "destination": "SelectionSortViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "选择排序"
+            },
+            {
+                "destination": "InsertionSortViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "插入排序"
+            },
+            {
+                "destination": "ShellSortViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "希尔排序"
+            },
+            {
+                "destination": "QuickSortViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "快速排序"
+            },
+            {
+                "destination": "MergeSortViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "归并排序"
+            },
+            {
+                "destination": "HeapSortViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "堆排序"
+            },
+        ]
+    },
+    {
+        "title": "剑指offer",
+        "datas": [
+            {
+                "destination": "SwordOfferViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "title": "剑指offer",
+                "datas": [
+
+                ],
+            },
+        ]
+    },
+    {
+        "title": "京东算法",
+        "datas": [
+            {
+                "destination": "JingDongViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "字节算法"
+            },
+        ]
+    },
+    {
+        "title": "字节算法",
+        "datas": [
+            {
+                "destination": "ByteDanceViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "字节算法"
+            },
+        ]
+    },
+    {
+        "title": "快手算法",
+        "datas": [
+            {
+                "destination": "KuaishouViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "字节算法"
+            },
+        ]
+    },
+    {
+        "title": "非受限线性表",
+        "datas": [
+            {
+                "destination": "LCTwoSumViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+                    {
+                        "title": "暴力求解",
+                        "imageName": "twosum1",
+                        "timeComplexity": "O(n^2)",
+                        "cosumedTime": "48 ms, 在所有 Swift 提交中击败了46.41%的用户",
+                        "occupiedSpace": "13.7 MB, 在所有 Swift 提交中击败了68.42%的用户"
+                    },
+                    {
+                        "title": "Hash存储求解",
+                        "imageName": "twosum2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "44 ms, 在所有 Swift 提交中击败了66.23%的用户",
+                        "occupiedSpace": "13.7 MB, 在所有 Swift 提交中击败了64.31%的用户"
+                    }
+                ],
+                "title": "二数之和"
+            },
+            {
+                "destination": "LCThreeSumViewController",
+                "detail": "https://leetcode-cn.com/problems/3sum/",
+                "datas": [
+                    {
+                        "title": "暴力求解",
+                        "imageName": "threeSum3",
+                        "timeComplexity": "O(n^3)",
+                        "cosumedTime": "超时",
+                        "occupiedSpace": "示知"
+                    },
+                    {
+                        "title": "转换成两数之和求解",
+                        "imageName": "threeSum2",
+                        "timeComplexity": "O(n^2)",
+                        "cosumedTime": "4220 ms, 在所有 Swift 提交中击败了5.03%的用户",
+                        "occupiedSpace": "18 MB, 在所有 Swift 提交中击败了15.41%的用户"
+                    },
+                    {
+                        "title": "排序+双指针求解",
+                        "imageName": "threesum1",
+                        "timeComplexity": "O(nlog(n))",
+                        "cosumedTime": "244 ms, 在所有 Swift 提交中击败了93.08%的用户",
+                        "occupiedSpace": "17.5 MB, 在所有 Swift 提交中击败了60.69%的用户"
+                    }
+                ],
+                "title": "三数之和"
+            },
+            {
+                "destination": "MoveZeroToTailViewController",
+                "detail": "https://leetcode-cn.com/problems/move-zeroes/",
+                "datas": [
+                    {
+                        "title": "暴力求解",
+                        "imageName": "movezero1",
+                        "timeComplexity": "O(n^2)",
+                        "cosumedTime": "156 ms, 在所有 Swift 提交中击败了5.43%的用户",
+                        "occupiedSpace": "14.2 MB, 在所有 Swift 提交中击败了50.69%的用户"
+                    },
+                    {
+                        "title": "索引求解",
+                        "imageName": "movezero",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "44 ms, 在所有 Swift 提交中击败了96.61%的用户",
+                        "occupiedSpace": "14.1 MB, 在所有 Swift 提交中击败了65.98%的用户"
+                    },
+                ],
+                "title": "移动零"
+            },
+            {
+                "destination": "LCMaxAreaViewController",
+                "detail": "https://leetcode-cn.com/problems/container-with-most-water/",
+                "datas": [
+                    {
+                        "title": "暴力求解",
+                        "imageName": "maxArea1",
+                        "timeComplexity": "O(n^2)",
+                        "cosumedTime": "超时",
+                        "occupiedSpace": "示知"
+                    },
+                    {
+                        "title": "左右夹壁求解",
+                        "imageName": "maxArea2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "180 ms, 在所有 Swift 提交中击败了57.20%的用户",
+                        "occupiedSpace": "14.3 MB, 在所有 Swift 提交中击败了24.61%的用户"
+                    },
+                ],
+                "title": "盛最多水的容器"
+            },
+            {
+                "destination": "LCClimbStarirsViewController",
+                "detail": "https://leetcode-cn.com/problems/climbing-stairs/",
+                "datas": [
+                    {
+                        "title": "纯递归求解",
+                        "imageName": "climbStairs1",
+                        "timeComplexity": "O(2^n)",
+                        "cosumedTime": "超时",
+                        "occupiedSpace": "示知"
+                    },
+                    {
+                        "title": "递归+缓存求解",
+                        "imageName": "climbStairs2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "4 ms, 在所有 Swift 提交中击败了71.95%的用户",
+                        "occupiedSpace": "13.6 MB, 在所有 Swift 提交中击败了12.46%的用户户"
+                    },
+                    {
+                        "title": "斐波那契求解",
+                        "imageName": "climbStairs3",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "4 ms, 在所有 Swift 提交中击败了71.95%的用户",
+                        "occupiedSpace": "13.4 MB, 在所有 Swift 提交中击败了44.44%的用户"
+                    },
+                ],
+                "title": "爬楼梯"
+            },
+            {
+                "destination": "LCDeleteSortedDuplicateNumberController",
+                "detail": "https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/",
+                "datas": [
+                    {
+                        "title": "双指针求解",
+                        "imageName": "removeDuplicate1",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "76 ms, 在所有 Swift 提交中击败了93.14%的用户",
+                        "occupiedSpace": "14.6 MB, 在所有 Swift 提交中击败了24.88%的用户"
+                    },
+                ],
+                "title": "删除排序数组中的重复项"
+            },
+            {
+                "destination": "LCRotateArrayController",
+                "detail": "https://leetcode-cn.com/problems/rotate-array/",
+                "datas": [
+                    {
+                        "title": "暴力求解",
+                        "imageName": "rotate1",
+                        "timeComplexity": "O(n * k)",
+                        "cosumedTime": "3392 ms, 在所有 Swift 提交中击败了6.31%的用户",
+                        "occupiedSpace": "14.9 MB, 在所有 Swift 提交中击败了37.14%的用户"
+                    },
+                    {
+                        "title": "使用额外的数组求解",
+                        "imageName": "rotate2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "3392 ms, 在所有 Swift 提交中击败了6.31%的用户",
+                        "occupiedSpace": "14.9 MB, 在所有 Swift 提交中击败了37.14%的用户"
+                    },
+                    {
+                        "title": "使用环状替换求解",
+                        "imageName": "rotate3",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "3392 ms, 在所有 Swift 提交中击败了6.31%的用户",
+                        "occupiedSpace": "14.9 MB, 在所有 Swift 提交中击败了37.14%的用户"
+                    },
+                    {
+                        "title": "使用反转求解",
+                        "imageName": "rotate4",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "3392 ms, 在所有 Swift 提交中击败了6.31%的用户",
+                        "occupiedSpace": "14.9 MB, 在所有 Swift 提交中击败了37.14%的用户"
+                    },
+                ],
+                "title": "旋转数组"
+            },
+            {
+                "destination": "LCMergetTwoSortedArrayController",
+                "detail": "https://leetcode-cn.com/problems/merge-sorted-array/",
+                "datas": [
+                    {
+                        "title": "插入再排序",
+                        "imageName": "mergeTwo1",
+                        "timeComplexity": "O(nlog(n))",
+                        "cosumedTime": "12 ms, 在所有 Swift 提交中击败了85.36%的用户",
+                        "occupiedSpace": "13.7 MB, 在所有 Swift 提交中击败了28.99%的用户"
+                    },
+                    {
+                        "title": "从前往后排序",
+                        "imageName": "mergeTwo2",
+                        "timeComplexity": "O(n^2)",
+                        "cosumedTime": "208 ms, 在所有 Swift 提交中击败了6.28%的用户",
+                        "occupiedSpace": "13.6 MB, 在所有 Swift 提交中击败了35.71%的用户"
+                    },
+                    {
+                        "title": "从后往前排序",
+                        "imageName": "mergeTwo3",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "12 ms, 在所有 Swift 提交中击败了85.36%的用户",
+                        "occupiedSpace": "13.5 MB, 在所有 Swift 提交中击败了59.24%的用户"
+                    },
+                ],
+                "title": "合并两个有序数组"
+            },
+            {
+                "destination": "LCPlusOneViewController",
+                "detail": "https://leetcode-cn.com/problems/plus-one/",
+                "datas": [
+                    {
+                        "title": "插入再排序",
+                        "imageName": "plusOne1",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "4 ms, 在所有 Swift 提交中击败了98.23%的用户",
+                        "occupiedSpace": "13.6 MB, 在所有 Swift 提交中击败了44.14%的用户"
+                    },
+                ],
+                "title": "加一"
+            },
+            {
+                "destination": "LCReverseListViewController",
+                "detail": "https://leetcode-cn.com/problems/reverse-linked-list/",
+                "datas": [
+                    {
+                        "title": "递归求解",
+                        "imageName": "reverseList1",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "16 ms, 在所有 Swift 提交中击败了93.09%的用户",
+                        "occupiedSpace": "15.1 MB, 在所有 Swift 提交中击败了16.74%的用户"
+                    },
+                    {
+                        "title": "遍历求解",
+                        "imageName": "reverseList2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "16 ms, 在所有 Swift 提交中击败了93.09%的用户",
+                        "occupiedSpace": "14.2 MB, 在所有 Swift 提交中击败了71.90%的用户"
+                    },
+                ],
+                "title": "链表反转"
+            },
+            {
+                "destination": "LCSwapParisViewController",
+                "detail": "https://leetcode-cn.com/problems/swap-nodes-in-pairs/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china",
+                "datas": [
+                    {
+                        "title": "递归求解",
+                        "imageName": "swapParis1",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "4 ms, 在所有 Swift 提交中击败了97.69%的用户",
+                        "occupiedSpace": "13.6 MB, 在所有 Swift 提交中击败了17.44%的用户"
+                    },
+                    {
+                        "title": "遍历求解",
+                        "imageName": "swapParis2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "8 ms, 在所有 Swift 提交中击败了41.83%的用户",
+                        "occupiedSpace": "13.3 MB, 在所有 Swift 提交中击败了48.28%的用户"
+                    },
+                ],
+                "title": "两两交换链表中的节点"
+            },
+            {
+                "destination": "LCHasCycleViewController",
+                "detail": "https://leetcode-cn.com/problems/linked-list-cycle/",
+                "datas": [
+                    {
+                        "title": "快慢指针求解",
+                        "imageName": "hasCycle1",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "8 ms, 在所有 Swift 提交中击败了41.83%的用户",
+                        "occupiedSpace": "13.3 MB, 在所有 Swift 提交中击败了48.28%的用户"
+                    },
+                    {
+                        "title": "hash存储求解",
+                        "imageName": "hasCycle2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "8 ms, 在所有 Swift 提交中击败了41.83%的用户",
+                        "occupiedSpace": "13.3 MB, 在所有 Swift 提交中击败了48.28%的用户"
+                    },
+                    {
+                        "title": "数组存储求解",
+                        "imageName": "hasCycle3",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "超时",
+                        "occupiedSpace": "未知"
+                    },
+                ],
+                "title": "环形链表"
+            },
+            {
+                "destination": "LCHasCycleIIViewController",
+                "detail": "https://leetcode-cn.com/problems/linked-list-cycle-ii/",
+                "datas": [
+                    {
+                        "title": "快慢指针求解",
+                        "imageName": "hasCycleii1",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "8 ms, 在所有 Swift 提交中击败了41.83%的用户",
+                        "occupiedSpace": "13.3 MB, 在所有 Swift 提交中击败了48.28%的用户"
+                    },
+                    {
+                        "title": "hash存储求解",
+                        "imageName": "hasCycleii2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "8 ms, 在所有 Swift 提交中击败了41.83%的用户",
+                        "occupiedSpace": "13.3 MB, 在所有 Swift 提交中击败了48.28%的用户"
+                    }
+                ],
+                "title": "环形链表ii"
+            }
+        ]
+    },
+    {
+        "title": "受限线性表",
+        "datas": [
+            {
+                "destination": "LCValidParenthesesViewController",
+                "detail": "https://leetcode-cn.com/problems/valid-parentheses/",
+                "datas": [
+                    {
+                        "title": "方法一: 移除匹配的括号",
+                        "imageName": "valid1",
+                        "timeComplexity": "O(nlog(n))",
+                        "cosumedTime": "880 ms, 在所有 Swift 提交中击败了10.37%的用户",
+                        "occupiedSpace": "15.1 MB, 在所有 Swift 提交中击败了5.22%的用户"
+                    },
+                    {
+                        "title": "方法二：Stack求解",
+                        "imageName": "valid2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "4 ms, 在所有 Swift 提交中击败了96.05%的用户",
+                        "occupiedSpace": "13.8 MB, 在所有 Swift 提交中击败了77.61%的用户"
+                    }
+                ],
+                "title": "有效的括号"
+            },
+            {
+                "destination": "LCMinStackViewController",
+                "detail": "https://leetcode-cn.com/problems/min-stack/",
+                "datas": [
+                    {
+                        "title": "方法一: Stack保存最小值",
+                        "imageName": "minStack1",
+                        "timeComplexity": "O(nlog(n))",
+                        "cosumedTime": "88 ms, 在所有 Swift 提交中击败了82.12%的用户",
+                        "occupiedSpace": "14.9 MB, 在所有 Swift 提交中击败了46.00%的用户"
+                    },
+                    {
+                        "title": "方法二：Stack保存与最小值的差值",
+                        "imageName": "minStack2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "84 ms, 在所有 Swift 提交中击败了95.36%的用户",
+                        "occupiedSpace": "14.7 MB, 在所有 Swift 提交中击败了83.33%的用户"
+                    }
+                ],
+                "title": "最小栈"
+            },
+            {
+                "destination": "LCLargestRectangleAreaViewController",
+                "detail": "https://leetcode-cn.com/problems/largest-rectangle-in-histogram/",
+                "datas": [
+                    {
+                        "title": "方法一: Stack保存最小值",
+                        "imageName": "minStack1",
+                        "timeComplexity": "O(nlog(n))",
+                        "cosumedTime": "88 ms, 在所有 Swift 提交中击败了82.12%的用户",
+                        "occupiedSpace": "14.9 MB, 在所有 Swift 提交中击败了46.00%的用户"
+                    },
+                    {
+                        "title": "方法二：Stack保存与最小值的差值",
+                        "imageName": "minStack2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "84 ms, 在所有 Swift 提交中击败了95.36%的用户",
+                        "occupiedSpace": "14.7 MB, 在所有 Swift 提交中击败了83.33%的用户"
+                    }
+                ],
+                "title": "柱状图中最大的矩形"
+            },
+            {
+                "destination": "LCMaxSlidingWindowViewController",
+                "detail": "https://leetcode-cn.com/problems/sliding-window-maximum/",
+                "datas": [
+                    {
+                        "title": "方法一: Stack保存最小值",
+                        "imageName": "minStack1",
+                        "timeComplexity": "O(nlog(n))",
+                        "cosumedTime": "88 ms, 在所有 Swift 提交中击败了82.12%的用户",
+                        "occupiedSpace": "14.9 MB, 在所有 Swift 提交中击败了46.00%的用户"
+                    },
+                    {
+                        "title": "方法二：Stack保存与最小值的差值",
+                        "imageName": "minStack2",
+                        "timeComplexity": "O(n)",
+                        "cosumedTime": "84 ms, 在所有 Swift 提交中击败了95.36%的用户",
+                        "occupiedSpace": "14.7 MB, 在所有 Swift 提交中击败了83.33%的用户"
+                    }
+                ],
+                "title": "滑动窗口最大值"
+            }
+        ]
+        
+    },
+    {
+        "title": "动态规划",
+        "datas": [
+            {
+                "destination": "LCDPController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "打家劫舍III"
+            },
+            
+        ]
+    },
+    {
+        "title": "树",
+        "datas": [
+            {
+                "destination": "BinarySearchTreeController",
+                "detail": "https://leetcode-cn.com/problems/binary-tree-inorder-traversal/",
+                "datas": [
+
+                ],
+                "title": "二叉树的遍历"
+            },
+            
+        ]
+    },
+    
+]

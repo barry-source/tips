@@ -1,0 +1,22 @@
+PODS:
+  - HXPhotoPicker (3.1.6):
+    - HXPhotoPicker/Default (= 3.1.6)
+  - HXPhotoPicker/Default (3.1.6)
+  - SnapKit (5.0.1)
+
+DEPENDENCIES:
+  - HXPhotoPicker (~> 3.1.6)
+  - SnapKit (~> 5.0.1)
+
+SPEC REPOS:
+  trunk:
+    - HXPhotoPicker
+    - SnapKit
+
+SPEC CHECKSUMS:
+  HXPhotoPicker: 508ca7af32e9f4a1b155abd2694a3b42b87ae7a5
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+
+PODFILE CHECKSUM: fb80d8777f0b072dc9b3c12fc0f45c4e18d8fd32
+
+COCOAPODS: 1.9.1

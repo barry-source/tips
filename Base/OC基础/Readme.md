@@ -346,3 +346,43 @@ Swift：
     添加dynamic关键字函数使用消息派发
     添加@objc关键字的函数使用消息派发
     添加@inline关键字的函数会告诉编译器可以使用直接派发
+
+### 30、回到主线程的几种方式
+
+```ruby
+/*******************GCD************************/
+dispatch_async(dispatch_get_main_queue(), ^{
+    需要执行的方法
+});
+
+/*******************NSOperation************************/
+NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];  
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    需要执行的方法
+}];
+[mainQueue addOperation:operation];
+
+/*******************NSObject************************/
+[self performSelector:@selector(method) onThread:[NSThread mainThread] withObject:nil waitUntilDone:YES modes:nil];
+[self performSelectorOnMainThread:@selector(method) withObject:nil waitUntilDone:YES];
+
+[[NSThread mainThread] performSelector:@selector(method) withObject:nil];
+[[NSRunLoop mainRunLoop] performSelector:@selector(method) withObject:nil];
+
+```
+
+### 32、不用临时变量怎么实现 swap(a, b)
+
+```ruby
+a = a + b; // a + b
+b = a - b; // a + b - b = a
+a = a - b; // a + b - a = b
+
+或
+
+a = a ^ b // a ^ b
+b = a ^ b // a ^ b ^ b = a
+a = a ^ b // a ^ b ^ a = b
+```
+
+

@@ -1,0 +1,21 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'Leetcode' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for Leetcode
+#  pod "RATreeView", "~> 2.1.2"
+  pod 'SnapKit', '~> 5.0.1'
+  pod 'HXPhotoPicker', '~> 3.1.6'
+  target 'LeetcodeTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'LeetcodeUITests' do
+    # Pods for testing
+  end
+
+end

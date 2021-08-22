@@ -1072,3 +1072,5 @@ initialize： 在第一次给对象发消息时调用。实质也是给对象发
 分类实现了initialize方法，会优先调用分类的。
 
 
+
+![load和Initiliaze.png](https://upload-images.jianshu.io/upload_images/1846524-f119c4995caf3665.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)

@@ -1,0 +1,6 @@
+framework module Pods_Leetcode_LeetcodeUITests {
+  umbrella header "Pods-Leetcode-LeetcodeUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
