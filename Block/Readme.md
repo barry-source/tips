@@ -19,6 +19,7 @@ void (^globalBlock)(void);
 void blockType() {
     
     // 1、未捕获任何自动变量的block，是_NSConcreteGlobalBlock类型的
+    // 或者如果访问了外部static或者全局变量也是这种类
     globalBlock = ^{
     };
     

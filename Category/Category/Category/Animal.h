@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LivingBeings.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Animal : NSObject
+@interface Animal : LivingBeings
 
 - (void)run;
 

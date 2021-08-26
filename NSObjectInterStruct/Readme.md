@@ -183,3 +183,25 @@ debug_objc_class *dogMetaClass = (__bridge struct debug_objc_class *)(dogOrinalM
 ## 参考文档
 
 [类对象和元类对象](http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html)
+
+
+
+##### 谈谈你对Runtime的理解
+
+```ruby
+
+1、OC是一门动态性编程语言,允许很多操作推迟到运行时在进行，包括类型的确定和方法的调用等
+OC的动态性是有RunTime来支撑和实现的,Runtime是一套C语言的API,封装了很多动态性相关的函数
+平时编写的OC代码,底层都转换成立Runtime API进行调用，比如说调用对象的方法，底层会转换成objc_msgSend(receiver, msg)
+
+2、对象的构造
+isa superClass methodList ivars methodLists protocols cache 等
+
+3 、讲一下oc的消息机制
+
+给对象发消息对象isa指针指向类对象，先查找缓存，如果有直接返回相应的方法，没有则查找方法列表，有则返回，没有则通过superclass向父类方法查找，先查找缓存有则返回，没有则查找方法列表。一直找到跟类对象，如果找不到进入消息转发
+1.动态方法解析，动态添加没有实现的方法
+2.消息转发 将方法交由可以接收的其它对象 ----   这里可以做一些防崩溃处理（）
+3、实现方法签名和forwardInvocation ,这里可以创建一个新类
+
+```

@@ -11,7 +11,7 @@
 @implementation Animal
 
 + (void)initialize {
-    
+    NSLog(@"Animal --- initialize");
 }
 
 + (void)load {

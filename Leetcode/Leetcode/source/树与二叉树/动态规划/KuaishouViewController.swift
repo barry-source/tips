@@ -11,10 +11,11 @@ class KuaishouViewController: LCLinkBaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+//        print(combinationSum([2,3,6,7], 7))
 //        addStrings("1", "9")
-//        print(longestPalindrome("babad"))
-        print(countPrimeNum(6))
+        print(longestPalindrome("babad"))
+//        print(countPrimeNum(6))
     }
     
     
@@ -24,6 +25,88 @@ class KuaishouViewController: LCLinkBaseViewController {
 // easy
 extension KuaishouViewController {
     
+    func levelOrder(_ root: TreeNode?) -> [[Int]] {
+        guard let root = root else { return [] }
+
+        var result: [[Int]] = []
+        var queue: [TreeNode] = [root]
+
+        while !queue.isEmpty {
+            var levelResult: [Int] = []
+
+            for _ in 0 ..< queue.count {
+                let node = queue.removeFirst()
+                levelResult.append(node.val)
+                if let left = node.left { queue.append(left) }
+                if let right = node.right { queue.append(right) }
+            }
+
+            result.append(levelResult)
+        }
+
+        return result
+    }
+    
+    func lengthOfLongestSubstring(_ s: String) -> Int {
+        if(s == "") { return 0 }
+        var maxStr = String()
+        var curStr = String()
+        for char in s {
+            while curStr.contains(char) {
+                curStr.removeFirst()
+            }
+            curStr.append(char)
+            if curStr.count > maxStr.count {
+                maxStr = curStr
+            }
+        }
+        return maxStr.count
+    }
+//    func lengthOfLongestSubstring(_ s: String) -> Int {
+//        var dic = [Character: Int]()
+//        var start = 0
+//        var result = 0
+//        for (index, char) in s.enumerated() {
+//            let previousIndex = dic[char] ?? -1
+//            if previousIndex >= start {
+//                start = previousIndex + 1
+//            }
+//            let currentLength = index - start + 1
+//            result = max(result, currentLength)
+//            dic[char] = index
+//        }
+//        return result
+//    }
+    /*
+     39. 组合总和
+     https://leetcode-cn.com/problems/combination-sum/
+     */
+    
+    func combinationSum(_ candidates: [Int], _ target: Int) -> [[Int]] {
+        var result = [[Int]]()
+        if candidates.count == 0 {
+            return result
+        }
+
+        // 先排序原数组
+        let newCandidates = candidates.sorted()
+        dfs(newCandidates, target, 0, [], &result)
+        
+        return result
+    }
+
+    func dfs(_ candidates: [Int], _ target: Int, _ begin: Int, _ path: [Int], _ result: inout [[Int]]) {
+        if target == 0 {
+            result.append(path)
+            return
+        }
+        for i in begin..<candidates.count {
+            if target - candidates[i] < 0 { return }
+            var path = path
+            path.append(candidates[i])
+            dfs(candidates, target - candidates[i], i, path, &result)
+        }
+    }
     /*
      剑指 Offer 58 - II. 左旋转字符串
      https://leetcode-cn.com/problems/zuo-xuan-zhuan-zi-fu-chuan-lcof/
@@ -246,16 +329,12 @@ extension KuaishouViewController {
         var begin = 0
         
         for j in 0..<count {
-            for i in 0 ... j {
-                if i == j { // 对角线无参考意义
-                    dp[i][j] = true
-                    continue
-                }
+            for i in 0 ..< j {
                 if stringArray[i] != stringArray[j] {
                     dp[i][j] = false
                     continue
                 }
-                if stringArray[i] == stringArray[j], j - i < 2 || dp[i + 1][j - 1] {
+                if (j - i <= 2) || dp[i + 1][j - 1] {
                     dp[i][j] = true
                     if j - i >= maxLength {
                         begin = i
@@ -266,6 +345,15 @@ extension KuaishouViewController {
         }
         return String(stringArray[begin..<(begin + maxLength)])
         
+        
+        /*
+         for i in 0 ... j {
+             if i == j { // 对角线无参考意义
+                 dp[i][j] = true
+                 continue
+             }
+         
+         */
 //        let strArr = Array(s)
 //        let n = strArr.count
 //        var dp = Array(repeating: Array(repeating: false, count: n), count: n)

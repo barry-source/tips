@@ -13,6 +13,10 @@
 
 @implementation Animal (Function1)
 
++ (void)initialize {
+    NSLog(@"Function1 --- initialize");
+}
+
 + (void)load {
     NSLog(@"Function1 --- load");
 }

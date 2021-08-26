@@ -11,6 +11,7 @@
 		7103B4972511A38F00DA6050 /* Animal.m in Sources */ = {isa = PBXBuildFile; fileRef = 7103B4962511A38F00DA6050 /* Animal.m */; };
 		7121F8B1251834B500981DCF /* Animal+Function1.m in Sources */ = {isa = PBXBuildFile; fileRef = 7121F8B0251834B500981DCF /* Animal+Function1.m */; };
 		7121F8B4251834C500981DCF /* Animal+Function2.m in Sources */ = {isa = PBXBuildFile; fileRef = 7121F8B3251834C500981DCF /* Animal+Function2.m */; };
+		E75E96A926D23C5B00BC3758 /* LivingBeings.m in Sources */ = {isa = PBXBuildFile; fileRef = E75E96A826D23C5B00BC3758 /* LivingBeings.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,8 @@
 		7121F8B2251834C500981DCF /* Animal+Function2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Animal+Function2.h"; sourceTree = "<group>"; };
 		7121F8B3251834C500981DCF /* Animal+Function2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Animal+Function2.m"; sourceTree = "<group>"; };
 		7121F8B5251836FE00981DCF /* Animal+Function1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Animal+Function1.cpp"; sourceTree = "<group>"; };
+		E75E96A726D23C5B00BC3758 /* LivingBeings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LivingBeings.h; sourceTree = "<group>"; };
+		E75E96A826D23C5B00BC3758 /* LivingBeings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LivingBeings.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +78,8 @@
 				7121F8B0251834B500981DCF /* Animal+Function1.m */,
 				7121F8B2251834C500981DCF /* Animal+Function2.h */,
 				7121F8B3251834C500981DCF /* Animal+Function2.m */,
+				E75E96A726D23C5B00BC3758 /* LivingBeings.h */,
+				E75E96A826D23C5B00BC3758 /* LivingBeings.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -138,6 +143,7 @@
 			files = (
 				7103B4972511A38F00DA6050 /* Animal.m in Sources */,
 				7121F8B1251834B500981DCF /* Animal+Function1.m in Sources */,
+				E75E96A926D23C5B00BC3758 /* LivingBeings.m in Sources */,
 				7121F8B4251834C500981DCF /* Animal+Function2.m in Sources */,
 				7103B48C2511A33000DA6050 /* main.m in Sources */,
 			);

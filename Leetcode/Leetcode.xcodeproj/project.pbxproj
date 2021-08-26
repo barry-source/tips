@@ -56,6 +56,7 @@
 		E7507ED726C8B70A00FFE2AD /* JingDongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7507ED626C8B70A00FFE2AD /* JingDongViewController.swift */; };
 		E75E96A326D1ECB600BC3758 /* SwordOfferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75E96A226D1ECB600BC3758 /* SwordOfferViewController.swift */; };
 		E75E96A626D1EDBA00BC3758 /* SwordOfferViewController+Ten.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75E96A526D1EDBA00BC3758 /* SwordOfferViewController+Ten.swift */; };
+		E75E96AB26D31C8400BC3758 /* LCCheckIPController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75E96AA26D31C8400BC3758 /* LCCheckIPController.swift */; };
 		E7A7799226C1F82800D78DD4 /* LCDPController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A7799126C1F82800D78DD4 /* LCDPController.swift */; };
 		E7A7799426C21B8F00D78DD4 /* ByteDanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A7799326C21B8F00D78DD4 /* ByteDanceViewController.swift */; };
 		E7A7799626C2629400D78DD4 /* KuaishouViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A7799526C2629400D78DD4 /* KuaishouViewController.swift */; };
@@ -144,6 +145,7 @@
 		E7507ED626C8B70A00FFE2AD /* JingDongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JingDongViewController.swift; sourceTree = "<group>"; };
 		E75E96A226D1ECB600BC3758 /* SwordOfferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwordOfferViewController.swift; sourceTree = "<group>"; };
 		E75E96A526D1EDBA00BC3758 /* SwordOfferViewController+Ten.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwordOfferViewController+Ten.swift"; sourceTree = "<group>"; };
+		E75E96AA26D31C8400BC3758 /* LCCheckIPController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LCCheckIPController.swift; sourceTree = "<group>"; };
 		E7A7799126C1F82800D78DD4 /* LCDPController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LCDPController.swift; sourceTree = "<group>"; };
 		E7A7799326C21B8F00D78DD4 /* ByteDanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteDanceViewController.swift; sourceTree = "<group>"; };
 		E7A7799526C2629400D78DD4 /* KuaishouViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuaishouViewController.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 				71E11F08258A083700F4A173 /* LCRotateArrayController.swift */,
 				71B29CAA258AF5CE00825708 /* LCMergetTwoSortedArrayController.swift */,
 				71143D8A25917FFB002847FC /* LCPlusOneViewController.swift */,
+				E75E96AA26D31C8400BC3758 /* LCCheckIPController.swift */,
 			);
 			path = "数组";
 			sourceTree = "<group>";
@@ -762,6 +765,7 @@
 				716B818B258737F700F30868 /* LCClimbStarirsViewController.swift in Sources */,
 				E7A7799A26C429C500D78DD4 /* LCFullSquareViewController.swift in Sources */,
 				71EA662B2570DA8D004AF2D4 /* ViewController.swift in Sources */,
+				E75E96AB26D31C8400BC3758 /* LCCheckIPController.swift in Sources */,
 				7169FD4625949E15001D083B /* LCHasCycleIIViewController.swift in Sources */,
 				7190FEEB2578D8ED00FEE547 /* AppMode.swift in Sources */,
 				7169656F2576462700FF4772 /* UIScreen+Extension.swift in Sources */,
