@@ -65,6 +65,9 @@
 		E7A7799C26C42ECE00D78DD4 /* LCUniquePathsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A7799B26C42ECE00D78DD4 /* LCUniquePathsViewController.swift */; };
 		E7A7799E26C42F0200D78DD4 /* LCUniquePaths2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A7799D26C42F0200D78DD4 /* LCUniquePaths2ViewController.swift */; };
 		E7A779A026C659C600D78DD4 /* BubbleSortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A7799F26C659C600D78DD4 /* BubbleSortViewController.swift */; };
+		E7AC43B126D8C68300EA693D /* SwordOfferViewController+Twenty.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AC43B026D8C68300EA693D /* SwordOfferViewController+Twenty.swift */; };
+		E7AC43B426DB8C7700EA693D /* BFSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AC43B326DB8C7700EA693D /* BFSViewController.swift */; };
+		E7AC43BA26DE6FF000EA693D /* NormalTreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AC43B926DE6FF000EA693D /* NormalTreeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -154,6 +157,9 @@
 		E7A7799B26C42ECE00D78DD4 /* LCUniquePathsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LCUniquePathsViewController.swift; sourceTree = "<group>"; };
 		E7A7799D26C42F0200D78DD4 /* LCUniquePaths2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LCUniquePaths2ViewController.swift; sourceTree = "<group>"; };
 		E7A7799F26C659C600D78DD4 /* BubbleSortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleSortViewController.swift; sourceTree = "<group>"; };
+		E7AC43B026D8C68300EA693D /* SwordOfferViewController+Twenty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwordOfferViewController+Twenty.swift"; sourceTree = "<group>"; };
+		E7AC43B326DB8C7700EA693D /* BFSViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BFSViewController.swift; sourceTree = "<group>"; };
+		E7AC43B926DE6FF000EA693D /* NormalTreeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalTreeViewController.swift; sourceTree = "<group>"; };
 		EEA0F5AD2CBFA2657CD53F11 /* Pods-Leetcode-LeetcodeUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Leetcode-LeetcodeUITests.release.xcconfig"; path = "Target Support Files/Pods-Leetcode-LeetcodeUITests/Pods-Leetcode-LeetcodeUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -230,6 +236,7 @@
 		7139A28D257481FB00DFEC71 /* 树与二叉树 */ = {
 			isa = PBXGroup;
 			children = (
+				E7AC43B226DB8C4E00EA693D /* 广度优先搜索 */,
 				E7A7799026C1F7CE00D78DD4 /* 动态规划 */,
 				7139A2962574827900DFEC71 /* 字典树 */,
 				7139A2952574826E00DFEC71 /* 哈夫曼树 */,
@@ -309,6 +316,7 @@
 		7139A2942574826700DFEC71 /* 二叉树 */ = {
 			isa = PBXGroup;
 			children = (
+				E7AC43B826DE6FCB00EA693D /* Normal */,
 				7139A29A257482B900DFEC71 /* 平衡二叉搜索树 */,
 				7139A299257482A200DFEC71 /* 二叉搜索树 */,
 				7139A2982574829900DFEC71 /* 满二叉树 */,
@@ -491,6 +499,7 @@
 			children = (
 				E75E96A226D1ECB600BC3758 /* SwordOfferViewController.swift */,
 				E75E96A526D1EDBA00BC3758 /* SwordOfferViewController+Ten.swift */,
+				E7AC43B026D8C68300EA693D /* SwordOfferViewController+Twenty.swift */,
 			);
 			path = SwordOffer;
 			sourceTree = "<group>";
@@ -507,6 +516,22 @@
 				E7507ED626C8B70A00FFE2AD /* JingDongViewController.swift */,
 			);
 			path = "动态规划";
+			sourceTree = "<group>";
+		};
+		E7AC43B226DB8C4E00EA693D /* 广度优先搜索 */ = {
+			isa = PBXGroup;
+			children = (
+				E7AC43B326DB8C7700EA693D /* BFSViewController.swift */,
+			);
+			path = "广度优先搜索";
+			sourceTree = "<group>";
+		};
+		E7AC43B826DE6FCB00EA693D /* Normal */ = {
+			isa = PBXGroup;
+			children = (
+				E7AC43B926DE6FF000EA693D /* NormalTreeViewController.swift */,
+			);
+			path = Normal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -748,6 +773,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7AC43B426DB8C7700EA693D /* BFSViewController.swift in Sources */,
 				E7507ED726C8B70A00FFE2AD /* JingDongViewController.swift in Sources */,
 				712DA7E2257DCA19001AE4CD /* MoveZeroToTailViewController.swift in Sources */,
 				71E11F09258A083700F4A173 /* LCRotateArrayController.swift in Sources */,
@@ -766,6 +792,7 @@
 				E7A7799A26C429C500D78DD4 /* LCFullSquareViewController.swift in Sources */,
 				71EA662B2570DA8D004AF2D4 /* ViewController.swift in Sources */,
 				E75E96AB26D31C8400BC3758 /* LCCheckIPController.swift in Sources */,
+				E7AC43B126D8C68300EA693D /* SwordOfferViewController+Twenty.swift in Sources */,
 				7169FD4625949E15001D083B /* LCHasCycleIIViewController.swift in Sources */,
 				7190FEEB2578D8ED00FEE547 /* AppMode.swift in Sources */,
 				7169656F2576462700FF4772 /* UIScreen+Extension.swift in Sources */,
@@ -787,6 +814,7 @@
 				E7A7799826C2CDA600D78DD4 /* BinarySearchTreeController.swift in Sources */,
 				71C87396259B0FF600009FA7 /* LCLargestRectangleAreaViewController.swift in Sources */,
 				7139A2C42574CBC100DFEC71 /* WebViewController.swift in Sources */,
+				E7AC43BA26DE6FF000EA693D /* NormalTreeViewController.swift in Sources */,
 				E7A7799626C2629400D78DD4 /* KuaishouViewController.swift in Sources */,
 				71DC24362594221200AB3336 /* LCHasCycleViewController.swift in Sources */,
 				E75E96A326D1ECB600BC3758 /* SwordOfferViewController.swift in Sources */,

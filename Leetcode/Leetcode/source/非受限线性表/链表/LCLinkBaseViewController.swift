@@ -7,6 +7,7 @@
 
 import UIKit
 
+// 二叉树
 public class TreeNode {
     public var val: Int
     public var left: TreeNode?
@@ -24,6 +25,18 @@ public class TreeNode {
     }
 }
 
+// n叉树
+public class Node {
+    public var val: Int
+    public var children: [Node]
+
+    public init(_ val: Int) {
+        self.val = val
+        children = []
+    }
+}
+
+// 链表
 public class ListNode {
     public var val: Int
     public var next: ListNode?

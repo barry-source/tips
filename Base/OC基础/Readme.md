@@ -386,3 +386,22 @@ a = a ^ b // a ^ b ^ a = b
 ```
 
 
+### 33、layoutSubviews调用时机
+
+- init初始化不会触发layoutSubviews；
+- addSubview会触发layoutSubviews；
+- 设置view的frame会触发layoutSubviews，当然前提是frame的值前后发生了变化。
+- 滚动一个UIScrollview会触发layoutSubviews；
+- 旋转Screen会触发父UIView上的layoutSubviews事件；
+- 改变一个UIView大小的时候也会触发父UIView的layoutSubviews事件。
+- 直接调用setLayoutSubviews。
+
+### 34、drawRect调用时机
+
+- 如果在UIView初始化时没有设置rect大小，将直接导致drawRect不被自动调用。 drawRect掉用是在 Controller-> load view, Controller-> viewDidLoad两方法之后掉用的所以不用担心在控制器中,这些View的drawRect就开始画了,这样可以在控制器中设置一些值给View(如果这些 View draw的时候需要用到某些变量值)
+
+- 该方法在调用 sizeToFit后被调用,所以可以先调用sizeToFit计算出size。然后系统自动调用drawRect方法。
+
+- 通过设置 contentMode属性值为UIViewContentModeRedraw。那么将在每次设置或更改frame的时候自动调用 drawRect。
+
+- 直接调用 setNeedsDisplay,或者 setNeedsDisplaylnRect:触发drawRect:,但是有个前提条件是rect不能为0。

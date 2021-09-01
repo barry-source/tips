@@ -12,7 +12,8 @@ class LCClimbStarirsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print(climbStairs(100))
+//        print(climbStairs(100))
+        print(climbStairs1(100))
     }
     
     // 斐波那契求解
@@ -31,6 +32,20 @@ class LCClimbStarirsViewController: BaseViewController {
         }
         return f2
     }
+    
+    func climbStairs1(_ n: Int) -> Int {
+        if n <= 2 {
+            return n
+        }
+        var result = [Int](repeating: 0, count: n)
+        result[0] = 1
+        result[1] = 2
+        for i in 0..<n - 2 {
+            result[i + 2] = result[i] + result[i + 1]
+        }
+        return result.last ?? 0
+    }
+    
 
 //    // 递归求解
 //    /*超时

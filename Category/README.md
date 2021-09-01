@@ -1073,4 +1073,12 @@ initialize： 在第一次给对象发消息时调用。实质也是给对象发
 
 
 
+> 分类和扩展的区别
+
+Class Extension（即匿名分类）类的扩展只是声明，依赖于当前类，没有.m文件；在编译时，作为类的一部分，和类一起编译，它的数据包含在类信息中。可以添加属性同时会生成对应的成员变量
+
+Category是在运行时，才会将数据合并到类信息中。可以添加属性但是不会生成对应的成员变量
+
+
+
 ![load和Initiliaze.png](https://upload-images.jianshu.io/upload_images/1846524-f119c4995caf3665.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)

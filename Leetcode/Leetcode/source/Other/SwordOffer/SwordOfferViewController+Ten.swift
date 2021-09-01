@@ -7,8 +7,64 @@
 
 import Foundation
 
+// 反转链表
+var arr = [Int]()
+
+// 用两个栈实现队列
+var stack1: [Int] = []
+var stack2: [Int] = []
+
 extension SwordOfferViewController {
     
+    /*
+     剑指 Offer 03. 数组中重复的数字
+     https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/
+     */
+    
+    func findRepeatNumber(_ nums: [Int]) -> Int {
+        var nums = nums
+        var index = 0
+        while index < nums.count {
+            if index == nums[index] {
+                index += 1
+                continue
+            }
+            if nums[nums[index]] == nums[index] {
+                return nums[index]
+            }
+            (nums[index], nums[nums[index]]) = (nums[nums[index]], nums[index])
+        }
+        return -1
+        
+//        var nums = nums
+//        for i in 0 ..< nums.count {
+//            if i == nums[i] { continue }
+//            if nums[i] == nums[nums[i]] {
+//                return nums[i]
+//            }
+//            nums.swapAt(i, nums[i])
+//            if i == nums.count - 1 {
+//                if nums[i] == nums[nums[i]] {
+//                    return nums[i]
+//                }
+//            }
+//        }
+//        return -1
+    }
+    
+    
+//    func findRepeatNumber(_ nums: [Int]) -> Int {
+//        var hashSet: Set<Int> = []
+//        for num in nums {
+//            if hashSet.contains(num) {
+//                return num
+//            }
+//            hashSet.insert(num)
+//        }
+//        return -1
+//    }
+
+
     /*
      剑指 Offer 04. 二维数组中的查找
      https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof/
@@ -57,6 +113,119 @@ extension SwordOfferViewController {
 //
 //        return false
     }
+    
+    /*
+     剑指 Offer 05. 替换空格
+     https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/
+     */
+    
+    func replaceSpace(_ s: String) -> String {
+//        var res = ""
+//        for char in s {
+//            if char == " " {
+//                res.append("%20")
+//            } else {
+//                res.append(char)
+//            }
+//        }
+//        return res
+        
+        // 双指针法
+        var count: Int = 0
+        s.forEach { item in
+            if item == " "{
+                count += 1
+            }
+        }
+        var resultArr = [Character](repeating: Character(" "), count: s.count + 2 * count)
+        var index: Int = resultArr.count - 1
+        for item in s.reversed() {
+            if item == " " {
+                resultArr[index] = Character("0")
+                index -= 1
+                resultArr[index] = Character("2")
+                index -= 1
+                resultArr[index] = Character("%")
+                index -= 1
+            } else {
+                resultArr[index] = item
+                index -= 1
+            }
+        }
+        return String(resultArr)
+    }
+    
+    /*
+     剑指 Offer 06. 从尾到头打印链表
+     https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/
+     */
+    
+//    func reversePrintInsertArray(_ head: ListNode?) -> [Int] {
+//        var result: [Int] = []
+//        var node = head
+//        while node != nil {
+//            result.insert(node!.val, at: 0)
+//            node = node?.next
+//        }
+//        return result
+//    }
+
+    // 递归调用
+    func reversePrintInsertArray(_ head: ListNode?) -> [Int] {
+        return reversePrint(head)
+    }
+    
+    func reversePrint(_ head: ListNode?) -> [Int] {
+        if head == nil { return [] }
+        _ = reversePrint(head?.next)
+        arr.append(head!.val)
+        return arr
+    }
+
+    /*
+     剑指 Offer 07. 重建二叉树
+     https://leetcode-cn.com/problems/zhong-jian-er-cha-shu-lcof/
+     */
+    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        if preorder.count == 0 || inorder.count == 0 { return nil }
+        
+        //构建二叉树根结点
+        let root: TreeNode? = TreeNode(preorder[0])
+        
+        //对中序序列进行遍历
+        for (index, num) in inorder.enumerated() {
+            // 如果找到根节点
+            if num == preorder[0] {
+                root?.left = buildTree(Array(preorder[1..<index+1]), Array(inorder[0..<index]) )
+                root?.right = buildTree(Array(preorder[index+1..<preorder.endIndex]), Array(inorder[index+1..<inorder.endIndex]))
+            }
+        }
+        
+        return root
+    }
+    
+
+    /*
+     剑指 Offer 09. 用两个栈实现队列
+     https://leetcode-cn.com/problems/yong-liang-ge-zhan-shi-xian-dui-lie-lcof/
+     */
+    
+    func appendTail(_ value: Int) {
+        stack1.append(value)
+    }
+    
+    func deleteHead() -> Int {
+        if stack2.isEmpty {
+            while let head = stack1.popLast() {
+                stack2.append(head)
+            }
+        }
+        return stack2.popLast() ?? -1
+    }
+    /*
+     
+     */
+    
     
     /*
      

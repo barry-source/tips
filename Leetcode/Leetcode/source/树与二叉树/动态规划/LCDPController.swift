@@ -29,6 +29,8 @@ class LCDPController: BaseViewController {
         print(compress(&array))
         print(array)
 
+        
+        print(maxWidthRamp([2,4,1,3]))
     }
     
     
@@ -86,4 +88,46 @@ class LCDPController: BaseViewController {
         return write
     }
     
+    
+//    53.最大子序和
+//    https://leetcode-cn.com/problems/maximum-subarray/solution/53zui-da-zi-xu-he-swift-by-cobbly/
+    func maxSubArray(_ nums: [Int]) -> Int {
+        var dp = [Int](repeating: 0, count: nums.count)
+        dp[0] = nums[0]
+        var maxSum = dp[0]
+        for i in 1..<nums.count {
+            dp[i] = max(dp[i-1] + nums[i], nums[i])
+            maxSum = max(dp[i], maxSum)
+        }
+        return maxSum
+    }
+    
+    
+    // 2 4 1 3
+    /*
+     最大宽度坡
+     https://leetcode-cn.com/problems/maximum-width-ramp/solution/zui-da-kuan-du-po-by-leetcode/
+     */
+    func maxWidthRamp(_ nums: [Int]) -> Int {
+        if nums.count <= 1 {
+            return 0
+        }
+        var stack: [Int] = []
+        var result = 0
+        for i in 0..<nums.count {
+            if stack.isEmpty  {
+                stack.append(i)
+            } else if nums[stack[stack.count - 1]] > nums[i] {
+                stack.append(i)
+            }
+        }
+        
+        for i in (0..<nums.count).reversed() {
+            while !stack.isEmpty && nums[i] >= nums[stack[stack.count - 1]] {
+                result = max(result, i - stack.last!)
+                stack.removeLast()
+            }
+        }
+        return result
+    }
 }
