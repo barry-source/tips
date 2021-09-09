@@ -54,6 +54,7 @@
 		E7507ED326C7F04700FFE2AD /* MergeSortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7507ED226C7F04700FFE2AD /* MergeSortViewController.swift */; };
 		E7507ED526C7FB5400FFE2AD /* HeapSortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7507ED426C7FB5400FFE2AD /* HeapSortViewController.swift */; };
 		E7507ED726C8B70A00FFE2AD /* JingDongViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7507ED626C8B70A00FFE2AD /* JingDongViewController.swift */; };
+		E7567FCC26E9D7BF00F94E08 /* CountSortViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7567FCB26E9D7BF00F94E08 /* CountSortViewController.swift */; };
 		E75E96A326D1ECB600BC3758 /* SwordOfferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75E96A226D1ECB600BC3758 /* SwordOfferViewController.swift */; };
 		E75E96A626D1EDBA00BC3758 /* SwordOfferViewController+Ten.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75E96A526D1EDBA00BC3758 /* SwordOfferViewController+Ten.swift */; };
 		E75E96AB26D31C8400BC3758 /* LCCheckIPController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75E96AA26D31C8400BC3758 /* LCCheckIPController.swift */; };
@@ -146,6 +147,7 @@
 		E7507ED226C7F04700FFE2AD /* MergeSortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MergeSortViewController.swift; sourceTree = "<group>"; };
 		E7507ED426C7FB5400FFE2AD /* HeapSortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeapSortViewController.swift; sourceTree = "<group>"; };
 		E7507ED626C8B70A00FFE2AD /* JingDongViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JingDongViewController.swift; sourceTree = "<group>"; };
+		E7567FCB26E9D7BF00F94E08 /* CountSortViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountSortViewController.swift; sourceTree = "<group>"; };
 		E75E96A226D1ECB600BC3758 /* SwordOfferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwordOfferViewController.swift; sourceTree = "<group>"; };
 		E75E96A526D1EDBA00BC3758 /* SwordOfferViewController+Ten.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwordOfferViewController+Ten.swift"; sourceTree = "<group>"; };
 		E75E96AA26D31C8400BC3758 /* LCCheckIPController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LCCheckIPController.swift; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 				E7507ECE26C7BD1000FFE2AD /* QuickSortViewController.swift */,
 				E7507ED226C7F04700FFE2AD /* MergeSortViewController.swift */,
 				E7507ED426C7FB5400FFE2AD /* HeapSortViewController.swift */,
+				E7567FCB26E9D7BF00F94E08 /* CountSortViewController.swift */,
 			);
 			path = "排序";
 			sourceTree = "<group>";
@@ -802,6 +805,7 @@
 				71EA66292570DA8D004AF2D4 /* SceneDelegate.swift in Sources */,
 				7145F13A259C1CA600835192 /* LCMaxSlidingWindowViewController.swift in Sources */,
 				E7507ED526C7FB5400FFE2AD /* HeapSortViewController.swift in Sources */,
+				E7567FCC26E9D7BF00F94E08 /* CountSortViewController.swift in Sources */,
 				718095D125778721005E8A33 /* LCThreeSumViewController.swift in Sources */,
 				716965772576647800FF4772 /* PreviewHeaderView.swift in Sources */,
 				71C87391259AB38A00009FA7 /* LCMinStackViewController.swift in Sources */,

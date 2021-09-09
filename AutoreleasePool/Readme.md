@@ -20,6 +20,20 @@ autorelease对象除了作用域后，会被添加到最近一次创建的自动
 ps:runloop从程序启动到加载完成是一个完整的运行循环，然后会停下来，等待用户交互，用户的每一次交互都会启动一次运行循环，这时候会创建自动释放池，来处理用户所有的点击事件、触摸事件，在一次完整的运行循环结束之前，会销毁自动释放池，达到销毁对象的目的。
 
 
+使用以下名称开头的方法名意味着自己生成的对象自己持有：
+
+    alloc
+    new
+    copy
+    mutableCopy
+    
+除了以上四种方式创建的对象，都不是自己持有的
+
+    id obj = [NSMutableArray array];//自己不持有
+    [UIImage imageNamed:@"test"];//自己不持有
+    
+
+
 ## 2、AutoreleasePool概念
 
 自动释放池的主要底层数据结构是：__AtAutoreleasePool、AutoreleasePoolPage

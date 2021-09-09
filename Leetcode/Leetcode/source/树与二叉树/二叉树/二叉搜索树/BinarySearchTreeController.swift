@@ -13,7 +13,7 @@ class BinarySearchTreeController: LCLinkBaseViewController {
         super.viewDidLoad()
         let l = TreeNode(4, TreeNode(3), TreeNode(5))
         let root = TreeNode(1, l, TreeNode(2))
-        print(inorderTraversal(root))
+        print(inorderTraversal1(root))
 //        print(preorderTraversal(root))
         // Do any additional setup after loading the view.
     }
@@ -77,5 +77,26 @@ extension BinarySearchTreeController {
         seq += inorderTraversal(root.left)
         seq += inorderTraversal(root.right)
         return seq
+    }
+    
+    func inorderTraversal1(_ root: TreeNode?) -> [Int] {
+        if root == nil { return [] }
+        var stack: [TreeNode] = []
+        var result: [Int] = []
+        var node = root
+        
+        while node != nil || !stack.isEmpty {
+            while node != nil {
+                stack.append(node!)
+                node = node?.left
+            }
+            guard let temp = stack.popLast() else {
+                return result
+            }
+            
+            result.append(temp.val)
+            node = temp.right
+        }
+        return result
     }
 }

@@ -58,6 +58,14 @@
                 ],
                 "title": "堆排序"
             },
+            {
+                "destination": "CountSortViewController",
+                "detail": "https://leetcode-cn.com/problems/two-sum/",
+                "datas": [
+
+                ],
+                "title": "计数排序"
+            }
         ]
     },
     {
