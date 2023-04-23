@@ -1,6 +1,52 @@
 
 # HTTPS工作流程
 
+## http相关概念
+
+URI = URL + URN 大致看成是URL和URN的集合，但是URL和URN之间有交集
+URI：Uniform Resource Identifier
+URL：Uniform Resource Locator
+URN：Uniform Resource Name
+
+URI: (scheme://)(host:port)(/path)(?query) 由 scheme 、authority（host：port）、path和query四部分组成
+
+scheme 叫“方案名”或者“协议名”，表示资源应该使用哪种协议来访问（http,https,ftp等）
+authority 表示资源所在的主机名和端口号；
+path 标记资源所在的位置
+query 表示对资源附加的额外要求
+在 URI 里对“@&/”等特殊字符和汉字必须要做编码，否则服务器收到 HTTP 报文后会无法正确处理。
+
+//////////////////////////////////////////////////////////
+## http 常用状态码
+状态码在响应报文里表示了服务器对请求的处理结果；
+状态码后的原因短语是简单的文字描述，可以自定义；
+状态码是十进制的三位数，分为五类，从 100 到 599；
+2××类状态码表示成功，常用的有 200(ok)、204( No Content)、206(Partial Content，断点续传)；
+3××类状态码表示重定向，常用的有 301(永久重定向)、302(临时重定向)、304(Not Modified 缓存重定向)；
+4××类状态码表示客户端错误，常用的有 400(Bad Request)、403(Forbidden)、404(Not Found)；
+5××类状态码表示服务器错误，常用的有 500( Internal Server Error)、501(Not Implemented)、502(Bad Gateway)、503(Service Unavailable)。
+
+//////////////////////////////////////////////////////////
+## http特点
+
+* HTTP 是灵活可扩展的，可以任意添加头字段实现任意功能；
+* HTTP 是可靠传输协议，基于 TCP/IP 协议“尽量”保证数据的送达；
+* HTTP 是应用层协议，比 FTP、SSH 等更通用功能更多，能够传输任意数据；
+* HTTP 使用了请求 - 应答模式，客户端主动发起请求，服务器被动回复请求；
+* HTTP 本质上是无状态的，每个请求都是互相独立、毫无关联的，协议不要求客户端或服务器记录请求相关的信息
+
+//////////////////////////////////////////////////////////
+## http优缺点 HTTP/1.1
+
+优点：
+HTTP 最大的优点是简单、灵活和易于扩展；
+HTTP 拥有成熟的软硬件环境，应用的非常广泛，是互联网的基础设施；
+HTTP 是无状态的，可以轻松实现集群化，扩展性能，但有时也需要用 Cookie 技术来实现“有状态”；
+缺点：
+HTTP 是明文传输，数据完全肉眼可见，能够方便地研究分析，但也容易被窃听；
+HTTP 是不安全的，无法验证通信双方的身份，也不能判断报文是否被窜改；
+HTTP 的性能不算差，但不完全适应现在的互联网，还有很大的提升空间。
+
 [HTTPS工作流程](https://blog.cloudflare.com/keyless-ssl-the-nitty-gritty-technical-details/)
 
 ## 名词解释：
