@@ -13,3 +13,5 @@
 [崩溃记录 ](https://github.com/barry-source/tips/tree/master/Base/崩溃记录)
 
 [线程和进程 ](https://github.com/barry-source/tips/tree/master/Base/线程和进程)
+
+[iOS优化 ](https://github.com/barry-source/tips/tree/master/Base/优化)
