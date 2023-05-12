@@ -1,0 +1,6 @@
+framework module Pods_sd_source_sd_sourceUITests {
+  umbrella header "Pods-sd_source-sd_sourceUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
