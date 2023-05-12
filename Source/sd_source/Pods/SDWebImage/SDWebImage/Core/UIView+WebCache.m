@@ -61,25 +61,32 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
                                                       progress:(nullable SDImageLoaderProgressBlock)progressBlock
                                                      completed:(nullable SDInternalCompletionBlock)completedBlock
 {
+    // 如果外部传入context，则对context做copy操作，防止改变，否则内部自动创建一个不可变的context
     if (context) {
-        // copy to avoid mutable object
         context = [context copy];
     }
     else {
         context = [NSDictionary dictionary];
     }
+    // 获取OperationKey，在外部未传入context时，第一次取出就是nil
     NSString *validOperationKey = context[SDWebImageContextSetImageOperationKey];
+    // OperationKey = nil 进入下面的操作
     if (!validOperationKey) {
-        // pass through the operation key to downstream, which can used for tracing operation or image view class
+        // 对于UIImageView实例来说，这里的self就是UIImageView
         validOperationKey = NSStringFromClass([self class]);
+        // mutableCopy -> 存储 -> copy, 将OperationKey存入到context
         SDWebImageMutableContext *mutableContext = [context mutableCopy];
         mutableContext[SDWebImageContextSetImageOperationKey] = validOperationKey;
         context = [mutableContext copy];
     }
+    // 将key保存到`UIImageView+WebCache`中的sd_latestOperationKey关联属性中
     self.sd_latestOperationKey = validOperationKey;
+    // 取消上一次OperationKey对应的下载
     [self sd_cancelImageLoadOperationWithKey:validOperationKey];
+    // 将url保存到`UIImageView+WebCache`中的sd_imageURL关联属性中
     self.sd_imageURL = url;
 
+    // 和validOperationKey类似，在外部未传入context时，第一次取出就是nil
     SDWebImageManager *manager = context[SDWebImageContextCustomManager];
     if (!manager) {
         manager = [SDWebImageManager sharedManager];
