@@ -130,10 +130,12 @@ static id<SDImageLoader> _defaultImageLoader;
 
     NSString *key;
     // Cache Key Filter
+    // 如果context从外部传入过滤器，直接使用，否则使用cacheKeyFilter
     id<SDWebImageCacheKeyFilter> cacheKeyFilter = self.cacheKeyFilter;
     if (context[SDWebImageContextCacheKeyFilter]) {
         cacheKeyFilter = context[SDWebImageContextCacheKeyFilter];
     }
+    // 如果没有过滤器直接用absoluteString
     if (cacheKeyFilter) {
         key = [cacheKeyFilter cacheKeyForURL:url];
     }
@@ -211,11 +213,13 @@ static id<SDImageLoader> _defaultImageLoader;
 
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, Xcode won't
     // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
+    // 如果外部传入NSString，这里尝试转换成NSURL
     if ([url isKindOfClass:NSString.class]) {
         url = [NSURL URLWithString:(NSString *)url];
     }
 
     // Prevents app crashing on argument type error like sending NSNull instead of NSURL
+    // 判断url是否合法
     if (![url isKindOfClass:NSURL.class]) {
         url = nil;
     }
@@ -225,6 +229,7 @@ static id<SDImageLoader> _defaultImageLoader;
 
     BOOL isFailedUrl = NO;
     if (url) {
+        // 判断url是否加载失败过
         SD_LOCK(_failedURLsLock);
         isFailedUrl = [self.failedURLs containsObject:url];
         SD_UNLOCK(_failedURLsLock);
@@ -233,13 +238,16 @@ static id<SDImageLoader> _defaultImageLoader;
     // Preprocess the options and context arg to decide the final the result for manager
     SDWebImageOptionsResult *result = [self processedResultForURL:url options:options context:context];
 
+    // url为长度为空或失败过且未设置重试（SDWebImageRetryFailed）
     if (url.absoluteString.length == 0 || (!(options & SDWebImageRetryFailed) && isFailedUrl)) {
         NSString *description = isFailedUrl ? @"Image url is blacklisted" : @"Image url is nil";
         NSInteger code = isFailedUrl ? SDWebImageErrorBlackListed : SDWebImageErrorInvalidURL;
+        // 触发错误完成回调，内包含错误信息，这里的错误信息要么是图片加载失败要么是url为空
         [self callCompletionBlockForOperation:operation completion:completedBlock error:[NSError errorWithDomain:SDWebImageErrorDomain code:code userInfo:@{NSLocalizedDescriptionKey : description}] queue:result.context[SDWebImageContextCallbackQueue] url:url];
         return operation;
     }
 
+    // 如果之前未加载过，将operation加到runningOperations中
     SD_LOCK(_runningOperationsLock);
     [self.runningOperations addObject:operation];
     SD_UNLOCK(_runningOperationsLock);
@@ -257,6 +265,7 @@ static id<SDImageLoader> _defaultImageLoader;
     // 4. do transform in CPU
     // 5. store original image to cache
     // 6. store transformed image to cache
+    // 🍉查询缓存操作
     [self callCacheProcessForOperation:operation url:url options:result.options context:result.context progress:progressBlock completed:completedBlock];
 
     return operation;
@@ -307,28 +316,34 @@ static id<SDImageLoader> _defaultImageLoader;
                            completed:(nullable SDInternalCompletionBlock)completedBlock
 {
     // Grab the image cache to use
+    // 如果context外部未传入相应的SDImageCache,默认用imageCache (SDImageCache单例)
     id<SDImageCache> imageCache = context[SDWebImageContextImageCache];
     if (!imageCache) {
         imageCache = self.imageCache;
     }
     // Get the query cache type
+    // 默认是缓存类型是SDImageCacheTypeAll，如果通过context传入，则用外部的
     SDImageCacheType queryCacheType = SDImageCacheTypeAll;
     if (context[SDWebImageContextQueryCacheType]) {
         queryCacheType = [context[SDWebImageContextQueryCacheType] integerValue];
     }
 
     // Check whether we should query cache
+    // 如果未设置SDWebImageFromLoaderOnly（直接网络加载）那么就先查找缓存，否则直接网络加载
     BOOL shouldQueryCache = !SD_OPTIONS_CONTAINS(options, SDWebImageFromLoaderOnly);
     if (shouldQueryCache) {
         // transformed cache key
+        // 根据url生成相应的key
         NSString *key = [self cacheKeyForURL:url context:context];
         @weakify(operation);
+        // 【step 4】查找图片
         operation.cacheOperation = [imageCache queryImageForKey:key
                                                         options:options
                                                         context:context
                                                       cacheType:queryCacheType
                                                      completion:^(UIImage *_Nullable cachedImage, NSData *_Nullable cachedData, SDImageCacheType cacheType) {
                                                        @strongify(operation);
+                                                       // operation不存在或取消，触发错误完成回调
                                                        if (!operation || operation.isCancelled) {
                                                            // Image combined operation cancelled by user
                                                            [self callCompletionBlockForOperation:operation completion:completedBlock error:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorCancelled userInfo:@{ NSLocalizedDescriptionKey : @"Operation cancelled by user during querying the cache" }] queue:context[SDWebImageContextCallbackQueue] url:url];
@@ -336,6 +351,7 @@ static id<SDImageLoader> _defaultImageLoader;
                                                            return;
                                                        }
                                                        else if (!cachedImage) {
+                                                           // 如果缓存图片不存在，将当前传入的key和根据urla获取的key比较，如果相符，那么直接查找原始缓存好的图片，否则重新下载图片
                                                            NSString *originKey = [self originalCacheKeyForURL:url context:context];
                                                            BOOL mayInOriginalCache = ![key isEqualToString:originKey];
                                                            // Have a chance to query original cache instead of downloading, then applying transform
@@ -346,11 +362,13 @@ static id<SDImageLoader> _defaultImageLoader;
                                                            }
                                                        }
                                                        // Continue download process
+                                                       // 上述操作都找不到图 ，🍉 直接下载图片
                                                        [self callDownloadProcessForOperation:operation url:url options:options context:context cachedImage:cachedImage cachedData:cachedData cacheType:cacheType progress:progressBlock completed:completedBlock];
                                                      }];
     }
     else {
         // Continue download process
+        // 🍉 直接下载图片
         [self callDownloadProcessForOperation:operation url:url options:options context:context cachedImage:nil cachedData:nil cacheType:SDImageCacheTypeNone progress:progressBlock completed:completedBlock];
     }
 }
@@ -426,18 +444,21 @@ static id<SDImageLoader> _defaultImageLoader;
                               completed:(nullable SDInternalCompletionBlock)completedBlock
 {
     // Mark the cache operation end
+    // 由于在缓存中（内存+磁盘）未找到图片，这里标记缓存操作结束
     @synchronized(operation)
     {
         operation.cacheOperation = nil;
     }
 
     // Grab the image loader to use
+    // 查看context是否传入imageLoader，有则使用，否则使用内部的imageLoader（单例）
     id<SDImageLoader> imageLoader = context[SDWebImageContextImageLoader];
     if (!imageLoader) {
         imageLoader = self.imageLoader;
     }
 
     // Check whether we should download image from network
+    // 如果设置了SDWebImageFromCacheOnly则不能从网上下载
     BOOL shouldDownload = !SD_OPTIONS_CONTAINS(options, SDWebImageFromCacheOnly);
     shouldDownload &= (!cachedImage || options & SDWebImageRefreshCached);
     shouldDownload &= (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url]);
@@ -508,10 +529,12 @@ static id<SDImageLoader> _defaultImageLoader;
                                                            }];
     }
     else if (cachedImage) {
+        // 图片禁止从网络上下载，只允许用缓存的图片
         [self callCompletionBlockForOperation:operation completion:completedBlock image:cachedImage data:cachedData error:nil cacheType:cacheType finished:YES queue:context[SDWebImageContextCallbackQueue] url:url];
         [self safelyRemoveOperationFromRunning:operation];
     }
     else {
+        // 图片未被缓存且禁止从网络上下载
         // Image not in cache and download disallowed by delegate
         [self callCompletionBlockForOperation:operation completion:completedBlock image:nil data:nil error:nil cacheType:SDImageCacheTypeNone finished:YES queue:context[SDWebImageContextCallbackQueue] url:url];
         [self safelyRemoveOperationFromRunning:operation];
