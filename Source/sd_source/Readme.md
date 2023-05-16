@@ -396,61 +396,6 @@ NSMapTable 是 NSDictionary 的通用版本。和 NSDictionary / NSMutableDictio
 }
 ```
 
-#### 关于sd_setImage:mageData:basedOnClassOrViaCustomSetImageBlock:transition:cacheType:imageURL:
-
-该方法主要是将图片显示到视图上，并处理转场动画，部分代码如下：
-
-```
-
-- (void)sd_setImage:(UIImage *)image imageData:(NSData *)imageData basedOnClassOrViaCustomSetImageBlock:(SDSetImageBlock)setImageBlock transition:(SDWebImageTransition *)transition cacheType:(SDImageCacheType)cacheType imageURL:(NSURL *)imageURL
-{
-    UIView *view = self;
-    SDSetImageBlock finalSetImageBlock;
-    // 正常情况下是不会设置setImageBlock回调，所以这里不会走，如果外部设置了，会走这里
-    if (setImageBlock) {
-        finalSetImageBlock = setImageBlock;
-    }
-    else if ([view isKindOfClass:[UIImageView class]]) {
-        // 将图片设置到UIImageView上
-        UIImageView *imageView = (UIImageView *)view;
-        finalSetImageBlock = ^(UIImage *setImage, NSData *setImageData, SDImageCacheType setCacheType, NSURL *setImageURL) {
-          imageView.image = setImage;
-        };
-    }
-#if SD_UIKIT
-    else if ([view isKindOfClass:[UIButton class]]) {
-        // 将图片设置到UIButton上
-        UIButton *button = (UIButton *)view;
-        finalSetImageBlock = ^(UIImage *setImage, NSData *setImageData, SDImageCacheType setCacheType, NSURL *setImageURL) {
-          [button setImage:setImage forState:UIControlStateNormal];
-        };
-    }
-#endif
-#if SD_MAC
-    else if ([view isKindOfClass:[NSButton class]]) {
-        NSButton *button = (NSButton *)view;
-        finalSetImageBlock = ^(UIImage *setImage, NSData *setImageData, SDImageCacheType setCacheType, NSURL *setImageURL) {
-          button.image = setImage;
-        };
-    }
-#endif
-#if SD_MAC
-    else if ([view isKindOfClass:[NSButton class]]) {
-        NSButton *button = (NSButton *)view;
-        finalSetImageBlock = ^(UIImage *setImage, NSData *setImageData, SDImageCacheType setCacheType, NSURL *setImageURL) {
-          button.image = setImage;
-        };
-    }
-    // 转场动画 
-    if (transition) {
-        ////
-        省略
-        ////
-    }
-}
-
-```
-
 ## 【step 3】loadimage(url, options, context, progressBiock, completedBlock)
 
 该方法位于`SDWebImageManager`内，主要是做一些验证的操作，其主要加载图片的逻辑由`callCacheProcessForOperation`承担
@@ -526,7 +471,7 @@ NSMapTable 是 NSDictionary 的通用版本。和 NSDictionary / NSMutableDictio
 }
 ```
 
-#### `callCacheProcessForOperation` 真正的加载图片的入口，具体代码如下：
+#### callCacheProcessForOperation真正的加载图片的入口，具体代码如下：
 
 ```
 // Query normal cache process
@@ -626,7 +571,7 @@ NSMapTable 是 NSDictionary 的通用版本。和 NSDictionary / NSMutableDictio
 }
 ```
 
-##### `queryCacheOperationForKey`源码如下所示：
+#### queryCacheOperationForKey源码如下所示：
 
 ```
 - (nullable SDImageCacheToken *)queryCacheOperationForKey:(nullable NSString *)key options:(SDImageCacheOptions)options context:(nullable SDWebImageContext *)context cacheType:(SDImageCacheType)queryCacheType done:(nullable SDImageCacheQueryCompletionBlock)doneBlock
@@ -824,14 +769,503 @@ NSMapTable 是 NSDictionary 的通用版本。和 NSDictionary / NSMutableDictio
 
 ## 【step 5】disk result
 
+这里涉及到两部分
+- 从磁盘中查找的过程：【step 4】中的queryCacheOperationForKey方法
+- 从网络下载放入磁盘的过程：【step 8】中磁盘存储过程
+
 ## 【step 6】requestImageWithURL(url, options, context, progressBlock, completedBlock)
+
+下载代码位于 `SDWebImageDownloader`内，`requestImageWithURL`具体代码如下所示：
+
+```
+- (id<SDWebImageOperation>)requestImageWithURL:(NSURL *)url options:(SDWebImageOptions)options context:(SDWebImageContext *)context progress:(SDImageLoaderProgressBlock)progressBlock completed:(SDImageLoaderCompletedBlock)completedBlock
+{
+    UIImage *cachedImage = context[SDWebImageContextLoaderCachedImage];
+    // 从options中获取所有下载的配置
+    SDWebImageDownloaderOptions downloaderOptions = 0;
+    if (options & SDWebImageLowPriority)
+        downloaderOptions |= SDWebImageDownloaderLowPriority;
+    if (options & SDWebImageProgressiveLoad)
+        downloaderOptions |= SDWebImageDownloaderProgressiveLoad;
+    if (options & SDWebImageRefreshCached)
+        downloaderOptions |= SDWebImageDownloaderUseNSURLCache;
+    if (options & SDWebImageContinueInBackground)
+        downloaderOptions |= SDWebImageDownloaderContinueInBackground;
+    if (options & SDWebImageHandleCookies)
+        downloaderOptions |= SDWebImageDownloaderHandleCookies;
+    if (options & SDWebImageAllowInvalidSSLCertificates)
+        downloaderOptions |= SDWebImageDownloaderAllowInvalidSSLCertificates;
+    if (options & SDWebImageHighPriority)
+        downloaderOptions |= SDWebImageDownloaderHighPriority;
+    if (options & SDWebImageScaleDownLargeImages)
+        downloaderOptions |= SDWebImageDownloaderScaleDownLargeImages;
+    if (options & SDWebImageAvoidDecodeImage)
+        downloaderOptions |= SDWebImageDownloaderAvoidDecodeImage;
+    if (options & SDWebImageDecodeFirstFrameOnly)
+        downloaderOptions |= SDWebImageDownloaderDecodeFirstFrameOnly;
+    if (options & SDWebImagePreloadAllFrames)
+        downloaderOptions |= SDWebImageDownloaderPreloadAllFrames;
+    if (options & SDWebImageMatchAnimatedImageClass)
+        downloaderOptions |= SDWebImageDownloaderMatchAnimatedImageClass;
+
+    if (cachedImage && options & SDWebImageRefreshCached) {
+        // force progressive off if image already cached but forced refreshing
+        downloaderOptions &= ~SDWebImageDownloaderProgressiveLoad;
+        // ignore image read from NSURLCache if image if cached but force refreshing
+        downloaderOptions |= SDWebImageDownloaderIgnoreCachedResponse;
+    }
+    // 下载图片
+    return [self downloadImageWithURL:url options:downloaderOptions context:context progress:progressBlock completed:completedBlock];
+}
+
+```
+
+如上代码所示`requestImageWithURL`主要用来整合下载的配置，真正的下载方法由`downloadImageWithURL`承接
+
+#### downloadImageWithURL
+
+该方法主要用来配置下载图片的operation并加入到下载队列中，并返回可取消任务的token标识。
+operation的类型是`SDWebImageDownloaderOperation`、`SDWebImageDownloaderOperation`也实现了`SDWebImageDownloaderOperation`协议，
+`SDWebImageDownloaderOperation` 内部有具体的图片下载方法。
+`downloadImageWithURL`具体代码如下所示
+
+```
+- (nullable SDWebImageDownloadToken *)downloadImageWithURL:(nullable NSURL *)url
+                                                   options:(SDWebImageDownloaderOptions)options
+                                                   context:(nullable SDWebImageContext *)context
+                                                  progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
+                                                 completed:(nullable SDWebImageDownloaderCompletedBlock)completedBlock
+{
+    // The URL will be used as the key to the callbacks dictionary so it cannot be nil. If it is nil immediately call the completed block with no image or data.
+    // 判断url是否为空，为空则直接完成回调，并返回错误信息
+    if (url == nil) {
+        if (completedBlock) {
+            NSError *error = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorInvalidURL userInfo:@{ NSLocalizedDescriptionKey : @"Image url is nil" }];
+            completedBlock(nil, nil, error, YES);
+        }
+        return nil;
+    }
+
+    id downloadOperationCancelToken;
+    // When different thumbnail size download with same url, we need to make sure each callback called with desired size
+    // 如果context从外部传入过滤器，直接使用过滤器查找cacheKey，否则使用url.absoluteString
+    id<SDWebImageCacheKeyFilter> cacheKeyFilter = context[SDWebImageContextCacheKeyFilter];
+    NSString *cacheKey;
+    if (cacheKeyFilter) {
+        cacheKey = [cacheKeyFilter cacheKeyForURL:url];
+    }
+    else {
+        cacheKey = url.absoluteString;
+    }
+    // 获取解码配置
+    SDImageCoderOptions *decodeOptions = SDGetDecodeOptionsFromContext(context, [self.class imageOptionsFromDownloaderOptions:options], cacheKey);
+    SD_LOCK(_operationsLock);
+    NSOperation<SDWebImageDownloaderOperation> *operation = [self.URLOperations objectForKey:url];
+    // There is a case that the operation may be marked as finished or cancelled, but not been removed from `self.URLOperations`.
+    BOOL shouldNotReuseOperation;
+    // operation存在的情况下，但是已经完成或被取消，那么不应该重用，
+    if (operation) {
+        @synchronized(operation)
+        {
+            shouldNotReuseOperation = operation.isFinished || operation.isCancelled || SDWebImageDownloaderOperationGetCompleted(operation);
+        }
+    }
+    else {
+        shouldNotReuseOperation = YES;
+    }
+    //
+    if (shouldNotReuseOperation) {
+        // 根据url创建operation
+        operation = [self createDownloaderOperationWithUrl:url options:options context:context];
+        // 创建失败直接完成回调，并返回错误信息
+        if (!operation) {
+            SD_UNLOCK(_operationsLock);
+            if (completedBlock) {
+                NSError *error = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorInvalidDownloadOperation userInfo:@{ NSLocalizedDescriptionKey : @"Downloader operation is nil" }];
+                completedBlock(nil, nil, error, YES);
+            }
+            return nil;
+        }
+        @weakify(self);
+        operation.completionBlock = ^{
+          @strongify(self);
+          if (!self) {
+              return;
+          }
+            // 回调完成移除URLOperations内的operation
+          SD_LOCK(self->_operationsLock);
+          [self.URLOperations removeObjectForKey:url];
+          SD_UNLOCK(self->_operationsLock);
+        };
+        // 将operation添加到URLOperations内
+        [self.URLOperations setObject:operation forKey:url];
+        // Add the handlers before submitting to operation queue, avoid the race condition that operation finished before setting handlers.
+        // 在operation添加到downloadQueue之前 添加handler,防止在设置handler之前operation完成了
+        downloadOperationCancelToken = [operation addHandlersForProgress:progressBlock completed:completedBlock decodeOptions:decodeOptions];
+        // Add operation to operation queue only after all configuration done according to Apple's doc.
+        // `addOperation:` does not synchronously execute the `operation.completionBlock` so this will not cause deadlock.
+        // 将operation加入到下载队列，并在合适的时机启动任务
+        // ✈️ addOperation不会同步执行operation.completionBlock，不会引用死锁
+        [self.downloadQueue addOperation:operation];
+    }
+    else {
+        // When we reuse the download operation to attach more callbacks, there may be thread safe issue because the getter of callbacks may in another queue (decoding queue or delegate queue)
+        // So we lock the operation here, and in `SDWebImageDownloaderOperation`, we use `@synchonzied (self)`, to ensure the thread safe between these two classes.
+        @synchronized(operation)
+        {
+            downloadOperationCancelToken = [operation addHandlersForProgress:progressBlock completed:completedBlock decodeOptions:decodeOptions];
+        }
+    }
+    SD_UNLOCK(_operationsLock);
+
+    // 返回token，外部获取之后可以cancel任务
+    SDWebImageDownloadToken *token = [[SDWebImageDownloadToken alloc] initWithDownloadOperation:operation];
+    token.url = url;
+    token.request = operation.request;
+    token.downloadOperationCancelToken = downloadOperationCancelToken;
+
+    return token;
+}
+```
 
 ## 【step 7】network result
 
+图片下载由`SDWebImageDownloaderOperation`中的URLSession承接，具体代码如下所示：
+
+```
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+    // If we already cancel the operation or anything mark the operation finished, don't callback twice
+    // operation 如果完成直接返回，不再回调
+    if (self.isFinished)
+        return;
+
+    NSArray<SDWebImageDownloaderOperationToken *> *tokens;
+    @synchronized(self)
+    {
+        tokens = [self.callbackTokens copy];
+        self.dataTask = nil;
+        __block typeof(self) strongSelf = self;
+        // 下载完成发送 停止和错误（有的话） 通知
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:strongSelf];
+          if (!error) {
+              [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadFinishNotification object:strongSelf];
+          }
+        });
+    }
+
+    // make sure to call `[self done]` to mark operation as finished
+    if (error) {
+        // custom error instead of URLSession error
+        if (self.responseError) {
+            error = self.responseError;
+        }
+        // 错误回调
+        [self callCompletionBlocksWithError:error];
+        // 标记下载结束
+        [self done];
+    }
+    else {
+        // 如果有下载tokens不能为空
+        if (tokens.count > 0) {
+            NSData *imageData = self.imageData;
+            self.imageData = nil;
+            // data decryptor
+            // 解析数据，这里基本上base64解密
+            if (imageData && self.decryptor) {
+                imageData = [self.decryptor decryptedDataWithData:imageData response:self.response];
+            }
+            // 数据存在进入后续处理
+            if (imageData) {
+                /**  if you specified to only use cached data via `SDWebImageDownloaderIgnoreCachedResponse`,
+                 *  then we should check if the cached data is equal to image data
+                 */
+                // 如果配置了忽略缓存，首先检查缓存数据是不是和下载数据一致，如果是的话，调用错误回调，标记结束
+                if (self.options & SDWebImageDownloaderIgnoreCachedResponse && [self.cachedData isEqualToData:imageData]) {
+                    self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain
+                                                             code:SDWebImageErrorCacheNotModified
+                                                         userInfo:@{ NSLocalizedDescriptionKey : @"Downloaded image is not modified and ignored",
+                                                                     SDWebImageErrorDownloadResponseKey : self.response }];
+                    // call completion block with not modified error
+                    [self callCompletionBlocksWithError:self.responseError];
+                    [self done];
+                }
+                else {
+                    // decode the image in coder queue, cancel all previous decoding process
+                    // 在coderQueue中解码图片，首先清空所有操作
+                    [self.coderQueue cancelAllOperations];
+                    @weakify(self);
+                    // 存在多个token，进行遍历，在5.8.3的版本只处理了一个token
+                    for (SDWebImageDownloaderOperationToken *token in tokens) {
+                        [self.coderQueue addOperationWithBlock:^{
+                          @strongify(self);
+                          if (!self) {
+                              return;
+                          }
+                          UIImage *image;
+                          // check if we already decode this variant of image for current callback
+                          // 从imageMap（NSMaptable）中根据decodeOptions获取图片，如果第一次下载，肯定是空的
+                          if (token.decodeOptions) {
+                              image = [self.imageMap objectForKey:token.decodeOptions];
+                          }
+                          // 如果未在imageMap取到图上，根据imageData生成图片
+                          if (!image) {
+                              // check if we already use progressive decoding, use that to produce faster decoding
+                              // 分段下载解码器
+                              id<SDProgressiveImageCoder> progressiveCoder = SDImageLoaderGetProgressiveCoder(self);
+                              // 下载配置
+                              SDWebImageOptions options = [[self class] imageOptionsFromDownloaderOptions:self.options];
+                              SDWebImageContext *context;
+                              if (token.decodeOptions) {
+                                  SDWebImageMutableContext *mutableContext = [NSMutableDictionary dictionaryWithDictionary:self.context];
+                                  // 将解码配置放入到context中
+                                  SDSetDecodeOptionsToContext(mutableContext, &options, token.decodeOptions);
+                                  context = [mutableContext copy];
+                              }
+                              else {
+                                  context = self.context;
+                              }
+                              // 分段下载解码图片
+                              if (progressiveCoder) {
+                                  image = SDImageLoaderDecodeProgressiveImageData(imageData, self.request.URL, YES, self, options, context);
+                              }
+                              // 普通下载解码图片
+                              else {
+                                  image = SDImageLoaderDecodeImageData(imageData, self.request.URL, options, context);
+                              }
+                              // 将图片放入imageMap保存
+                              if (image && token.decodeOptions) {
+                                  [self.imageMap setObject:image forKey:token.decodeOptions];
+                              }
+                          }
+                          CGSize imageSize = image.size;
+                          if (imageSize.width == 0 || imageSize.height == 0) {
+                              // 图片宽高不正确，调用完成回调，并返回错误信息
+                              NSString *description = image == nil ? @"Downloaded image decode failed" : @"Downloaded image has 0 pixels";
+                              NSError *error = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorBadImageData userInfo:@{NSLocalizedDescriptionKey : description}];
+                              [self callCompletionBlockWithToken:token image:nil imageData:nil error:error finished:YES];
+                          }
+                          else {
+                              // 调用完成回调
+                              [self callCompletionBlockWithToken:token image:image imageData:imageData error:nil finished:YES];
+                          }
+                        }];
+                    }
+                    // call [self done] after all completed block was dispatched
+                    dispatch_block_t doneBlock = ^{
+                      @strongify(self);
+                      if (!self) {
+                          return;
+                      }
+                      [self done];
+                    };
+                    // 所有的token处理完成之后，再处理完成任务doneBlock
+                    if (@available(iOS 13, tvOS 13, macOS 10.15, watchOS 6, *)) {
+                        // seems faster than `addOperationWithBlock`
+                        [self.coderQueue addBarrierBlock:doneBlock];
+                    }
+                    else {
+                        // serial queue, this does the same effect in semantics
+                        [self.coderQueue addOperationWithBlock:doneBlock];
+                    }
+                }
+            }
+            else {
+                // 数据不存在，完成回调，直接标记结束
+                [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorBadImageData userInfo:@{ NSLocalizedDescriptionKey : @"Image data is nil" }]];
+                [self done];
+            }
+        }
+        else {
+            // tokens为空, 表示没有下载，直接标记结束
+            [self done];
+        }
+    }
+}
+```
+
+图片解析完成之后会调用完成回调，具体如下：
+
+#### callCompletionBlockWithToken
+
+```
+- (void)callCompletionBlockWithToken:(nonnull SDWebImageDownloaderOperationToken *)token
+                               image:(nullable UIImage *)image
+                           imageData:(nullable NSData *)imageData
+                               error:(nullable NSError *)error
+                            finished:(BOOL)finished
+{
+    SDWebImageDownloaderCompletedBlock completedBlock = token.completedBlock;
+    if (completedBlock) {
+        SDCallbackQueue *queue = self.context[SDWebImageContextCallbackQueue];
+        [(queue ?: SDCallbackQueue.mainQueue) async:^{
+          completedBlock(image, imageData, error, finished);
+        }];
+    }
+}
+```
 ## 【step 8】store(image, imageData, key, toDisk completionBlock)
+
+```
+- (void)storeImage:(nullable UIImage *)image
+         imageData:(nullable NSData *)imageData
+            forKey:(nullable NSString *)key
+           options:(SDWebImageOptions)options
+           context:(nullable SDWebImageContext *)context
+         cacheType:(SDImageCacheType)cacheType
+        completion:(nullable SDWebImageNoParamsBlock)completionBlock
+{
+    // 图片且图片数据不存在 或者 key不存在，直接调用完成回调
+    if ((!image && !imageData) || !key) {
+        if (completionBlock) {
+            completionBlock();
+        }
+        return;
+    }
+    // 缓存类型是SDImageCacheTypeMemory或者SDImageCacheTypeAll，需要存储到内存中
+    BOOL toMemory = cacheType == SDImageCacheTypeMemory || cacheType == SDImageCacheTypeAll;
+    // 缓存类型是SDImageCacheTypeDisk或者SDImageCacheTypeAll，需要存储到磁盘中
+    BOOL toDisk = cacheType == SDImageCacheTypeDisk || cacheType == SDImageCacheTypeAll;
+    // if memory cache is enabled
+    // 存储到内存中
+    if (image && toMemory && self.config.shouldCacheImagesInMemory) {
+        NSUInteger cost = image.sd_memoryCost;
+        [self.memoryCache setObject:image forKey:key cost:cost];
+    }
+    // 如果未设置存储到磁盘中，直接调用完成回调
+    if (!toDisk) {
+        if (completionBlock) {
+            completionBlock();
+        }
+        return;
+    }
+    NSData *data = imageData;
+    if (!data && [image respondsToSelector:@selector(animatedImageData)]) {
+        // If image is custom animated image class, prefer its original animated data
+        data = [((id<SDAnimatedImage>)image)animatedImageData];
+    }
+    SDCallbackQueue *queue = context[SDWebImageContextCallbackQueue];
+    // data不存在但是image存在
+    if (!data && image) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+          // Check image's associated image format, may return .undefined
+          // 处理图片格式
+          SDImageFormat format = image.sd_imageFormat;
+          if (format == SDImageFormatUndefined) {
+              // If image is animated, use GIF (APNG may be better, but has bugs before macOS 10.14)
+              // gif格式
+              if (image.sd_isAnimated) {
+                  format = SDImageFormatGIF;
+              }
+              else {
+                  // If we do not have any data to detect image format, check whether it contains alpha channel to use PNG or JPEG format
+                  format = [SDImageCoderHelper CGImageContainsAlpha:image.CGImage] ? SDImageFormatPNG : SDImageFormatJPEG;
+              }
+          }
+          NSData *data = [[SDImageCodersManager sharedManager] encodedDataWithImage:image format:format options:context[SDWebImageContextImageEncodeOptions]];
+          dispatch_async(self.ioQueue, ^{
+            [self _storeImageDataToDisk:data forKey:key];
+            [self _archivedDataWithImage:image forKey:key];
+            if (completionBlock) {
+                [(queue ?: SDCallbackQueue.mainQueue) async:^{
+                  completionBlock();
+                }];
+            }
+          });
+        });
+    }
+    else {
+        // data存在的情况下，将图片存储到磁盘中
+        dispatch_async(self.ioQueue, ^{
+          [self _storeImageDataToDisk:data forKey:key];
+          [self _archivedDataWithImage:image forKey:key];
+          if (completionBlock) {
+              [(queue ?: SDCallbackQueue.mainQueue) async:^{
+                completionBlock();
+              }];
+          }
+        });
+    }
+}
+```
 
 ## 【step 9】Image
 
+```
+- (void)callCompletionBlockForOperation:(nullable SDWebImageCombinedOperation *)operation
+                             completion:(nullable SDInternalCompletionBlock)completionBlock
+                                  image:(nullable UIImage *)image
+                                   data:(nullable NSData *)data
+                                  error:(nullable NSError *)error
+                              cacheType:(SDImageCacheType)cacheType
+                               finished:(BOOL)finished
+                                  queue:(nullable SDCallbackQueue *)queue
+                                    url:(nullable NSURL *)url
+{
+    if (completionBlock) {
+        [(queue ?: SDCallbackQueue.mainQueue) async:^{
+          completionBlock(image, data, error, cacheType, finished, url);
+        }];
+    }
+}
+```
+
 ## 【step 10】set image
+
+设置图片的方法
+`sd_setImage:mageData:basedOnClassOrViaCustomSetImageBlock:transition:cacheType:imageURL:`会在【step 1】中的`loadImageWithURL`中的回调中调用。
+该方法主要是将图片显示到视图上，并处理转场动画，部分代码如下：
+
+```
+
+- (void)sd_setImage:(UIImage *)image imageData:(NSData *)imageData basedOnClassOrViaCustomSetImageBlock:(SDSetImageBlock)setImageBlock transition:(SDWebImageTransition *)transition cacheType:(SDImageCacheType)cacheType imageURL:(NSURL *)imageURL
+{
+    UIView *view = self;
+    SDSetImageBlock finalSetImageBlock;
+    // 正常情况下是不会设置setImageBlock回调，所以这里不会走，如果外部设置了，会走这里
+    if (setImageBlock) {
+        finalSetImageBlock = setImageBlock;
+    }
+    else if ([view isKindOfClass:[UIImageView class]]) {
+        // 将图片设置到UIImageView上
+        UIImageView *imageView = (UIImageView *)view;
+        finalSetImageBlock = ^(UIImage *setImage, NSData *setImageData, SDImageCacheType setCacheType, NSURL *setImageURL) {
+          imageView.image = setImage;
+        };
+    }
+#if SD_UIKIT
+    else if ([view isKindOfClass:[UIButton class]]) {
+        // 将图片设置到UIButton上
+        UIButton *button = (UIButton *)view;
+        finalSetImageBlock = ^(UIImage *setImage, NSData *setImageData, SDImageCacheType setCacheType, NSURL *setImageURL) {
+          [button setImage:setImage forState:UIControlStateNormal];
+        };
+    }
+#endif
+#if SD_MAC
+    else if ([view isKindOfClass:[NSButton class]]) {
+        NSButton *button = (NSButton *)view;
+        finalSetImageBlock = ^(UIImage *setImage, NSData *setImageData, SDImageCacheType setCacheType, NSURL *setImageURL) {
+          button.image = setImage;
+        };
+    }
+#endif
+#if SD_MAC
+    else if ([view isKindOfClass:[NSButton class]]) {
+        NSButton *button = (NSButton *)view;
+        finalSetImageBlock = ^(UIImage *setImage, NSData *setImageData, SDImageCacheType setCacheType, NSURL *setImageURL) {
+          button.image = setImage;
+        };
+    }
+    // 转场动画 
+    if (transition) {
+        ////
+        省略
+        ////
+    }
+}
+
+```
 
 

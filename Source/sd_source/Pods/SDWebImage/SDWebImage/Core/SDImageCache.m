@@ -249,20 +249,24 @@ static NSString *_defaultDiskCacheDirectory;
          cacheType:(SDImageCacheType)cacheType
         completion:(nullable SDWebImageNoParamsBlock)completionBlock
 {
+    // 图片且图片数据不存在 或者 key不存在，直接调用完成回调
     if ((!image && !imageData) || !key) {
         if (completionBlock) {
             completionBlock();
         }
         return;
     }
+    // 缓存类型是SDImageCacheTypeMemory或者SDImageCacheTypeAll，需要存储到内存中
     BOOL toMemory = cacheType == SDImageCacheTypeMemory || cacheType == SDImageCacheTypeAll;
+    // 缓存类型是SDImageCacheTypeDisk或者SDImageCacheTypeAll，需要存储到磁盘中
     BOOL toDisk = cacheType == SDImageCacheTypeDisk || cacheType == SDImageCacheTypeAll;
     // if memory cache is enabled
+    // 存储到内存中
     if (image && toMemory && self.config.shouldCacheImagesInMemory) {
         NSUInteger cost = image.sd_memoryCost;
         [self.memoryCache setObject:image forKey:key cost:cost];
     }
-
+    // 如果未设置存储到磁盘中，直接调用完成回调
     if (!toDisk) {
         if (completionBlock) {
             completionBlock();
@@ -275,12 +279,15 @@ static NSString *_defaultDiskCacheDirectory;
         data = [((id<SDAnimatedImage>)image)animatedImageData];
     }
     SDCallbackQueue *queue = context[SDWebImageContextCallbackQueue];
+    // data不存在但是image存在
     if (!data && image) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
           // Check image's associated image format, may return .undefined
+          // 处理图片格式
           SDImageFormat format = image.sd_imageFormat;
           if (format == SDImageFormatUndefined) {
               // If image is animated, use GIF (APNG may be better, but has bugs before macOS 10.14)
+              // gif格式
               if (image.sd_isAnimated) {
                   format = SDImageFormatGIF;
               }
@@ -302,6 +309,7 @@ static NSString *_defaultDiskCacheDirectory;
         });
     }
     else {
+        // data存在的情况下，将图片存储到磁盘中
         dispatch_async(self.ioQueue, ^{
           [self _storeImageDataToDisk:data forKey:key];
           [self _archivedDataWithImage:image forKey:key];

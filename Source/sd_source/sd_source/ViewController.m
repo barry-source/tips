@@ -39,7 +39,7 @@
 - (void)buttonDidClick
 {
     NSURL *url = [NSURL URLWithString:@"https://scpic.chinaz.net/files/default/imgs/2023-04-14/f9f163d1f77795df.jpg"];
-    [self.imageView sd_setImageWithURL:url placeholderImage:nil options:SDWebImageFromCacheOnly context:nil];
+    [self.imageView sd_setImageWithURL:url placeholderImage:nil options:SDWebImageFromLoaderOnly context:nil];
 }
 
 @end

@@ -561,6 +561,7 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
     // If we already cancel the operation or anything mark the operation finished, don't callback twice
+    // operation 如果完成直接返回，不再回调
     if (self.isFinished)
         return;
 
@@ -570,6 +571,7 @@ didReceiveResponse:(NSURLResponse *)response
         tokens = [self.callbackTokens copy];
         self.dataTask = nil;
         __block typeof(self) strongSelf = self;
+        // 下载完成发送 停止和错误（有的话） 通知
         dispatch_async(dispatch_get_main_queue(), ^{
           [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:strongSelf];
           if (!error) {
@@ -584,21 +586,27 @@ didReceiveResponse:(NSURLResponse *)response
         if (self.responseError) {
             error = self.responseError;
         }
+        // 错误回调
         [self callCompletionBlocksWithError:error];
+        // 标记下载结束
         [self done];
     }
     else {
+        // 如果有下载tokens不能为空
         if (tokens.count > 0) {
             NSData *imageData = self.imageData;
             self.imageData = nil;
             // data decryptor
+            // 解析数据，这里基本上base64解密
             if (imageData && self.decryptor) {
                 imageData = [self.decryptor decryptedDataWithData:imageData response:self.response];
             }
+            // 数据存在进入后续处理
             if (imageData) {
                 /**  if you specified to only use cached data via `SDWebImageDownloaderIgnoreCachedResponse`,
                  *  then we should check if the cached data is equal to image data
                  */
+                // 如果配置了忽略缓存，首先检查缓存数据是不是和下载数据一致，如果是的话，调用错误回调，标记结束
                 if (self.options & SDWebImageDownloaderIgnoreCachedResponse && [self.cachedData isEqualToData:imageData]) {
                     self.responseError = [NSError errorWithDomain:SDWebImageErrorDomain
                                                              code:SDWebImageErrorCacheNotModified
@@ -610,8 +618,10 @@ didReceiveResponse:(NSURLResponse *)response
                 }
                 else {
                     // decode the image in coder queue, cancel all previous decoding process
+                    // 在coderQueue中解码图片，首先清空所有操作
                     [self.coderQueue cancelAllOperations];
                     @weakify(self);
+                    // 存在多个token，进行遍历，在5.8.3的版本只处理了一个token
                     for (SDWebImageDownloaderOperationToken *token in tokens) {
                         [self.coderQueue addOperationWithBlock:^{
                           @strongify(self);
@@ -620,39 +630,49 @@ didReceiveResponse:(NSURLResponse *)response
                           }
                           UIImage *image;
                           // check if we already decode this variant of image for current callback
+                          // 从imageMap（NSMaptable）中根据decodeOptions获取图片，如果第一次下载，肯定是空的
                           if (token.decodeOptions) {
                               image = [self.imageMap objectForKey:token.decodeOptions];
                           }
+                          // 如果未在imageMap取到图上，根据imageData生成图片
                           if (!image) {
                               // check if we already use progressive decoding, use that to produce faster decoding
+                              // 分段下载解码器
                               id<SDProgressiveImageCoder> progressiveCoder = SDImageLoaderGetProgressiveCoder(self);
+                              // 下载配置
                               SDWebImageOptions options = [[self class] imageOptionsFromDownloaderOptions:self.options];
                               SDWebImageContext *context;
                               if (token.decodeOptions) {
                                   SDWebImageMutableContext *mutableContext = [NSMutableDictionary dictionaryWithDictionary:self.context];
+                                  // 将解码配置放入到context中
                                   SDSetDecodeOptionsToContext(mutableContext, &options, token.decodeOptions);
                                   context = [mutableContext copy];
                               }
                               else {
                                   context = self.context;
                               }
+                              // 分段下载解码图片
                               if (progressiveCoder) {
                                   image = SDImageLoaderDecodeProgressiveImageData(imageData, self.request.URL, YES, self, options, context);
                               }
+                              // 普通下载解码图片
                               else {
                                   image = SDImageLoaderDecodeImageData(imageData, self.request.URL, options, context);
                               }
+                              // 将图片放入imageMap保存
                               if (image && token.decodeOptions) {
                                   [self.imageMap setObject:image forKey:token.decodeOptions];
                               }
                           }
                           CGSize imageSize = image.size;
                           if (imageSize.width == 0 || imageSize.height == 0) {
+                              // 图片宽高不正确，调用完成回调，并返回错误信息
                               NSString *description = image == nil ? @"Downloaded image decode failed" : @"Downloaded image has 0 pixels";
                               NSError *error = [NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorBadImageData userInfo:@{NSLocalizedDescriptionKey : description}];
                               [self callCompletionBlockWithToken:token image:nil imageData:nil error:error finished:YES];
                           }
                           else {
+                              // 调用完成回调
                               [self callCompletionBlockWithToken:token image:image imageData:imageData error:nil finished:YES];
                           }
                         }];
@@ -665,6 +685,7 @@ didReceiveResponse:(NSURLResponse *)response
                       }
                       [self done];
                     };
+                    // 所有的token处理完成之后，再处理完成任务doneBlock
                     if (@available(iOS 13, tvOS 13, macOS 10.15, watchOS 6, *)) {
                         // seems faster than `addOperationWithBlock`
                         [self.coderQueue addBarrierBlock:doneBlock];
@@ -676,11 +697,13 @@ didReceiveResponse:(NSURLResponse *)response
                 }
             }
             else {
+                // 数据不存在，完成回调，直接标记结束
                 [self callCompletionBlocksWithError:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorBadImageData userInfo:@{ NSLocalizedDescriptionKey : @"Image data is nil" }]];
                 [self done];
             }
         }
         else {
+            // tokens为空, 表示没有下载，直接标记结束
             [self done];
         }
     }

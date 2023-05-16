@@ -458,23 +458,30 @@ static id<SDImageLoader> _defaultImageLoader;
     }
 
     // Check whether we should download image from network
-    // 如果设置了SDWebImageFromCacheOnly则不能从网上下载
+    // 1、如果设置了SDWebImageFromCacheOnly则不能从网上下载
     BOOL shouldDownload = !SD_OPTIONS_CONTAINS(options, SDWebImageFromCacheOnly);
+    // 2、缓存图片不存在且设置刷新缓存 也需要下载
     shouldDownload &= (!cachedImage || options & SDWebImageRefreshCached);
+    // 3、从delegate的shouldDownloadImageForURL方法中获取是否下载
     shouldDownload &= (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url]);
+    // 4、从canRequestImageForURL获取是否下载
     if ([imageLoader respondsToSelector:@selector(canRequestImageForURL:options:context:)]) {
         shouldDownload &= [imageLoader canRequestImageForURL:url options:options context:context];
     }
     else {
         shouldDownload &= [imageLoader canRequestImageForURL:url];
     }
+    // ⚠️ 上述获取是否下载的操作，只要1 2 3 4 有一个返回NO，shouldDownload就是NO
     if (shouldDownload) {
+        // 缓存图片存在且设置了需要刷新，
         if (cachedImage && options & SDWebImageRefreshCached) {
             // If image was found in the cache but SDWebImageRefreshCached is provided, notify about the cached image
             // AND try to re-download it in order to let a chance to NSURLCache to refresh it from server.
+            // 缓存图片存在先执行完成回调
             [self callCompletionBlockForOperation:operation completion:completedBlock image:cachedImage data:cachedData error:nil cacheType:cacheType finished:YES queue:context[SDWebImageContextCallbackQueue] url:url];
             // Pass the cached image to the image loader. The image loader should check whether the remote image is equal to the cached image.
             SDWebImageMutableContext *mutableContext;
+            // 如果context不存在就创建一个，并将缓存图片放入context中，
             if (context) {
                 mutableContext = [context mutableCopy];
             }
@@ -485,6 +492,7 @@ static id<SDImageLoader> _defaultImageLoader;
             context = [mutableContext copy];
         }
 
+        // 🍉 【step 6】请求下载图片
         @weakify(operation);
         operation.loaderOperation = [imageLoader requestImageWithURL:url
                                                              options:options
@@ -492,6 +500,7 @@ static id<SDImageLoader> _defaultImageLoader;
                                                             progress:progressBlock
                                                            completed:^(UIImage *downloadedImage, NSData *downloadedData, NSError *error, BOOL finished) {
                                                              @strongify(operation);
+                                                             // operation不存在或被取消，处理完成回调，并返回错误信息
                                                              if (!operation || operation.isCancelled) {
                                                                  // Image combined operation cancelled by user
                                                                  [self callCompletionBlockForOperation:operation completion:completedBlock error:[NSError errorWithDomain:SDWebImageErrorDomain code:SDWebImageErrorCancelled userInfo:@{ NSLocalizedDescriptionKey : @"Operation cancelled by user during sending the request" }] queue:context[SDWebImageContextCallbackQueue] url:url];
@@ -514,12 +523,13 @@ static id<SDImageLoader> _defaultImageLoader;
                                                                  }
                                                              }
                                                              else {
+                                                                 // 如果url存在于failedURLs列表中需要移除
                                                                  if ((options & SDWebImageRetryFailed)) {
                                                                      SD_LOCK(self->_failedURLsLock);
                                                                      [self.failedURLs removeObject:url];
                                                                      SD_UNLOCK(self->_failedURLsLock);
                                                                  }
-                                                                 // Continue transform process
+                                                                 // 🍉 没有错误的情况下，开始处理图片转换过程，接下来的调用涉及图片存储（store）
                                                                  [self callTransformProcessForOperation:operation url:url options:options context:context originalImage:downloadedImage originalData:downloadedData cacheType:SDImageCacheTypeNone finished:finished completed:completedBlock];
                                                              }
 

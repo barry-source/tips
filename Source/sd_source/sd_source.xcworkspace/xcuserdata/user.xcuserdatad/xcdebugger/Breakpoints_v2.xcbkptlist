@@ -46,41 +46,57 @@
             filePath = "Pods/SDWebImage/SDWebImage/Core/SDImageCache.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "775"
-            endingLineNumber = "775"
+            startingLineNumber = "783"
+            endingLineNumber = "783"
             landmarkName = "-queryCacheOperationForKey:options:context:cacheType:done:"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "516CF8D6-D354-447E-9D5D-9B15A53D73C9 - f54577aa3f1450ef"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__73-[SDImageCache queryCacheOperationForKey:options:context:cacheType:done:]_block_invoke.320"
+                  moduleName = "SDWebImage"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/user/Desktop/tips/Source/sd_source/Pods/SDWebImage/SDWebImage/Core/SDImageCache.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "783"
+                  endingLineNumber = "783"
+                  offsetFromSymbolStart = "98">
+               </Location>
+               <Location
+                  uuid = "516CF8D6-D354-447E-9D5D-9B15A53D73C9 - 46edb4bbe8310f92"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SDImageCache queryCacheOperationForKey:options:context:cacheType:done:]"
+                  moduleName = "SDWebImage"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/user/Desktop/tips/Source/sd_source/Pods/SDWebImage/SDWebImage/Core/SDImageCache.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "783"
+                  endingLineNumber = "783"
+                  offsetFromSymbolStart = "1964">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7CC1801D-6BB8-46CD-B8F3-0C67F4996D68"
+            uuid = "CE99492C-20AF-4574-94AA-CC343B8E01A8"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pods/SDWebImage/SDWebImage/Core/SDImageCache.m"
+            filePath = "Pods/SDWebImage/SDWebImage/Core/SDImageLoadersManager.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "771"
-            endingLineNumber = "771"
-            landmarkName = "-queryCacheOperationForKey:options:context:cacheType:done:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "26AC0A52-FBB0-4469-BA79-9F6BFF82E55D"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Pods/SDWebImage/SDWebImage/Core/SDImageCache.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "766"
-            endingLineNumber = "766"
-            landmarkName = "-queryCacheOperationForKey:options:context:cacheType:done:"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
+            landmarkName = "-requestImageWithURL:options:context:progress:completed:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
