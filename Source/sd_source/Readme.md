@@ -1,6 +1,8 @@
 
-# SDWebImage 源码(5.15.7)分析
+# SDWebImage 源码(5.15.7)分析记录
 
+SDWebImage的整体的加载流程如下图所示，源码的分析也是基于这个流程。
+![SDWebImage流程](https://upload-images.jianshu.io/upload_images/11094757-fcd4cf80e38ee5e3.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200)
 
 ## 【step 1】sd_setImageWithURL
 
@@ -53,13 +55,13 @@
 /// @param setImageBlock 设置图片 Block（基于 UIImageView 方式调用的该参数一般为 nil）
 /// @param progressBlock 图片进度回调
 /// @param completedBlock 图片完成回调 
-- (nullable id<SDWebImageOperation>)sd_internalSetImageWithURL:(nullable NSURL *)url
-                                              placeholderImage:(nullable UIImage *)placeholder
-                                                       options:(SDWebImageOptions)options
-                                                       context:(nullable SDWebImageContext *)context
-                                                 setImageBlock:(nullable SDSetImageBlock)setImageBlock
-                                                      progress:(nullable SDImageLoaderProgressBlock)progressBlock
-                                                     completed:(nullable SDInternalCompletionBlock)completedBlock
+- (nullable id<SDWebImageOperation>)sd_internalSetImageWithURL:(nullable NSURL *)url 
+    placeholderImage:(nullable UIImage *)placeholder
+             options:(SDWebImageOptions)options 
+             context:(nullable SDWebImageContext *)context 
+       setImageBlock:(nullable SDSetImageBlock)setImageBlock 
+            progress:(nullable SDImageLoaderProgressBlock)progressBlock
+           completed:(nullable SDInternalCompletionBlock)completedBlock
 {
     // 如果外部传入context，则对context做copy操作，防止改变，否则内部自动创建一个不可变的context
     if (context) {
@@ -1268,4 +1270,95 @@ operation的类型是`SDWebImageDownloaderOperation`、`SDWebImageDownloaderOper
 
 ```
 
+## 相关的几个类解析
 
+### 【SDImageCacheConfig】
+    SDImageCacheConfig 主要是用于缓存配置的类，用于`SDDiskCache`和`SDMemoryCache`两个类中
+    默认的配置中磁盘最大过期时间kDefaultCacheMaxDiskAge = 1周
+    默认缓存到内存中，不使用weak内存缓存等等，内存缓存类使用的是SDMemoryCache，磁盘缓存类使用的是SDDiskCache
+    部分默认配置代码如下
+```
+        _shouldDisableiCloud = YES;
+        
+        _shouldCacheImagesInMemory = YES;
+        _shouldUseWeakMemoryCache = NO;
+        _shouldRemoveExpiredDataWhenEnterBackground = YES;
+        _shouldRemoveExpiredDataWhenTerminate = YES;
+        _diskCacheReadingOptions = 0;
+        _diskCacheWritingOptions = NSDataWritingAtomic;
+        _maxDiskAge = kDefaultCacheMaxDiskAge;
+        _maxDiskSize = 0;
+        _diskCacheExpireType = SDImageCacheConfigExpireTypeModificationDate;
+        _fileManager = nil;
+        _ioQueueAttributes = DISPATCH_QUEUE_SERIAL; // NULL
+        _memoryCacheClass = [SDMemoryCache class];
+        _diskCacheClass = [SDDiskCache class];
+```
+
+### 【SDMemoryCache】
+`SDMemoryCache` 继承自`NSCache`，同时拥有了它的优点
+* 1、收到内存警告时自动删减缓存
+* 2、线程安全
+* 3、优先删减“最久未使用”的对象
+* 4、NSCache不会拷贝键 ，而是强引用键。
+
+`SDMemoryCache` 额外做的一点是加了自己的弱引用缓存，即使用`NSMapTable weakCache`,`weakCache`对值的引用是`weak`,而NSCache是强引用。
+当使用了`weakCache`，在内存吃紧时需要自己手动处理，需要监听 `UIApplicationDidReceiveMemoryWarningNotification`通知。
+另外一点，使用`weakCache`，需要监听SDImageCacheConfig的 maxMemoryCost和maxMemoryCount，将匹配`NSCache`的属性 `totalCostLimit` 和`countLimit`。
+相关代码如下
+```
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey, id> *)change context:(void *)context
+{
+    if (context == SDMemoryCacheContext) {
+        if ([keyPath isEqualToString:NSStringFromSelector(@selector(maxMemoryCost))]) {
+            self.totalCostLimit = self.config.maxMemoryCost;
+        }
+        else if ([keyPath isEqualToString:NSStringFromSelector(@selector(maxMemoryCount))]) {
+            self.countLimit = self.config.maxMemoryCount;
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+```
+
+### 【SDDiskCache】
+`SDDiskCache`主要作用是将图上缓存到磁盘上，当然它也有检查缓存大小和删除过期缓存的功能。磁盘缓存默认是一周，也可以手动配置。缓存到磁盘上的图片名是采用了MD5摘要算法，最终的结果是将后缀之前的部分利用MD5处理然后再拼接后缀。具体如下：
+```
+static inline NSString *_Nonnull SDDiskCacheFileNameForKey(NSString *_Nullable key)
+{
+    const char *str = key.UTF8String;
+    if (str == NULL) {
+        str = "";
+    }
+    unsigned char r[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(str, (CC_LONG)strlen(str), r);
+    NSURL *keyURL = [NSURL URLWithString:key];
+    NSString *ext = keyURL ? keyURL.pathExtension : key.pathExtension;
+    // File system has file name length limit, we need to check if ext is too long, we don't add it to the filename
+    if (ext.length > SD_MAX_FILE_EXTENSION_LENGTH) {
+        ext = nil;
+    }
+    NSString *filename = [NSString stringWithFormat:@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%@",
+                                                    r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10],
+                                                    r[11], r[12], r[13], r[14], r[15], ext.length == 0 ? @"" : [NSString stringWithFormat:@".%@", ext]];
+    return filename;
+}
+```
+
+### 【SDWebImageDownloaderConfig】
+这里存储图片下载的配置，默认情况下最大并发数是6，超时时间是15s,任务执行的顺序是FIFO，有效的状态码是200-300,内部还有一些其它的配置，比如用户名和密码等
+
+```
+_maxConcurrentDownloads = 6;
+_downloadTimeout = 15.0;
+_executionOrder = SDWebImageDownloaderFIFOExecutionOrder;
+_acceptableStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(200, 100)];
+```
+    
+## 总结
+
+* 采用分类的形式，可以通过点语法应用到相应的控件上，比如UIImageView
+* 分类内的属性通过关联方法来添加对应的变量，比如：**UIView (WebCache)**中的 `sd_imageURL`属性
+* 将接口和实现分开，比如 定义了一个`SDWebImageOperation`协议,而具体的细节由`SDWebImageCombinedOperation`或其它类实现,其它还有像SDMemoryCache，SDImageLoader等
