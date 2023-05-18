@@ -1,0 +1,6 @@
+framework module Pods_kf_source_kf_sourceUITests {
+  umbrella header "Pods-kf_source-kf_sourceUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

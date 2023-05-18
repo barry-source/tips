@@ -1,0 +1,20 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'kf_source' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for kf_source
+
+  pod 'Kingfisher', '~> 7.6.2'
+  target 'kf_sourceTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'kf_sourceUITests' do
+    # Pods for testing
+  end
+
+end
