@@ -405,3 +405,116 @@ a = a ^ b // a ^ b ^ a = b
 - 通过设置 contentMode属性值为UIViewContentModeRedraw。那么将在每次设置或更改frame的时候自动调用 drawRect。
 
 - 直接调用 setNeedsDisplay,或者 setNeedsDisplaylnRect:触发drawRect:,但是有个前提条件是rect不能为0。
+
+### 35、iOS如何实现当多个网络请求完成后执行下一步
+
+gcd三种方式
+
+1.dispatch_group_t控制（enter,leave, notify）
+2.信号量dispatch_semaphore_t控制(wait, singal)
+3.栅栏块dispatch_barrier_async控制
+    注意：所有任务必须在同一个队列；队列不能使用全局队列，需要自己创建队列。
+    
+### 36、为什么NSArray要用copy？NSMutableArray要用strong修饰？
+
+- 1.如果NSArray用strong修饰，由于是强引用，副本对象数组和源对象数组只是指向同一块内存区域，这样会造成副本对象会随着源对象数组改变而改变，造成意想不到的变化。
+- 2.如果NSMutableArray用copy修饰，可变数组会变成不可变数组。用copy关键字，调用setter方法后， 进行了深拷贝，并且拷贝的对象是copy的，所以copy修饰NSMutableArray被视为NSArray了，再调用可变数组方法就会崩溃。
+
+### 37、方法延迟执行多种方法？
+
+- 1.performSelector【非阻塞】
+[self performSelector:@selector(delayMethod) withObject:nil afterDelay:2.0];
+
+- 2.NSTimer【非阻塞】
+NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(delayMethod) userInfo:nil repeats:NO];
+
+- 3.NSThread线程的sleep【阻塞】
+[NSThread sleepForTimeInterval:2.0];
+
+- 4.GCD【非阻塞】
+__block ViewController *weakSelf = self;
+dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC));
+
+dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+    [weakSelf delayMethod];
+});
+
+### 38、面向过程与面向对象区别
+
+面向过程：是一种以过程为中心的编程思想，分析出解决问题的步骤，然后用函数把这些步骤一一实现。面向过程数据和对数据操作是分离的。
+  （1）优点：性能比面向对象高，因为类调用需要实例化，开销大，比较耗资源。
+   （2）缺点：没有面向对象易维护，易复用，易扩展。
+
+面向对象：将事务对象化，通过对象通信来解决问题。面向对象编程中数据和对数据操作在一起的。
+  （1）优点：由于面向对象封装、继承、多态特性，可以设计低耦合，系统更灵活，更易于维护。
+  （2）缺点：性能比面向过程低。
+  
+### 39、dispatch_once怎么实现线程安全
+主要是采用原子操作
+
+在编程中，原子操作是指在一次发生中生效。一个原子操作不能在中途停止：它要么完整发生，要么不发生。没有副作用的原子操作是可见的，直到完成。
+
++ (instancetype)sharedInstance
+{
+    /*定义相应类实例的静态变量；
+    意义：函数内定义静态变量，无论该函数被调用多少次，
+         在内存中只初始化一次，并且能保存最后一次赋的值
+    */
+    static ClassName *instance = nil;
+    /*定义一个dispatch_once_t(其实也就是整型)静态变量，
+    意义：作为标识下面dispatch_once的block是否已执行过。
+         static修饰会默认将其初始化为0，当值为0时才会执行block。
+         当block执行完成，底层会将onceToken设置为1，这也就是为什
+         么要传onceToken的地址（static修饰的变量可以通过地址修改
+         onceToken的值），同时底层会加锁来保证这个方法是线程安全的
+    */
+    static dispatch_once_t onceToken;
+    /*只要当onceToken == 0时才会执行block，否则直接返回静态变量instance*/
+    dispatch_once(&onceToken, ^{
+        instance = [[ClassName alloc] init];
+        //...
+    });
+    return instance;
+}
+
+源码
+```
+void
+dispatch_once(dispatch_once_t *val, dispatch_block_t block)
+{
+	dispatch_once_f(val, block, _dispatch_Block_invoke(block));
+}
+
+void
+dispatch_once_f(dispatch_once_t *val, void *ctxt, dispatch_function_t func)
+{
+	dispatch_once_gate_t l = (dispatch_once_gate_t)val;
+
+#if !DISPATCH_ONCE_INLINE_FASTPATH || DISPATCH_ONCE_USE_QUIESCENT_COUNTER
+	uintptr_t v = os_atomic_load(&l->dgo_once, acquire);
+	if (likely(v == DLOCK_ONCE_DONE)) {
+		return;
+	}
+#if DISPATCH_ONCE_USE_QUIESCENT_COUNTER
+	if (likely(DISPATCH_ONCE_IS_GEN(v))) {
+		return _dispatch_once_mark_done_if_quiesced(l, v);
+	}
+#endif
+#endif
+    // 尝试进入，进入之后完成回调并通知其它线程
+	if (_dispatch_once_gate_tryenter(l)) {
+		return _dispatch_once_callout(l, ctxt, func);
+	}
+	// 其它线程进入只能等待
+	return _dispatch_once_wait(l);
+}
+
+static void
+_dispatch_once_callout(dispatch_once_gate_t l, void *ctxt,
+		dispatch_function_t func)
+{
+	_dispatch_client_callout(ctxt, func);
+	_dispatch_once_gate_broadcast(l);
+}
+
+```

@@ -10,7 +10,8 @@
 
 @implementation ViewD
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
     NSLog(@"ViewD范围内查找");
     NSLog(@"ViewD-->hitTest:withEvent:");
     UIView *view = [super hitTest:point withEvent:event];
@@ -18,24 +19,28 @@
     return view;
 }
 
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
     NSLog(@"ViewD-->pointInside:withEvent:");
     BOOL result = [super pointInside:point withEvent:event];
     NSLog(@"ViewD-->pointInside:withEvent:-->是否包含第一响应者：%d", result);
     return result;
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    //    [super touchesBegan:touches withEvent:event];
     NSLog(@"ViewD -- touchesBegan");
 }
 
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
     NSLog(@"ViewD -- touchesEnded");
 }
 
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesCancelled:touches withEvent:event];
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    //    [super touchesCancelled:touches withEvent:event];
     NSLog(@"ViewD -- touchesCancelled");
 }
 @end
