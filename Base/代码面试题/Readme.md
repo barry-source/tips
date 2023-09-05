@@ -142,3 +142,39 @@ dispatch_async(queue, ^{
 答案： 1  2  3 4 
 
 barrier2 也阻塞barrier3
+
+六、
+
+```
+- (void)testGCD {
+    //并发队列
+    dispatch_queue_t queue = dispatch_queue_create("zxy", DISPATCH_QUEUE_CONCURRENT);
+    NSLog(@"1");
+    dispatch_async(queue, ^{
+        NSLog(@"2");
+        dispatch_async(queue, ^{
+            NSLog(@"3");
+        });
+        NSLog(@"4");
+    });
+    NSLog(@"5");
+}
+```
+
+答案： 正常打印是 1 5 2 4 3，但是因为是异步，这个结果不是准确的，，，
+
+七、死锁
+
+```
+dispatch_queue_t queue = dispatch_queue_create("zxy", DISPATCH_QUEUE_SERIAL);
+    NSLog(@"1");
+    dispatch_async(queue, ^{
+        NSLog(@"2");
+        // 异步任务中开启同步任务
+        dispatch_sync(queue, ^{
+            NSLog(@"3");
+        });
+        NSLog(@"4");
+    });
+    NSLog(@"5");
+```
