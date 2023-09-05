@@ -34,7 +34,10 @@
 * 锁，子线程加锁可能会影响主线程
 * 最优线程数量是不超过Cpu核心数
 
+[抖音](https://www.exyb.cn/news/show-381450.html?action=onClick)
+
 ## 二、卡顿优化
+
 [像素如何显示到屏幕上](https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/)
 
 #### 卡顿原因的产生:
@@ -97,6 +100,10 @@ iOS中，渲染通常分为CPU和GPU渲染两种，而GPU渲染又分为在GPU�
 10、圆角的处理，尽量避免直接使用maskToBound, clipsToBound, 这样会造成离屏渲染
 11、阿里云图片裁剪
 
+卡顿优化案例：
+1、tableview封装时用了数组比较，数组数据多时滑动卡顿
+2、
+
 ## instrument调试
 ### 1、Time Profiler
 用来检测CPU性能、各个方法执行的时间
@@ -111,6 +118,10 @@ iOS中，渲染通常分为CPU和GPU渲染两种，而GPU渲染又分为在GPU�
 - Color Copied Images： 对于GPU 不支持的色彩格式的图片只能由 CPU来处理，把这样的图片标为蓝色。蓝色越多，性能越差。因为，我们不希望在滚动视图的时候，由 CPU 来处理图片，这样可能会对主线程造成阻塞。
 - Color Misaligned Images： 这个选项检查了图片是否被缩放，以及像素是否对齐。图片被放缩的会被标记为黄色，像素不对齐则会标注为紫色。黄色、紫色越多，性能越差。
 - Color Offscreen-Rendered Yellow：这个选项会把那些离屏渲染的图层显示为黄色。黄色越多，性能越差。这些显示为黄色的图层很可能需要用 shadowPath或者 shouldRasterize来优化。
+
+### 三、包瘦身
+
+
 
 ### 3、Leaks
 用来检测内存泄露
