@@ -22,7 +22,7 @@ MVC全名是Model View Controller，是模型(model)－视图(view)－控制器(
 
 ### Massive Controller的原因：
 
-1、view的构建：不管是用IB还是手写界面，初学者一般是将界面构建的代码放在vc中，甚至在vc的生命周期函数中，这是踏出massive viewController的第一步。
+1、view和ctroller是紧耦合的，所以对于view的构建，不管是用IB还是手写界面，初学者一般是将界面构建的代码放在vc中，甚至在vc的生命周期函数中，这是踏出massive viewController的第一步。
 
 2、网络数据的请求及后续处理：网络请求是一个比较关键的地方，涉及到数据的处理。我们在MVC模式下做个讨论，首先是View，View作为界面实现对象，一般能够用MVC的人不会把网络请求放里面了，这个跳过。接下来是model，一般MVC中model作为模型实体类，用于存放实体信息，执行实体的某些行为，本地数据库的操作，如果把网络请求放到model中执行，网络数据需要异步执行，如果model生命时间比网络数据请求时间长，那还可以，但是一般的服务器返回json数据中包含的实体信息非常多甚至一些无关model的请求，这部分又是一个问题，所以model里做网络显得格格不入，最后只能用vc，这是massive viewController的第二步。
 
@@ -40,6 +40,11 @@ MVC全名是Model View Controller，是模型(model)－视图(view)－控制器(
 ## 
 
 [MVVM](https://objccn.io/issue-13-1/)
+[MVVM](https://www.clariontech.com/blog/mvvm-in-ios-a-quick-walkthrough)
+
+该模式下，View 和Controller当成一个整体，Controller只负责显示和从UI中获取数据，viewmodel只管从controller中拿数据，VM承担了MVC中controller的获取和缓存数据的任务。
+
+MVVM模块下和响应式编程框架配合最好，完成数据的双向绑定。
 
 ### MVVM的优点：
 
@@ -47,11 +52,9 @@ MVC全名是Model View Controller，是模型(model)－视图(view)－控制器(
 
 2、可重用性：可以把一些视图逻辑放在一个 viewModel里面，让很多 view 重用这段视图逻辑
 
-3、兼容MVC
+3、低耦合：View 可以独立于Model变化和修改，一个 viewModel 可以绑定到不同的 View 上
 
-4、低耦合：View 可以独立于Model变化和修改，一个 viewModel 可以绑定到不同的 View 上
-
-5、分工协作独立开发：开发人员可以专注于业务逻辑和数据的开发 viewModel，设计人员可以专注于页面设计
+4、分工协作独立开发：开发人员可以专注于业务逻辑和数据的开发 viewModel，设计人员可以专注于页面设计
 
 ### 缺点：
 
