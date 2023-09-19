@@ -605,6 +605,16 @@ static void runLoopObserverCallBack(CFRunLoopObserverRef observer, CFRunLoopActi
 }
 
 ```
+
+* 启动（Launch）：20s；
+* 恢复（Resume）：10s；
+* 挂起（Suspend）：10s；
+* 退出（Quit）：6s；
+* 后台（Background）：3min（在 iOS 7 之前，每次申请 10min； 之后改为每次申请 3min，可连续申请，最多申请到 10min）。
+
+通过 WatchDog 设置的时间，我认为可以把启动的阈值设置为 10 秒，其他状态则都默认设置为 3 秒。总的原则就是，要小于 WatchDog 的限制时间。当然了，这个阈值也不用小得太多，原则就是要优先解决用户感知最明显的体验问题。
+
+
 - 性能优化
 
 - crash
