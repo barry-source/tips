@@ -53,6 +53,29 @@ Block三种类型的存储区域如下图所示：
 
 利用`Clang`命令可以将`OC`代码转换成底层的`c++`代码，大致看下底层的内部构造，当然也可以通过苹果官方提供的源码查看。
 
+block的底层结构如下：
+```c++
+/* Revised new layout. */
+struct Block_descriptor {
+    unsigned long int reserved; //预留内存大小
+    unsigned long int size; //块大小
+    void (*copy)(void *dst, void *src); //指向拷贝函数的函数指针
+    void (*dispose)(void *); //指向释放函数的函数指针
+};
+
+struct Block_layout {
+    void *isa; //指向Class对象
+    int flags; //状态标志位
+    int reserved; //预留内存大小
+    void (*invoke)(void *, ...); //指向块实现的函数指针
+    struct Block_descriptor *descriptor;
+    /* Imported variables. */
+};
+
+```
+
+![image.png](https://upload-images.jianshu.io/upload_images/1846524-f5d2186205f01e9f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+这个只是大致的一个描述，实际上用clang生成的底层代码稍有不同，invoke 对应 FuncPtr,  descriptor 并不在Block结构体内部等等。
 #### 3.1 未捕获任何变量Block底层构造
 
 源码如下：
