@@ -19,6 +19,8 @@
 
 [[底层原理] Runloop底层实现](https://github.com/barry-source/tips/tree/master/Runloop)
 
+[[底层原理] Runtime使用场景](https://github.com/barry-source/tips/tree/master/Runtime%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF)
+
 [[底层原理] AutoreleasePool底层实现](https://github.com/barry-source/tips/tree/master/AutoreleasePool)
 
 [[底层原理] weak底层实现](https://github.com/barry-source/tips/tree/master/Weak)
