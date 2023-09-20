@@ -31,6 +31,8 @@
 
 [[底层原理] 内存管理 ](https://github.com/barry-source/tips/tree/master/memory)
 
+[[底层原理] dSYM ](https://github.com/barry-source/tips/tree/master/dSYM)
+
 # 基础：
 
 [基础 ](https://github.com/barry-source/tips/tree/master/Base)
