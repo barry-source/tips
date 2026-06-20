@@ -1065,7 +1065,7 @@ void callInitialize(Class cls)
 > load、initialize在category中的调用的顺序，以及出现继承时他们之间的调用的过程
 
 load: 先调用原类的load方法，如果原类有父类，那么先调用父类的load方法，直到所有原类调用结束，
-再调用分类的load方法，分类的load方法调用顺序是谁在最后谁先调用，每个分类的load方法都会调用。
+再调用分类的load方法，分类的load方法调用顺序是谁在前谁先调用（编译顺序），每个分类的load方法都会调用。
 
 initialize： 在第一次给对象发消息时调用。实质也是给对象发送消息。
 原类和父类同时实现initialize会先调用父类的initialize方法（前提是写了super 方式调用），再调用原类的initialize方法。
