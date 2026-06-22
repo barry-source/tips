@@ -31,7 +31,7 @@ clang -rewrite-objc -fobjc-arc -stdlib=libc++ -mmacosx-version-min=10.7 -fobjc-r
 ### 1.2、Weak的实现原理
 
 第一、通过weak编译解析，可以看出来weak通过runtime初始化的并维护的；
-第二、weak和strong都是Object-C的修饰词，而strong是通过runtime维护的一个自动计数表结构。
+第二、weak和strong都是Objective-C的修饰词，而strong是通过runtime维护的一个自动计数表结构。
 
 综上：weak是有Runtime维护的weak表。
 
@@ -59,7 +59,7 @@ struct weak_table_t {
 ```ruby
 typedef objc_object ** weak_referrer_t;
 struct weak_entry_t {
-    DisguisedPtr<objc_object> referent;  //范型
+    DisguisedPtr<objc_object> referent;  //泛型
     union {
         struct {
             weak_referrer_t *referrers;
@@ -79,7 +79,7 @@ struct weak_entry_t {
 总之：
 1.`weak_table_t`(weak 全局表)：采用hash（哈希表）的方式把所有weak引用的对象，存储所有引用weak对象
 2`.weak_entry_t`（weak_table_t表中hash表的value值，weak对象体）：用于记录hash表中weak对象
-3.`objc_object`（weak_entry_t对象中的范型对象，用于标记对象weak对象）：用于标示weak引用的对象。
+3.`objc_object`（weak_entry_t对象中的泛型对象，用于标记对象weak对象）：用于标示weak引用的对象。
 
 详细讲解weak存储对象结构，对接下来对weak操作使用可以更加清晰的理解weak的使用。
 

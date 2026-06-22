@@ -784,7 +784,7 @@ attachCategories(Class cls, const locstamped_category_t *cats_list, uint32_t cat
 源码中 `methods`、 `properties`， `protocols`最终都会调用`attachLists`方法，这里会将分类最终添加到相应的列表上。
 `attachLists`参数会把数组中实际存入的数据传入，
 例如 方法列表
-`mlists` 占用的数量大小为`TTACH_BUFSIZ = 64`，`mcount`是总共包含的方法数， `ATTACH_BUFSIZ - mcount` 则为数组中空元素的最大序号，
+`mlists` 占用的数量大小为`ATTACH_BUFSIZ = 64`，`mcount`是总共包含的方法数， `ATTACH_BUFSIZ - mcount` 则为数组中空元素的最大序号，
 `mlists + ATTACH_BUFSIZ - mcount` 则是定位到了第一个非空元素的位置。
 
 -  attachLists 函数
@@ -926,7 +926,7 @@ static struct loadable_class *loadable_classes = nil;
 ```
 
 
-## 二、initialize的加载过程
+## 三、initialize的加载过程
 
 先利用Xcode 中bt 命令查看`initialize`调用堆栈，展示如下图：
 

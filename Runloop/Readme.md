@@ -24,7 +24,7 @@
 
 ## 2、结构
 
-通常所说的RunLoop指的是NSRunloop或者CFRunloopRef：
+通常所说的RunLoop指的是NSRunLoop或者CFRunLoopRef：
 
 - CFRunLoopRef 是在 CoreFoundation 框架内的，它提供了纯 C 函数的 API，所有这些 API 都是线程安全的。
 - NSRunLoop 是基于 CFRunLoopRef 的封装，提供了面向对象的 API，但是这些 API 不是线程安全的。
@@ -34,8 +34,8 @@
 
 Foundation：
 
-    [NSRunloop currentRunLoop];获得当前线程的RunLoop对象 
-    [NSRunLoop mainRunLoop];获得主线程的Runloop对象
+    [NSRunLoop currentRunLoop];获得当前线程的RunLoop对象 
+    [NSRunLoop mainRunLoop];获得主线程的RunLoop对象
 
 Core Foundation：
 
@@ -88,7 +88,7 @@ struct __CFRunLoopMode {
 
 - `kCFRunLoopDefaultMode`: App的默认运行模式，通常主线程是在这个运行模式下运行
 - `UITrackingRunLoopMode`: 跟踪用户交互事件（用于 ScrollView 追踪触摸滑动，保证界面滑动时不受其他Mode影响）
-- `kCFRunLoopCommonModes`: 伪模式，不是一种真正的运行模式l黑夜包括`kCFRunLoopDefaultMode`和 `UITrackingRunLoopMod`
+- `kCFRunLoopCommonModes`: 伪模式，不是一种真正的运行模式，它包括`kCFRunLoopDefaultMode`和 `UITrackingRunLoopMode`
 - `UIInitializationRunLoopMode`：在刚启动App时第进入的第一个Mode，启动完成后就不再使用
 - `GSEventReceiveRunLoopMode`：接受系统内部事件，通常用不到
 
@@ -104,7 +104,7 @@ struct __CFRunLoopMode {
 
 - `用于监听RunLoop的状态`
 - `UI刷新（BeforeWaiting）`
-- `Autorelease pool（BeforeWaiting`
+- `Autorelease pool（BeforeWaiting）`
 
 observers 底层结构如下：
 
@@ -170,7 +170,7 @@ SInt32 CFRunLoopRunSpecific(CFRunLoopRef rl, CFStringRef modeName, CFTimeInterva
     if (currentMode->_observerMask & kCFRunLoopEntry ) __CFRunLoopDoObservers(rl, currentMode, kCFRunLoopEntry);
     // MARK: 这里是实际的runloop流程操作
     result = __CFRunLoopRun(rl, currentMode, seconds, returnAfterSourceHandled, previousMode);
-    // 11、通知观察者，runloop已经退出了kCFRunLoopEntry
+    // 11、通知观察者，runloop已经退出了kCFRunLoopExit
     if (currentMode->_observerMask & kCFRunLoopExit ) __CFRunLoopDoObservers(rl, currentMode, kCFRunLoopExit);
 
     __CFRunLoopModeUnlock(currentMode);

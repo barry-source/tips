@@ -93,6 +93,6 @@ client无数据发送时,向sever发送关闭信号，sever对其进行回应，
 
 头部开销：
 - TCP ≥ 20 字节
-- UDP
+- UDP 8 字节
 
 

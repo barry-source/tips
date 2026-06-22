@@ -71,7 +71,7 @@ NSLog(@"name--%@", [self.account valueForKeyPath:@"owner.name"]); //通过keypat
 
 ![keypath.jpg](https://upload-images.jianshu.io/upload_images/1846524-a9b9ccefd5e6356f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 - `@collectionOperator`左侧是`Left key path`,可以省略(如果当属性对象是NSarray时)
-- `@collectionOperator`左侧是`Right key path`，除了`@count`集合操作符，其它的`Right key path`必须存在
+- `@collectionOperator`右侧是`Right key path`，除了`@count`集合操作符，其它的`Right key path`必须存在
 #### 3.3.1 Aggregation Operators聚合操作符
 &#160;&#160;&#160;&#160;&#160;&#160;&#160;聚合运算符以某种方式合并集合的对象，并返回通常与右键路径中指定的属性的数据类型匹配的单个对象。 @count运算符是一个例外 - 它没有正确的键路径，总是返回一个NSNumber实例。
 
@@ -103,7 +103,7 @@ NSArray *distinctPayees = [self.account.transactions valueForKeyPath:@"@distinct
 ```
 - **@unionOfObjects** 返回一个所有元素的Array
 ```Objective-C
-NSArray *distinctPayees = [self.account.transactions valueForKeyPath:@"@distinctUnionOfObjects.payee"];
+NSArray *allPayees = [self.account.transactions valueForKeyPath:@"@unionOfObjects.payee"];
 ```
 #### 3.3.3 Nesting Operators嵌套操作符
 嵌套操作作用在一个嵌套的序列上，序列中的每一个元素也是一个序列。
@@ -280,10 +280,10 @@ let user = User()
 user.name = "hangge"
 user.age = 100
 //取值
-let name = user1[keyPath: \User.name]
+let name = user[keyPath: \User.name]
 print(name)
 //设置值
-user1[keyPath: \User.name] = "hangge.com"
+user[keyPath: \User.name] = "hangge.com"
 ```
 - 修改私有属性的值
 OC语言中没有绝对的私有，我们可以通过runtime获取相应的私有属性，然后可根据需要修改，比如：

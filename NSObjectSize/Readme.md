@@ -1,7 +1,7 @@
 
 # 一个NSObject对象占用多少空间
 
-对于一个Object C对象，可以通过xcrun和clang命令来生成相应的底层代码，不过生成的代码不是最新的，具体的相关信息可以参考苹果官方源码。
+对于一个Objective-C对象，可以通过xcrun和clang命令来生成相应的底层代码，不过生成的代码不是最新的，具体的相关信息可以参考苹果官方源码。
 
 如下一个**没有**任何变量的类，可以暂时通过 `xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc main.m -o main64.cpp`（解释见附录）组合命令生成 底层cpp代码
 
@@ -117,7 +117,7 @@ size_t instanceSize(size_t extraBytes) const {
 # 附录：
 
 
-Clang 是 c 、c++ 、object-c的编译器
+Clang 是 C 、C++ 、Objective-C的编译器
 
  
 

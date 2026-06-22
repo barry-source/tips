@@ -87,7 +87,7 @@ pthread_mutex_destroy(&lock);
 
 ```ruby
 
-/ 初始化锁的属性
+// 初始化锁的属性
 pthread_mutexattr_t attr;
 pthread_mutexattr_init(&attr);
 // 递归锁
@@ -121,7 +121,7 @@ pthread_mutex_init(&lock, &attr);
 // 初始化条件
 pthread_cond_t condition;
 pthread_cond_init(&condition, NULL);
-// 等待条件（进入休眠时，会放开lock，补唤醒后，会再次对lock加锁）
+// 等待条件（进入休眠时，会放开lock，被唤醒后，会再次对lock加锁）
 pthread_cond_wait(&condition, &lock);
 // 激活一个等待该条件的线程
 pthread_cond_signal(&condition);

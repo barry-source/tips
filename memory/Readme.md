@@ -134,9 +134,9 @@ self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:[Proxy proxyWith
 @end
 ```
 
-类`Proxy`主要是用来消息转发的，直接进入消息转的第三步，越过了消息查找，和消息转发的前两步
+类`Proxy`主要是用来消息转发的，直接进入消息转发的第三步，越过了消息查找，和消息转发的前两步
 
-`Proxy` 继承`NSProxy`, `Proxy` 继承`NSObject` 这样会有下面的差异点：
+`Proxy` 继承`NSProxy`, `Proxy1` 继承`NSObject` 这样会有下面的差异点：
 
 ```
 ViewController *vc = [[ViewController alloc] init];
@@ -154,11 +154,11 @@ NSLog(@"%d %d",
 打印结果: 1 0
 
 解： 对于Proxy1它的父类是NSObject，所以不是ViewController的类及其子类
-对于Proxy，由于继承NSProxy,所以直接进入消息转主，由target进行处理消息，而target正好是ViewController
+对于Proxy，由于继承NSProxy,所以直接进入消息转发，由target进行处理消息，而target正好是ViewController
 ```
 
 
-### 4.1、`CADisplayLink`相互引用
+### 4.2、`CADisplayLink`相互引用
 
 `CADisplayLink`和`NSTimer`的target方法会出现同样的问题，
 

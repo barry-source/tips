@@ -33,7 +33,7 @@
 }
 //最后移除观察者
 - (void)dealloc {
-    [self.account removeObserver:self.person forKeyPath:"balance" context:nil];
+    [self.account removeObserver:self.person forKeyPath:@"balance" context:nil];
 }
 ```
 
@@ -141,7 +141,7 @@
 @end
 
 ```
-其它的序列如NSMutableSet, NSMutableOrderedSet 类似，只不过取值方式一一样
+其它的序列如NSMutableSet, NSMutableOrderedSet 类似，只不过取值方式一样
 
 - NSMutableArray -------> `mutableArrayValueForKey`
 - NSMutableSet -------> `mutableSetValueForKey`

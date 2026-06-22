@@ -11,7 +11,7 @@ Block有三种类型，分别如下图所示：
 ![Block类型.jpg](https://upload-images.jianshu.io/upload_images/1846524-750537dfd6e06ffe.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 (MRC下)验证代码如下：
-```python
+```objective-c
 
 void (^globalBlock)(void);
 
@@ -79,7 +79,7 @@ struct Block_layout {
 #### 3.1 未捕获任何变量Block底层构造
 
 源码如下：
-```python
+```objective-c
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         void (^blk)(void) = ^{
@@ -94,7 +94,7 @@ int main(int argc, const char * argv[]) {
 
 转换之后的代码如下：
 
-```python
+```c++
 // block的定义
 struct __block_impl {
   void *isa;
@@ -151,7 +151,7 @@ int main(int argc, const char * argv[])
 #### 3.2 访问自动变量Block底层构造
 
 源码如下：
-```python
+```objective-c
 void autoBlockImpl() {
     int autoVal = 1;
     void (^blk)(void) = ^{
@@ -163,7 +163,7 @@ void autoBlockImpl() {
 
 转换之后的代码不同点主要是Block的构造上：
 
-```python
+```c++
 struct __autoBlockImpl_block_impl_0 {
   struct __block_impl impl;
   struct __autoBlockImpl_block_desc_0* Desc;
@@ -188,7 +188,7 @@ static void __autoBlockImpl_block_func_0(struct __autoBlockImpl_block_impl_0 *__
 
 示例存取`__block`自动变量的代码如下：
 
-```python
+```objective-c
 void blk() {
     __block int autoVal = 1;
     void (^blk)(void) = ^{
@@ -200,7 +200,7 @@ void blk() {
 ```
 
 转换后的代码如下所示：
-```python
+```c++
 // autoVal 被包裹成了__Block_byref_autoVal_0类型
 struct __Block_byref_autoVal_0 {
   void *__isa;
@@ -303,22 +303,22 @@ void blk() {
 但是在ARC下，`Blk1`是可以被调用的。 也就是说栈上的Block变量`Blk2`的生命周期被延长了。
 那么是如何做到的呢。
 
-其实就是将栈上的Block进行了Copy,全部放到栈上进行保存。
+其实就是将栈上的Block进行了Copy,全部放到堆上进行保存。
 
 ![延长栈上Block生命示意图.png](https://upload-images.jianshu.io/upload_images/1846524-c7c47e33d91a45b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 在`MRC`下，Block 中`__forwarding`指向的是它自己，就可以通知`autoVal->__forwarding->autoVal`存取捕获的变量。
-在`ARC`下，栈上的`Bock`会被进行`copy`, `copy`之后会将栈上的`__forwarding`指向堆上的`Block`,这样无论在栈上或者堆上都可以正常的存取捕获的变量
+在`ARC`下，栈上的`Block`会被进行`copy`, `copy`之后会将栈上的`__forwarding`指向堆上的`Block`,这样无论在栈上或者堆上都可以正常的存取捕获的变量
 所以`__forwarding`的作用就是无论在栈上或者堆上都可以正确访问`__block`变量
 
 
 #### 3.2 访问全局变量或静态变量的Block底层构造
 
 
-#### 3.2 捕获局部变量Block底层构造
+#### 3.3 捕获局部变量Block底层构造
 
 底层构造和未捕获任何变量的Block大同小异，不同点如下所示：
-```python
+```c++
 struct __basicAutoBlockImpl_block_impl_0 {
   struct __block_impl impl;
   struct __basicAutoBlockImpl_block_desc_0* Desc;

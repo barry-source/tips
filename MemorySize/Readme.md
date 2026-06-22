@@ -33,8 +33,6 @@ struct CustomType {
 
 ## 案例2：#pragma pack(2) 二字节对齐
 ```Objective-C
-## 案例1：#pragma pack(1) 一字节对齐
-```Objective-C
 #pragma pack(2)
 struct CustomType {
     //1、数据成员对齐规则
@@ -56,8 +54,6 @@ struct CustomType {
 -  **X**为补齐部分
 
 ## 案例3：#pragma pack(4) 四字节对齐
-```Objective-C
-## 案例1：#pragma pack(1) 一字节对齐
 ```Objective-C
 #pragma pack(4)
 struct CustomType {
@@ -182,7 +178,7 @@ struct CustomType {
 ```
 
 #### - 上述代码中设置了#pragma pack(4)，但是由于结构体中使用了__attribute__((packed)) 属性，依然取消了设置的对齐方式
-#### - __attribute__ ((aligned (1))) 方式，目前在xcode中不起使用,参考![链接](https://stackoverflow.com/questions/10371296/pragma-pack1-nor-attribute-aligned-1-works)
+#### - __attribute__ ((aligned (1))) 方式，目前在xcode中不起使用,参考[链接](https://stackoverflow.com/questions/10371296/pragma-pack1-nor-attribute-aligned-1-works)
 
 ## iOS平台对齐
 
@@ -195,11 +191,11 @@ iOS平台的对齐系数为8，可以通过下述论证。
 
 ##### 正常形式
 ```
-// NSOject 的展现形式
+// NSObject 的展现形式
 struct NSObject_IMPL {
     Class isa;
 };
-// 继承NSOject的TestObject展现形式
+// 继承NSObject的TestObject展现形式
 struct TestObject_IMPL {
     struct NSObject_IMPL NSObject_IVARS; // 这里可以直接用 Class isa;替换
     int p1;
@@ -213,12 +209,12 @@ NSLog(@"%zd", sizeof(s));
 ##### #pragma pack(4)
 
 ```
-// NSOject 的展现形式
+// NSObject 的展现形式
 struct NSObject_IMPL {
     Class isa;
 };
 #pragma pack(4)
-// 继承NSOject的TestObject展现形式
+// 继承NSObject的TestObject展现形式
 struct TestObject_IMPL {
 struct NSObject_IMPL NSObject_IVARS; // 这里可以直接用 Class isa;替换
     int p1;
@@ -232,12 +228,12 @@ NSLog(@"%zd", sizeof(s));
 ##### #pragma pack(8)
 
 ```
-// NSOject 的展现形式
+// NSObject 的展现形式
 struct NSObject_IMPL {
     Class isa;
 };
 #pragma pack(8)
-// 继承NSOject的TestObject展现形式
+// 继承NSObject的TestObject展现形式
 struct TestObject_IMPL {
 struct NSObject_IMPL NSObject_IVARS; // 这里可以直接用 Class isa;替换
     int p1;
