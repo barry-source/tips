@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: third_party_source
+title: third_party_source
+scope:
+    - Source/
+source_files: []
+depends_on: []
+related_to: []

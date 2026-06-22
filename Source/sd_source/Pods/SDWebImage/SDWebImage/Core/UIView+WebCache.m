@@ -152,7 +152,7 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
               if (expectedSize != 0) {
                   progress = (double)receivedSize / expectedSize;
               }
-              // 进度是在0-1之前，
+              // 进度是在0-1之间，
               // ⚠️ 异常情况下<0,取0，>1,取1
               progress = MAX(MIN(progress, 1), 0); // 0.0 - 1.0
               // 主线程更新菊花

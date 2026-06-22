@@ -19,10 +19,10 @@
     //    [self deadLock1];
     //    [self deadLock2];
     //    [self interview];
-    [self interview2];
+//    [self interview2];
     //    [self groupNotify];
-    //    [self barrierAsync];
-    //    [self barrierSync];
+//        [self barrierAsync];
+        [self barrierSync];
     //    [self apply];
 }
 

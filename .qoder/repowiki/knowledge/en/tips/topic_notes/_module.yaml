@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: topic_notes
+title: topic_notes
+scope:
+    - AutoreleasePool/
+    - Block/
+    - Flutter/
+source_files: []
+depends_on: []
+related_to: []

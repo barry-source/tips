@@ -1,24 +1,26 @@
 
-# 进程和线程
+# TCP和UDP
 
 ## 三次握手
 ![三次握手](https://upload-images.jianshu.io/upload_images/1846524-4d755479d5966fd8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ### 解释
+```
+第一次握手：建立连接时，客户端发送syn包(包含随机的序列号`seq=1000`)到服务器，并进入SYN_SEND状态，等待服务器确认； 
 
-第一次握手：建立连接时，客户端发送syn包(和随机的序列号`seq=1000`)到服务器，并进入SYN_SEND状态，等待服务器确认； 
-
-第二次握手：服务器收到syn包，必须确认客户的`SYN（ack=1000 + 1`），同时自己也发送一个SYN包（和随机的序列号`seq=2000`），即`SYN + ACK`包，此时服务器进入`SYN_RECV`状态；
+第二次握手：服务器收到syn包，必须确认客户的`SYN（ack=1000 + 1`），同时自己也发送一个SYN包（包含随机的序列号`seq=2000`），即`SYN + ACK`包，此时服务器进入`SYN_RECV`状态；
 
 第三次握手：客户端收到服务器的`SYN ＋ ACK`包，向服务器发送确认包`ACK(ack=2000+1)`，此包发送完毕，客户端和服务器进入`ESTABLISHED`状态，完成三次握手。 完成三次握手，客户端与服务器开始传送数据.
+```
 
 - 上述1000 和 2000 是随机的，这里为了演示写死了
 
 ### 三次握手的目的
-    - 确认双方收发能力正常（Client 能收发、Server 能收发）
-    - 双方初始化序列号 seq （TCP 初始化序列号是为了防止旧连接数据混入新连接、避免重放攻击、保证数据按序传输，以及确保连接的唯一性和安全性）
-    - 避免历史连接（老旧 SYN）建立错误连接
+
+- 确认双方收发能力正常（Client 能收发、Server 能收发）
+- 双方初始化序列号 seq （TCP 初始化序列号是为了防止旧连接数据混入新连接、避免重放攻击、保证数据按序传输，以及确保连接的唯一性和安全性）
+- 避免历史连接（老旧 SYN）建立错误连接
 
 ### 通俗解释
 
@@ -36,13 +38,11 @@
 
 ### 解释
 
-```第一次挥手：主机1向主机2，发送FIN报文段，表示关闭数据传送，并主机1进入FIN_WAIT_1状态，表示没有数据要传输了``` 
-
-```第二次挥手：主机2收到FIN报文段后进入CLOSE_WAIT状态（被动关闭），然后发送ACK确认，表示同意你关闭请求了，主机到主机的数据链路关闭，主机进入FIN_WAIT_2状态 ```
-
-```第三次挥手：主机2等待主机1发送完数据，发送FIN到主机1请求关闭，主机2进入LAST_ACK状态 ```
-
-```第四次挥手：主机1收到主机2发送的FIN后，回复ACK确认到主机2，主机1进入TIME_WAIT状态。主机2收到主机1的ACK后就关闭连接了，状态为CLOSED。主机1等待2MSL，仍然没有收到主机2的回复，说明主机2已经正常关闭了，主机1关闭连接。```
+```第一次挥手：client向server发送FIN报文段(finish)，表示关闭数据传送并且client进入FIN_WAIT_1状态，表示没有数据要传输了
+第二次挥手:server收到FIN报文段后进入CLOSE_WAIT状态（被动关闭），然后发送ACK确认，表示同意你关闭请求了，clien到server的数据链路关闭，client进入FIN_WAIT_2状态 
+第三次挥手：client等待server发送完数据，server发送FIN到client请求关闭，server进入LAST_ACK状态
+ 
+第四次挥手：client收到server发送的FIN后，回复ACK到server，client进入TIME_WAIT状态。server收到client的ACK后就关闭连接了，状态为CLOSED。client等待2MSL，仍然没有收到server的回复，说明client已经正常关闭了，client关闭连接。```
 
 
 ### TCP四次目的 
@@ -59,10 +59,13 @@ client无数据发送时,向sever发送关闭信号，sever对其进行回应，
 
 ## 问题2、为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？
 
-答：虽然按道理讲，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可以最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文
+答： 1、保证自己发送的最后 ACK 能被对方收到（等待对方可能的 FIN 重传，最多 MSL 时间）
+    2、让所有旧连接残留的报文在网络中过期（再等待 1×MSL）
+    因此一共需要等待两个MSL。
+    
+> MSL: Maximum Segment Lifetime TCP 报文在网络中能存活的最长时间 (RFC 793 标准给了 2 分钟的参考值,UNIX是30s)
 
-
-> 面试题：TCP和UDP的区别是什么？[TCP,UDP区别](https://zhuanlan.zhihu.com/p/24860273/)
+面试题：TCP和UDP的区别是什么？[TCP,UDP区别](https://zhuanlan.zhihu.com/p/24860273/)
 
 连接方式：
 - TCP 面向连接（三次握手）

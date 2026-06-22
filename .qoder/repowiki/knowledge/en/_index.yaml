@@ -1,0 +1,128 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: en-US
+branch: master
+nodes_managed: true
+exported_at: "2026-06-22T06:30:46Z"
+modules:
+    "":
+        dir_name: tips
+        title: tips
+        scope: []
+        source_files: []
+        children:
+            - concurrency_demos
+            - easy_lighting_apps
+            - ios_knowledge
+            - leetcode
+            - memory_demos
+            - objc_feature_demos
+            - objc_runtime_source
+            - system_demos
+            - third_party_source
+            - topic_notes
+        depends_on: []
+        related_to: []
+    concurrency_demos:
+        dir_name: concurrency_demos
+        title: concurrency_demos
+        scope:
+            - multiThread/
+            - multiThreadLock/
+            - Runloop/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    easy_lighting_apps:
+        dir_name: easy_lighting_apps
+        title: easy_lighting_apps
+        scope:
+            - Easy-Lighting 2/
+            - Easy-Lighting 3/
+            - EasyLighting/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    ios_knowledge:
+        dir_name: ios_knowledge
+        title: ios_knowledge
+        scope:
+            - Base/
+            - Weak/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    leetcode:
+        dir_name: leetcode
+        title: leetcode
+        scope:
+            - Leetcode/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    memory_demos:
+        dir_name: memory_demos
+        title: memory_demos
+        scope:
+            - NSObjectInterStruct/
+            - NSObjectSize/
+            - MemorySize/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    objc_feature_demos:
+        dir_name: objc_feature_demos
+        title: objc_feature_demos
+        scope:
+            - Category/
+            - KVC/
+            - KVO/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    objc_runtime_source:
+        dir_name: objc_runtime_source
+        title: objc_runtime_source
+        scope:
+            - objc4-818-master/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    system_demos:
+        dir_name: system_demos
+        title: system_demos
+        scope:
+            - notification/
+            - memory/
+            - dSYM/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    third_party_source:
+        dir_name: third_party_source
+        title: third_party_source
+        scope:
+            - Source/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    topic_notes:
+        dir_name: topic_notes
+        title: topic_notes
+        scope:
+            - AutoreleasePool/
+            - Block/
+            - Flutter/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []

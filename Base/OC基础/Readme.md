@@ -290,25 +290,27 @@ Swift：
     给协议中用到的类型定义一个占位名称
     协议中可以拥有多个关联类型
     关联类型不能直接作为返回值 解决方案是 -> `some 关联类型`
-    
-    
+
+
+​    
 ### 28、swift中 什么时候使用 @objc
 
     协议中定义 optional 方法 时
     事件，通知中的回调方法前
     swift 类型或其中的变量暴露给OC类型使用时
-    
-    
+
+
+​    
 ### 29. swift 为什么数组索引越界会崩溃，而字典用下标取值时 key 没有对应值的话返回的是 nil 不会崩溃。
 
     struct Array<Element> {
         subscript(index: Int) -> Element
     }
-
+    
     struct Dictionary<Key: Hashable, Value> {
         subscript(key: Key) -> Value?
     }
-    
+
 ### 27、Swift 和OC对比
 
     1）Swift是强类型（静态）语言，有类型推断，Objective-C弱类型（动态）语言
@@ -333,7 +335,7 @@ Swift：
     Swift中协议的Extensions使用直接派发，初始声明函数使用函数表派发；
     Swift中Class中Extensions使用直接派发，初始声明函数使用函数表派发，dynamic修饰的函数使用消息派发；
     Swift中NSObject的子类用@nonobjc或final修饰的函数使用直接派发，初始声明函数使用函数表派发，dynamic修饰的Extensions使用消息派发；
-    
+
 3）Swift中函数派发查看方式: 可将Swift代码转换为SIL（中间码）
 
     swiftc -emit-silgen -O example.swift
@@ -410,11 +412,15 @@ a = a ^ b // a ^ b ^ a = b
 
 gcd三种方式
 
-1.dispatch_group_t控制（enter,leave, notify）
-2.信号量dispatch_semaphore_t控制(wait, singal)
-3.栅栏块dispatch_barrier_async控制
-    注意：所有任务必须在同一个队列；队列不能使用全局队列，需要自己创建队列。
-    
+- 1.dispatch_group_t控制（enter,leave, notify），或者
+- 2.信号量dispatch_semaphore_t控制(wait, singal),会阻塞线程，慎用
+- 3.栅栏块dispatch_barrier_async控制
+      注意：所有任务必须在同一个队列；队列不能使用全局队列，需要自己创建队列。
+- 4、OperationQueue，通过addDependency，比如：finish.addDependency(op1) 和 finish.addDependency(op2)
+- 5、最原始的数字变量
+- 6、Combine响应式编程 -- swift
+- 7、Swift Concurrency
+
 ### 36、为什么NSArray要用copy？NSMutableArray要用strong修饰？
 
 - 1.如果NSArray用strong修饰，由于是强引用，副本对象数组和源对象数组只是指向同一块内存区域，这样会造成副本对象会随着源对象数组改变而改变，造成意想不到的变化。
@@ -448,7 +454,7 @@ dispatch_after(delayTime, dispatch_get_main_queue(), ^{
 面向对象：将事务对象化，通过对象通信来解决问题。面向对象编程中数据和对数据操作在一起的。
   （1）优点：由于面向对象封装、继承、多态特性，可以设计低耦合，系统更灵活，更易于维护。
   （2）缺点：性能比面向过程低。
-  
+
 ### 39、dispatch_once怎么实现线程安全
 主要是采用原子操作
 

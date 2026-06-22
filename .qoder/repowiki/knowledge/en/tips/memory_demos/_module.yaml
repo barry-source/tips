@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: memory_demos
+title: memory_demos
+scope:
+    - NSObjectInterStruct/
+    - NSObjectSize/
+    - MemorySize/
+source_files: []
+depends_on: []
+related_to: []
