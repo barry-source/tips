@@ -33,6 +33,8 @@
 
 [[底层原理] dSYM](https://github.com/barry-source/tips/tree/master/dSYM)
 
+[[底层原理] NSMutableArray底层分析](https://github.com/barry-source/tips/tree/master/NSMutableArray)
+
 [[底层原理] objc4-818 源码](https://github.com/barry-source/tips/tree/master/objc4-818-master)
 
 # 基础：
@@ -89,5 +91,11 @@
 
 # 源码记录：
 
-[三方库源码分析](https://github.com/barry-source/tips/tree/master/Source)
+[SDWebImage](https://github.com/barry-source/tips/tree/master/Source/sd_source)
+
+[Kingfisher](https://github.com/barry-source/tips/tree/master/Source/kf_source)
+
+[Bugly](https://github.com/barry-source/tips/tree/master/Source/bugly_source)
+
+
 
