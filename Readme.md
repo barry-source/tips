@@ -37,8 +37,6 @@
 
 # 基础：
 
-[基础](https://github.com/barry-source/tips/tree/master/Base)
-
 - [GCD多读单写](https://github.com/barry-source/tips/tree/master/Base/GCD多读单写)
 - [OC基础](https://github.com/barry-source/tips/tree/master/Base/OC基础)
 - [Swift](https://github.com/barry-source/tips/tree/master/Base/swift)
@@ -47,8 +45,6 @@
 - [单例的几种写法](https://github.com/barry-source/tips/tree/master/Base/单例的几种写法)
 - [崩溃记录](https://github.com/barry-source/tips/tree/master/Base/崩溃记录)
 - [iOS优化](https://github.com/barry-source/tips/tree/master/Base/优化)
-- [Hash](https://github.com/barry-source/tips/tree/master/Base/hash)
-- [堆和栈的区别](https://github.com/barry-source/tips/tree/master/Base/堆和栈的区别)
 - [内存泄漏场景](https://github.com/barry-source/tips/tree/master/Base/内存泄漏场景)
 - [常用设计模式](https://github.com/barry-source/tips/tree/master/Base/常用设计模式)
 - [手势触摸事件](https://github.com/barry-source/tips/tree/master/Base/手势触摸事件)
@@ -61,16 +57,6 @@
 - [Swift]()
 - [Dart基础]()
 - [Flutter]()
-
-[Flutter](https://github.com/barry-source/tips/tree/master/Flutter)
-
-# 源码记录：
-
-[SDWebImage](https://github.com/barry-source/tips/tree/master/Source/sd_source)
-
-[Kingfisher](https://github.com/barry-source/tips/tree/master/Source/kf_source)
-
-[Bugly](https://github.com/barry-source/tips/tree/master/Source/bugly_source)
 
 # 网络相关：
 
@@ -86,8 +72,12 @@
 
 # 数据结构
 
+[堆和栈的区别](https://github.com/barry-source/tips/tree/master/Base/堆和栈的区别)
+
+[Hash](https://github.com/barry-source/tips/tree/master/Base/hash)
 
 # 设计
+
 - [图片加载库设计](https://github.com/barry-source/tips/tree/master/Base/图片加载库设计)
 - [网络请求库设计](https://github.com/barry-source/tips/tree/master/Base/网络请求库设计)
 - [优化数组的插入和删除](https://github.com/barry-source/tips/tree/master/Base/优化数组的插入和删除)
@@ -100,27 +90,4 @@
 # 源码记录：
 
 [三方库源码分析](https://github.com/barry-source/tips/tree/master/Source)
-
-# 网络相关：
-
-[HTTPS工作流程 ](https://github.com/barry-source/tips/tree/master/Base/HTTPS工作流程)
-
-[TCP握手和挥手 ](https://github.com/barry-source/tips/tree/master/Base/TCP握手和挥手)
-
-[线程和进程 ](https://github.com/barry-source/tips/tree/master/Base/线程和进程)
-
-# 数据结构
-
-
-# 设计
-[图片加载库设计](https://github.com/barry-source/tips/tree/master/Base/图片加载库设计)
-
-[网络请求库设计](https://github.com/barry-source/tips/tree/master/Base/网络请求库设计)
-
-[优化数组的插入和删除](https://github.com/barry-source/tips/tree/master/Base/优化数组的插入和删除)
-
-# 流程详解
-
-[触摸屏幕发生了什么]()
-[一次完整的HTTPS请求过程]()
 
