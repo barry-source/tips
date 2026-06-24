@@ -56,7 +56,7 @@
 - [架构](https://github.com/barry-source/tips/tree/master/Base/架构)
 - [锁](https://github.com/barry-source/tips/tree/master/Base/锁)
 - [Swift]()
-- [Dart基础]()
+- [Dart基础](https://github.com/barry-source/tips/blob/master/Base/Dart基础/Dart基础.md)
 - [Flutter]()
 
 # 设计模式
@@ -91,6 +91,7 @@
 # 流程详解
 
 - [触摸屏幕发生了什么](https://github.com/barry-source/tips/tree/master/Base/手势触摸事件)
+- [图片是如何显示到屏幕上的](https://github.com/barry-source/tips/tree/master/Base/图片显示到屏幕)
 - [一次完整的HTTPS请求过程](https://github.com/barry-source/tips/tree/master/Base/HTTPS工作流程)
 
 # 源码记录：
