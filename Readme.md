@@ -48,7 +48,6 @@
 - [崩溃记录](https://github.com/barry-source/tips/tree/master/Base/崩溃记录)
 - [iOS优化](https://github.com/barry-source/tips/tree/master/Base/优化)
 - [内存泄漏场景](https://github.com/barry-source/tips/tree/master/Base/内存泄漏场景)
-- [常用设计模式](https://github.com/barry-source/tips/tree/master/Base/常用设计模式)
 - [手势触摸事件](https://github.com/barry-source/tips/tree/master/Base/手势触摸事件)
 - [runtime实际应用](https://github.com/barry-source/tips/tree/master/Base/runtime实际应用)
 - [代码面试题](https://github.com/barry-source/tips/tree/master/Base/代码面试题)
@@ -59,6 +58,11 @@
 - [Swift]()
 - [Dart基础]()
 - [Flutter]()
+
+# 设计模式
+
+- [常用设计模式](https://github.com/barry-source/tips/blob/master/Base/常用设计模式/设计模式.md)
+- [三种工厂模式对比](https://github.com/barry-source/tips/blob/master/Base/常用设计模式/三种工厂模式对比.md)
 
 # 网络相关：
 
