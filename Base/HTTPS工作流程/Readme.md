@@ -123,7 +123,7 @@ SSL（Secure Sockets Layer，安全套接字层）和 TLS（Transport Layer Secu
 | **警报消息** | 仅警告和致命两种，未加密 | 增加关闭通知类型，已加密 |
 | **消息认证** | 使用 MAC（MD5 算法，已过时） | 使用 HMAC（更安全的哈希认证） |
 | **密码套件** | 支持有已知安全漏洞的早期算法 | 使用高级加密算法 |
-| **握手** | 复杂且缓慢，步骤多 | 步骤更少，连接更快（TLS 1.3 仅 1-RTT） |
+| **握手** | 复杂且缓慢，步骤多 | 步骤更少，连接更快（TLS 1.3 仅 1-RTT，即一次往返时间） |
 
 ### 详细对比
 
@@ -285,43 +285,295 @@ ECDHE（椭圆曲线 DH 临时密钥交换）是 DH 的椭圆曲线变体，安�
 
 ## 十、TLS 1.3 握手流程
 
-TLS 1.3 对握手流程进行了大幅简化，从 2-RTT 减少到 **1-RTT**，并支持 **0-RTT**（早期数据）。
+TLS 1.3（RFC 8446，2018 年发布）对握手流程进行了大幅简化，从 TLS 1.2 的 2-RTT 减少到 **1-RTT**，并支持 **0-RTT**（早期数据）。
 
-### 主要改进
+### TLS 1.3 的主要改进
 
-- 移除了 RSA 密钥交换等不具备前向安全性的算法，**仅保留 ECDHE**；
-- 握手消息加密：ServerHello 之后的握手消息都是加密的；
-- 支持会话恢复（Session Resumption），可实现 0-RTT；
-- 移除了独立的 MAC，统一使用 **AEAD**（如 AES-GCM、ChaCha20-Poly1305）。
+| 改进项 | TLS 1.2 | TLS 1.3 |
+|--------|---------|---------|
+| **RTT 数** | 2-RTT（RSA 和 DH 都需要 2 次往返） | 1-RTT（完整握手），0-RTT（会话恢复） |
+| **密钥交换算法** | 支持 RSA、DH、ECDHE | **仅保留 ECDHE**（移除了无前向安全性的算法） |
+| **握手消息** | 部分明文，部分加密 | ServerHello **之后所有消息加密** |
+| **密码套件** | 大量套件组合（数百种） | 仅 5 种 AEAD 套件 |
+| **MAC 机制** | 独立的 HMAC | 统一使用 **AEAD**（AES-GCM / ChaCha20-Poly1305） |
+| **会话恢复** | Session ID / Session Ticket（有延迟） | PSK（预共享密钥），可实现 0-RTT |
+| **前向安全性** | RSA 不具备，DHE/ECDHE 具备 | **所有套件都具备** |
 
-### 1-RTT 握手流程
+### ECDHE 算法原理
+
+TLS 1.3 仅使用 **ECDHE**（椭圆曲线 Diffie-Hellman 临时密钥交换）：
+
+```
+椭圆曲线 DH（ECDHE）：
+  
+  选择椭圆曲线（如 X25519 或 P-256）
+  
+  客户端：生成随机数 a，计算 A = a × G（G 是椭圆曲线的基点）
+  服务端：生成随机数 b，计算 B = b × G
+
+  客户端发 A 给服务端，服务端发 B 给客户端
+
+  客户端计算：S = a × B = a × (b × G) = (ab) × G
+  服务端计算：S = b × A = b × (a × G) = (ab) × G
+
+  → 双方得到相同的点 S，取 S 的 x 坐标作为共享密钥
+  → 窃听者只知道 G、A、B，但无法计算 a 或 b（椭圆曲线离散对数难题）
+  → 每一步都使用临时私钥（Ephemeral），不长期保存，保证前向安全性
+```
+
+**椭圆曲线相比有限域 DH 的优势**：同安全强度下密钥更短（256 位 ECC ≈ 3072 位 RSA）、计算更快。
+
+### 1-RTT 完整握手流程
 
 ```
 Client                                            Server
   |                                                  |
   | --- ClientHello (Client Random, Key Share) ----> |
-  |                                                  |
+  |                  (1 个 RTT)                      |
   | <-- ServerHello (Server Random, Key Share) ----- |
-  | <-- {EncryptedExtensions} --------------------- |
-  | <-- {Certificate} ----------------------------- |
-  | <-- {CertificateVerify} ----------------------- |
-  | <-- {Finished} -------------------------------- |
+  | <-- {EncryptedExtensions} ------------------- -- |  ← 加密传输
+  | <-- {Certificate} ------------------------------ |  ← 同一 Flight
+  | <-- {CertificateVerify} ------------------------ |
+  | <-- {Finished} --------------------------------- |
   |                                                  |
-  | --- {Finished} ------------------------------> |
+  | --- {Finished} -------------------------------> |
   |                                                  |
   | <============= Application Data ===============> |
 ```
 
-1. **ClientHello**：客户端发送 Client Random、支持的密码套件、以及 ECDHE 公钥（Key Share）；
-2. **ServerHello**：服务器回应 Server Random、选定的密码套件、以及 ECDHE 公钥（Key Share）；
-3. 此时双方已可计算出共享密钥，后续握手消息（EncryptedExtensions、Certificate、CertificateVerify、Finished）都是**加密**的；
-4. 客户端验证证书和签名后，发送 Finished，握手结束，开始传输应用数据。
+#### 第 1 步：Client → Server（ClientHello）
 
-> TLS 1.3 的所有密钥交换算法都具备前向安全性。
+客户端发送消息给服务器，包含：
+
+- **Client Random**：32 字节随机数（TLS 1.3 中全部为随机数，不再包含时间戳）
+- **支持的密码套件**：仅列出 TLS 1.3 套件（如 TLS_AES_128_GCM_SHA256）
+- **Key Share**：客户端的一次性 ECDHE 公钥（可直接包含多个曲线的候选公钥）
+- **Supported Versions**：支持的 TLS 版本列表（TLS 1.3 必填）
+- **PSK Key Exchange Modes**（可选）：若支持会话恢复，标识可接受的密钥交换模式
+- **其他扩展**：SNI（域名指示）、ALPN（应用层协议协商）等
+
+> **TLS 1.3 的关键区别**：客户端在第一条消息中就发送了 ECDHE 公钥（Key Share），使服务器可以在收到后立即计算共享密钥，无需额外往返，这是实现 1-RTT 的核心。
+
+#### 第 2 步：Server → Client（ServerHello + 加密 Flight）
+
+服务器收到 ClientHello 后：
+
+1. 选定密码套件和曲线
+2. 生成自己的 ECDHE 密钥对，用客户端的 Key Share 计算出**共享密钥**（Handshake Secret）
+3. 回复以下消息（**同一 Flight 内连续发送**）：
+
+| 消息 | 加密与否 | 说明 |
+|------|---------|------|
+| **ServerHello** | ❌ 明文 | 包含 Server Random + 选定套件 + 服务器 ECDHE 公钥（Key Share） |
+| **EncryptedExtensions** | ✅ 加密 | 不需要保护或不需要证书即可发送的扩展（如 ALPN、SNI） |
+| **CertificateRequest** | ✅ 加密 | 可选，仅当服务器要求客户端证书时发送 |
+| **Certificate** | ✅ 加密 | 服务器的数字证书链（TLS 1.3 中**证书加密传输**，防止泄露域名） |
+| **CertificateVerify** | ✅ 加密 | 用**服务器私钥对截至目前所有握手消息的哈希值签名**，证明服务器持有证书私钥 |
+| **Finished** | ✅ 加密 | 对截至目前所有握手消息的 MAC，确认握手完整性 |
+
+> **密钥计算时序**：ServerHello 发完后，服务器立刻用 ECDHE 的 Key Share 计算出 Handshake Secret，然后用这个密钥**加密 EncryptedExtensions 及之后的所有消息**。Certificate 是在加密后才发送的，所以中间人无法看到证书内容。
+
+#### 第 3 步：Client → Server（验证 + Finished）
+
+客户端收到服务器的回复后：
+
+1. **计算共享密钥**：用客户端的 ECDHE 私钥 + 服务器的 ECDHE 公钥，计算出相同的 Handshake Secret；
+2. **解密 ServerHello 之后的消息**：用 Handshake Secret 解密 EncryptedExtensions、Certificate 等；
+3. **验证证书**：验证服务器证书链的合法性（CA 签名、有效期、域名等）；
+4. **验证签名**：用证书中的公钥验证 CertificateVerify 中的数字签名，确保证书和握手参数未被篡改；
+5. **验证 Finished**：验证服务器发送的 Finished 消息，确认握手完整性；
+6. **发送 {Finished}**：客户端发送加密的 Finished 消息（用当前 Handshake Secret 加密），确认客户端侧握手已完成；
+7. 计算**应用数据密钥**（Traffic Secret），握手完成。
+
+#### 第 4 步：应用数据传输
+
+- 客户端和服务器使用通过 HKDF 派生的**应用数据密钥**（Application Traffic Secret）
+- 使用 AEAD 加密算法（AES-GCM / ChaCha20-Poly1305）对应用数据进行对称加密传输
+- **客户端可以在发送 Finished 时就带上应用数据**（1-RTT 的含义：从 ClientHello 到能发送数据，只需要 1 次网络往返）
+
+### 0-RTT 会话恢复（PSK）
+
+TLS 1.3 支持基于 **PSK（Pre-Shared Key，预共享密钥）** 的会话恢复，实现 0-RTT（零往返时间恢复）：
+
+```
+第一次完成握手（1-RTT）后，服务器发送 Session Ticket：
+  Server → Client: {NewSessionTicket, PSK}（加密）
+
+后续恢复连接时，客户端可以直接发送应用数据：
+  Client → Server: ClientHello + PSK Key Exchange Mode + 0-RTT 数据（加密）
+  Server → Client: ServerHello + Finished + 响应数据
+```
+
+| 对比项 | 1-RTT 完整握手 | 0-RTT 会话恢复（PSK） |
+|--------|---------------|---------------------|
+| **RTT** | 1 次往返 | 0 次（客户端直接发数据） |
+| **是否需要证书** | ✅ 需要 | ❌ 不需要 |
+| **适用场景** | 首次连接 | 最近连接过的服务器复用 |
+| **安全性** | 最高 | 存在重放攻击风险（需应用层处理） |
+
+### TLS 1.2 与 TLS 1.3 握手对比
+
+| 对比项 | TLS 1.2（DH/ECDHE） | TLS 1.3 |
+|--------|-------------------|---------|
+| RTT 数 | 2-RTT | 1-RTT（完整），0-RTT（恢复） |
+| ClientHello 中是否包含 KeyShare | ❌ 否 | ✅ 是（实现 1-RTT 的关键） |
+| 证书传输时间 | 第 2 步明文传输 | 第 2 步**加密**传输 |
+| ServerHelloDone 消息 | ✅ 有 | ❌ 无（简化） |
+| ChangeCipherSpec | ✅ 有 | ✅ 保留（兼容性） |
+| 密钥推导 | PRF（伪随机函数） | HKDF（基于 HMAC 的密钥推导） |
+| MAC 机制 | 独立的 HMAC | AEAD 内嵌认证 |
+| 前向安全性 | 仅 DHE/ECDHE 支持 | **所有套件都支持** |
 
 ---
 
-## 十一、数字证书验证
+## 十一、HTTPS 中间人攻击（MITM）与抓包原理
+
+### 什么是中间人攻击？
+
+中间人攻击（Man-in-the-Middle, MITM）是指攻击者在客户端和服务端之间拦截并篡改通信：
+
+```
+正常通信：              中间人攻击：
+客户端 ←→ 服务端       客户端 ←→ 攻击者 ←→ 服务端
+                        （客户端以为在和服务端通信
+                         服务端以为在和客户端通信）
+```
+
+HTTPS 通过**证书验证 + 加密**来防御中间人攻击。如果攻击者无法提供合法的服务器证书，客户端会报警告。
+
+### HTTPS 如何防御中间人攻击？
+
+| 防御手段 | 防护目标 | 绕过条件 |
+|---------|---------|---------|
+| **证书验证** | 防止身份伪造 | 需要用户信任攻击者的 CA 证书 |
+| **CertificateVerify 签名** | 防止参数篡改 | 攻击者需要持有服务器私钥 |
+| **加密通信** | 防止窃听 | 无法绕过 |
+
+### Charles 抓包原理
+
+Charles 是一个流行的 HTTPS 抓包工具，之所以能在 HTTPS 加密环境下工作，是因为它**充当了一个中间人（MITM 代理）**，但需要用户主动信任 Charles 的根证书。
+
+#### 抓包流程
+
+```
+正常 HTTPS 通信：
+  App/浏览器（信任系统根证书）←→ 服务器（持有真实证书）
+
+Charles 抓包时：
+  App/浏览器（信任系统根证书 + Charles 证书）←→ Charles（用自己的证书冒充）←→ 服务器（真实连接）
+```
+
+**详细步骤**：
+
+```
+          App/浏览器                         Charles                          目标服务器
+              │                                │                                │
+              │  ------ 1. 安装 Charles 根证书 --│                                │
+              │     （手动信任，系统提示风险）      │                                │
+              │                                │                                │
+              │  --- 2. 请求 https://example.com │                                │
+              │-------------------------------->│                                │
+              │                                │  --- 3. 代理请求 example.com     │
+              │                                │-------------------------------->│
+              │                                │                                │
+              │                                │  <-- 4. 服务器返回真实证书 -------│
+              │                                │                                │
+              │                                │  5. Charles 用服务器证书建立连接  │
+              │  <-- 6. Charles 返回伪造证书 ---│     （用 Charles 根证书签发的）    │
+              │      （用 Charles 根证书签名）    │                                │
+              │                                │                                │
+              │  7. 客户端验证证书：             │                                │
+              │     ✅ 证书链到 Charles 根证书    │                                │
+              │     ✅ 客户端信任 Charles 根证书  │                                │
+              │     ← 验证通过！                 │                                │
+              │                                │                                │
+              │  --- 8. ClientHello + KeyShare->│  --- 9. 代理 ClientHello ------>│
+              │                                │-------------------------------->│
+              │  <-- 10. 用 Charles 密钥加密 ---│  <-- 11. 用服务器密钥加密 -------│
+              │                                │                                │
+              │  12. Charles 解密流量并记录      │                                │
+              │     之后加密转发给任一方          │                                │
+```
+
+#### Charles 的三段式加密
+
+```
+  ┌──────────┐        ┌──────────┐        ┌──────────┐
+  │ 客户端    │        │ Charles  │        │ 服务端    │
+  │          │ 加密1   │          │  加密2  │          │
+  │ 对称密钥1│◄──────►│  明文    │◄──────►│ 对称密钥2│
+  │          │        │  抓包记录│         │          │
+  └──────────┘        └──────────┘        └──────────┘
+```
+
+- **加密1**：客户端与 Charles 之间的 TLS 连接，使用 Charles 自己签发的证书
+- **加密2**：Charles 与服务器之间的 TLS 连接，使用服务器的真实证书
+- **中间**：Charles 拥有两个链接的明文数据，可以记录和分析
+
+#### Charles 抓包的局限性
+
+| 情况 | 能否抓包 | 原因 |
+|------|---------|------|
+| App 信任系统根证书 + 已安装 Charles 证书 | ✅ 能 | Charles 用自己的证书冒充服务器 |
+| App 仅信任系统根证书（未安装 Charles 证书） | ❌ 不能 | 证书验证失败：Charles 证书未受信任 |
+| App 使用 SSL Pinning（证书绑定） | ❌ 不能 | App 固定了服务器证书，Charles 证书不匹配 |
+| App 使用 SSL Pinning + 已安装 Charles 证书 | ❌ 不能 | SSL Pinning 在代码中硬编码证书，不依赖系统信任 |
+
+#### SSL Pinning（证书绑定）
+
+SSL Pinning 是一种防止中间人抓包的机制，App **在代码中固定服务器的证书或公钥**，不依赖系统信任链：
+
+```swift
+// SSL Pinning 示例：固定服务器公钥
+class PinnedDelegate: NSObject, URLSessionDelegate {
+    func urlSession(_ session: URLSession,
+                    didReceive challenge: URLAuthenticationChallenge,
+                    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+
+        guard let serverTrust = challenge.protectionSpace.serverTrust else {
+            return completionHandler(.cancelAuthenticationChallenge, nil)
+        }
+
+        // 获取服务器证书
+        let serverCert = SecTrustCopyCertificateChain(serverTrust)!.first!
+        let serverCertData = SecCertificateCopyData(serverCert as! SecCertificate) as NSData
+
+        // 对比本地硬编码的证书
+        let localCertData = // 从 Bundle 中加载预先保存的证书
+
+        if serverCertData.isEqual(to: localCertData as Data) {
+            completionHandler(.useCredential, URLCredential(trust: serverTrust))
+        } else {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+        }
+    }
+}
+```
+
+### 面试常见问题
+
+#### 1. HTTPS 既然加密了，为什么 Charles 能抓到包？
+
+因为 Charles 用了**中间人攻击**的方式——用户在手机上主动安装了 Charles 的根证书，所以 Charles 可以用自己的证书冒充任意服务器。如果没有安装 Charles 的证书，或者 App 做了 SSL Pinning，Charles 就抓不到包。
+
+#### 2. 如何防止 App 被 Charles 抓包？
+
+1. **SSL Pinning**：在代码中固定服务器证书或公钥
+2. **双向认证（Mutual TLS）**：服务器也验证客户端证书
+3. **禁止用户安装的根证书**：仅信任系统内置的根证书（iOS 14+ 可通过 `SecTrustStore` 配置）
+4. **证书透明度（Certificate Transparency）**：检查证书是否有公开日志记录
+
+#### 3. Charles 抓包时，App 会报警告吗？
+
+如果 App 没有做 SSL Pinning，且用户已安装 Charles 证书，HTTPS 连接会**静默成功**（Charles 返回的证书在客户端验证通过），App 不会产生任何警告。用户完全感知不到正在被抓包。
+
+#### 4. 公司和学校能监控员工的 HTTPS 流量吗？
+
+可以，原理和 Charles 完全一样——公司在员工的设备上安装公司的根证书，然后通过代理服务器解密所有 HTTPS 流量。这是合法的（设备属于公司），但通常会在合规协议中告知员工。
+
+---
+
+## 十二、数字证书验证
 
 ### 证书链（Chain of Trust）
 
@@ -352,7 +604,7 @@ Client                                            Server
 
 ---
 
-## 十二、HTTP 请求方法
+## 十三、HTTP 请求方法
 
 | 方法 | 说明 | 幂等 | 安全 |
 | --- | --- | --- | --- |
@@ -371,7 +623,7 @@ Client                                            Server
 
 ---
 
-## 十三、HTTP 报文首部字段
+## 十四、HTTP 报文首部字段
 
 ### 1. 通用首部字段（General Header）
 
@@ -429,7 +681,7 @@ Client                                            Server
 
 ---
 
-## 十四、GET 与 POST 的区别
+## 十五、GET 与 POST 的区别
 
 | 对比项 | GET | POST |
 | --- | --- | --- |
@@ -447,7 +699,7 @@ Client                                            Server
 
 ---
 
-## 十五、HTTP 与 HTTPS 的区别
+## 十六、HTTP 与 HTTPS 的区别
 
 | 对比项 | HTTP | HTTPS |
 | --- | --- | --- |
@@ -460,7 +712,7 @@ Client                                            Server
 
 ---
 
-## 十六、浏览器中输入 URL 后发生了什么
+## 十七、浏览器中输入 URL 后发生了什么
 
 参考：[从输入 URL 到页面展示发生了什么](https://www.jianshu.com/p/c1dfc6caa520)
 
@@ -483,7 +735,7 @@ Client                                            Server
 
 ---
 
-## 十七、Cookie、Session 与 Token
+## 十八、Cookie、Session 与 Token
 
 HTTP 是无状态协议，服务器默认不会记住客户端的身份。为了实现"有状态"的通信（如用户登录），需要借助 Cookie、Session 或 Token 机制。
 

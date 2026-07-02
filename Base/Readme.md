@@ -35,6 +35,9 @@
 - [HTTPS工作流程](https://github.com/barry-source/tips/tree/master/Base/HTTPS工作流程)
 - [TCP握手和挥手](https://github.com/barry-source/tips/tree/master/Base/TCP握手和挥手)
 - [线程和进程](https://github.com/barry-source/tips/tree/master/Base/线程和进程)
+
+## 蓝牙
+- [BLE GATT 详解](https://github.com/barry-source/tips/tree/master/Base/蓝牙)
 # 基础：
 
 [GCD多读单写 ](https://github.com/barry-source/tips/tree/master/Base/GCD多读单写)

@@ -37,6 +37,8 @@
 
 [[底层原理] objc4-818 源码](https://github.com/barry-source/tips/tree/master/objc4-818-master)
 
+[[底层原理] 组件化方案](https://github.com/barry-source/tips/blob/master/Base/组件化方案/组件化方案.md)
+
 # 基础：
 
 - [GCD多读单写](https://github.com/barry-source/tips/tree/master/Base/GCD多读单写)
